@@ -1,0 +1,297 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { supabase } from '@/lib/supabase'
+import { useRouter } from 'next/navigation'
+import WorkoutTracker from '@/components/WorkoutTracker'
+import MealTracker from '@/components/MealTracker'
+import PointsDisplay from '@/components/PointsDisplay'
+import CoachRecommendations from '@/components/CoachRecommendations'
+import Routines from '@/components/Routines'
+import RecoveryZone from '@/components/RecoveryZone'
+import DashboardOverview from '@/components/DashboardOverview'
+import BodyMapVisual from '@/components/BodyMapVisual'
+import UserProfile from '@/components/UserProfile'
+import ProgressiveOverload from '@/components/ProgressiveOverload'
+
+const navItems = [
+  { id: 'overview', abbr: 'RE', label: 'Resumen', sub: 'Tu progreso' },
+  { id: 'profile', abbr: 'PE', label: 'Mi Perfil', sub: 'Datos personales' },
+  { id: 'workout', abbr: 'TR', label: 'Entrenamientos', sub: 'Registra tu rutina' },
+  { id: 'routines', abbr: 'RU', label: 'Rutinas', sub: 'Plan de entrenamiento' },
+  { id: 'recovery', abbr: 'RC', label: 'Recuperación', sub: 'Estado muscular' },
+  { id: 'body', abbr: 'BM', label: 'Mapa Corporal', sub: 'Visualización' },
+  { id: 'meals', abbr: 'CM', label: 'Nutrición', sub: 'Tracker de comidas' },
+  { id: 'overload', abbr: 'SO', label: 'Sobrecarga', sub: 'Progresión' },
+  { id: 'coach', abbr: 'IA', label: 'Coach IA', sub: 'Recomendaciones' },
+]
+
+export default function Dashboard() {
+  const [user, setUser] = useState<any>(null)
+  const [points, setPoints] = useState<any>(null)
+  const [activeTab, setActiveTab] = useState('overview')
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const router = useRouter()
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+      if (!session) {
+        router.push('/auth')
+        return
+      }
+      setUser(session.user)
+      const { data } = await supabase
+        .from('user_points')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .single()
+      setPoints(data)
+    }
+    checkAuth()
+  }, [router])
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    router.push('/auth')
+  }
+
+  if (!user) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: 'var(--ink)', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
+        CARGANDO...
+      </div>
+    )
+  }
+
+  const currentNav = navItems.find(n => n.id === activeTab)
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'overview': return <DashboardOverview userId={user.id} />
+      case 'profile': return <UserProfile userId={user.id} />
+      case 'workout': return <WorkoutTracker userId={user.id} />
+      case 'routines': return <Routines userId={user.id} />
+      case 'recovery': return <RecoveryZone userId={user.id} />
+      case 'body': return <BodyMapVisual userId={user.id} />
+      case 'meals': return <MealTracker userId={user.id} />
+      case 'overload': return <ProgressiveOverload userId={user.id} />
+      case 'coach': return <CoachRecommendations userId={user.id} />
+      default: return null
+    }
+  }
+
+  return (
+    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--ink)' }}>
+      {/* Sidebar */}
+      <aside style={{
+        width: sidebarOpen ? 220 : 60,
+        flexShrink: 0,
+        background: 'var(--ink-sidebar)',
+        borderRight: '1px solid var(--border)',
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'sticky',
+        top: 0,
+        height: '100vh',
+        overflow: 'hidden',
+        transition: 'width 0.2s ease',
+      }}>
+        {/* Logo */}
+        <div style={{ padding: '20px 16px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          {sidebarOpen && (
+            <div>
+              <div style={{ fontFamily: 'Georgia, serif', fontWeight: 700, fontSize: '15px', lineHeight: 1.1 }}>
+                💪 Gym <span style={{ fontStyle: 'italic', color: 'var(--blue)' }}>Coach</span>
+              </div>
+              <div style={{ fontFamily: 'monospace', fontSize: '9px', letterSpacing: '0.14em', color: 'var(--text-faint)', textTransform: 'uppercase', marginTop: '3px' }}>
+                v1.0
+              </div>
+            </div>
+          )}
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            style={{
+              background: 'none',
+              border: '1px solid var(--border)',
+              color: 'var(--text-faint)',
+              width: '26px',
+              height: '26px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '12px',
+              fontFamily: 'monospace',
+              borderRadius: '4px',
+            }}
+          >
+            {sidebarOpen ? '‹' : '›'}
+          </button>
+        </div>
+
+        {/* Nav */}
+        <nav style={{ flex: 1, padding: '12px 0', overflowY: 'auto', overflowX: 'hidden' }}>
+          {navItems.map((item) => (
+            <div
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
+              className={`nav-item ${activeTab === item.id ? 'active' : ''}`}
+            >
+              <span style={{
+                fontFamily: 'monospace',
+                fontSize: '10px',
+                fontWeight: 700,
+                letterSpacing: '0.06em',
+                color: activeTab === item.id ? 'var(--blue)' : 'var(--text-faint)',
+                flexShrink: 0,
+                width: '20px',
+                textAlign: 'center',
+              }}>
+                {item.abbr}
+              </span>
+              {sidebarOpen && (
+                <div style={{ marginLeft: '10px' }}>
+                  <div style={{
+                    fontFamily: 'monospace',
+                    fontSize: '12px',
+                    fontWeight: activeTab === item.id ? 700 : 400,
+                    color: activeTab === item.id ? 'var(--text)' : 'var(--text-muted)',
+                    letterSpacing: '0.03em',
+                  }}>
+                    {item.label}
+                  </div>
+                  <div style={{
+                    fontFamily: 'monospace',
+                    fontSize: '10px',
+                    color: 'var(--text-faint)',
+                    letterSpacing: '0.06em',
+                  }}>
+                    {item.sub}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </nav>
+
+        {/* User info + logout */}
+        <div style={{ padding: '14px 18px', borderTop: '1px solid var(--border)', display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: '6px' }}>
+          {sidebarOpen && (
+            <>
+              <div style={{ fontFamily: 'monospace', fontSize: '11px', color: 'var(--text-muted)' }}>
+                @{user.email?.split('@')[0]}
+              </div>
+              <div style={{ fontFamily: 'monospace', fontSize: '10px', color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                Usuario
+              </div>
+            </>
+          )}
+          <button
+            onClick={handleLogout}
+            style={{
+              width: '100%',
+              fontFamily: 'monospace',
+              fontSize: '11px',
+              letterSpacing: '0.06em',
+              background: 'none',
+              border: '1px solid var(--border2)',
+              color: 'var(--text-muted)',
+              padding: '7px 0',
+              cursor: 'pointer',
+              marginTop: '4px',
+            }}
+          >
+            {sidebarOpen ? 'Cerrar sesión' : '⏻'}
+          </button>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main style={{ flex: 1, overflow: 'auto' }}>
+        {/* Header */}
+        <header style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0.65rem 1.5rem',
+          borderBottom: '1px solid var(--border)',
+          background: 'var(--ink-panel)',
+          position: 'sticky',
+          top: 0,
+          zIndex: 100,
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <span style={{ fontFamily: 'Georgia, serif', fontWeight: 700, fontSize: '1rem', letterSpacing: '-0.01em', color: 'var(--text)', lineHeight: 1 }}>
+              💪 <span style={{ fontStyle: 'italic', color: 'var(--blue)' }}>Gym</span> Coach
+            </span>
+            <span style={{ color: 'var(--border2)', fontSize: '0.9rem' }}>·</span>
+            <div>
+              <div style={{ fontFamily: 'monospace', fontWeight: 600, fontSize: '0.8rem', color: 'var(--text)', lineHeight: 1.2 }}>
+                🏋️ Tu Dashboard Personal
+              </div>
+              <div style={{ fontFamily: 'monospace', fontSize: '0.6rem', color: 'var(--text-faint)', letterSpacing: '0.06em', textTransform: 'uppercase', marginTop: '1px' }}>
+                Entrenamiento · Nutrición · Progreso
+              </div>
+            </div>
+          </div>
+
+          {/* Points + live indicator */}
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            {points && (
+              <span style={{
+                fontFamily: 'monospace',
+                fontSize: '0.75rem',
+                color: 'var(--blue)',
+                background: 'rgba(91,141,239,0.08)',
+                padding: '3px 10px',
+                borderRadius: '2px',
+                border: '1px solid rgba(91,141,239,0.25)',
+                letterSpacing: '0.1em',
+                fontWeight: 700,
+              }}>
+                🏆 {points.total_points || 0} pts
+              </span>
+            )}
+            <span style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontFamily: 'monospace',
+              fontSize: '0.65rem',
+              color: 'var(--green)',
+              background: 'rgba(74,222,128,0.08)',
+              padding: '3px 10px',
+              borderRadius: '2px',
+              border: '1px solid rgba(74,222,128,0.25)',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+            }}>
+              <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: 'var(--green)', display: 'inline-block', animation: 'pulse 2s ease-in-out infinite' }}></span>
+              Activo
+            </span>
+          </div>
+        </header>
+
+        {/* Section Header */}
+        <div style={{ padding: '1rem 1.5rem 0 1.5rem' }}>
+          <div className="section-header">
+            <span className="section-num">{currentNav?.abbr}</span>
+            <span className="section-title">{currentNav?.label}</span>
+            <span className="section-sub">{currentNav?.sub}</span>
+          </div>
+        </div>
+
+        {/* Content */}
+        <main style={{ padding: '1rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <PointsDisplay points={points} />
+          <div className="panel">
+            {renderContent()}
+          </div>
+        </main>
+      </main>
+    </div>
+  )
+}
