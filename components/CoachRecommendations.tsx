@@ -35,12 +35,12 @@ export default function CoachRecommendations({ userId }: CoachRecommendationsPro
         const act = profile.activity_level || 'moderate'
         const meta = profile.metabolic_rate || 'normal'
         const goal = profile.goal || 'hypertrophy'
-        const actMul = { sedentary: 1.2, light: 1.375, moderate: 1.55, active: 1.725, very_active: 1.9 }[act] || 1.55
-        const metaAdj = { slow: 0.9, normal: 1.0, fast: 1.1 }[meta] || 1.0
+        const actMul = ({ sedentary: 1.2, light: 1.375, moderate: 1.55, active: 1.725, very_active: 1.9 } as Record<string, number>)[act] || 1.55
+        const metaAdj = ({ slow: 0.9, normal: 1.0, fast: 1.1 } as Record<string, number>)[meta] || 1.0
         const bmr = 10 * w + 6.25 * h - 5 * a + (g === 'male' ? 5 : -161)
         let tdee = Math.round(bmr * actMul * metaAdj)
-        const protMul = goal === 'weight_loss' ? 2.4 : goal === 'hypertrophy' ? 2.2 : 2.0
-        calGoal = goal === 'hypertrophy' ? tdee + 300 : goal === 'strength' ? tdee + 200 : goal === 'weight_loss' ? tdee - 400 : tdee
+        const protMul = ({ weight_loss: 2.4, hypertrophy: 2.2, strength: 2.0, endurance: 2.0 } as Record<string, number>)[goal] || 2.0
+        calGoal = ({ hypertrophy: tdee + 300, strength: tdee + 200, weight_loss: tdee - 400 } as Record<string, number>)[goal] || tdee
         proteinGoal = Math.round(w * protMul)
         macroNote = `Tu metabolismo ${meta === 'fast' ? 'rápido' : meta === 'slow' ? 'lento' : 'normal'} y actividad ${act} ajustan tu gasto diario a ~${tdee} kcal.`
       }
