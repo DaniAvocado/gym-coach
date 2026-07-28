@@ -273,7 +273,7 @@ export default function Dashboard() {
       </aside>
 
       {/* Main Content */}
-      <main style={{ flex: 1, overflow: 'auto', minWidth: 0, width: '100%' }}>
+      <main className="dashboard-main" style={{ flex: 1, overflow: 'auto', minWidth: 0, width: '100%' }}>
         {/* Header */}
         <header className="hide-mobile" style={{
           display: 'flex',

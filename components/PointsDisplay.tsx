@@ -21,8 +21,7 @@ export default function PointsDisplay({ points }: PointsDisplayProps) {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: idx * 0.08, duration: 0.3 }}
-          style={{ borderTop: `2px solid ${card.border}` }}
-          className="panel"
+          style={{ borderTop: `2px solid ${card.border}`, background: 'var(--ink-panel)', border: '1px solid var(--border)', borderRadius: '6px', padding: '16px 18px', overflow: 'hidden' }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>

@@ -53,7 +53,7 @@ export default function DashboardOverview({ userId }: DashboardOverviewProps) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       {/* Stats KPIs */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px' }}>
         {[
           { label: 'Entrenamientos (7d)', value: stats?.totalWorkouts || 0, border: 'var(--blue)', icon: '🏋️' },
           { label: 'Sets Completados', value: stats?.totalSets || 0, border: 'var(--purple)', icon: '💪' },
@@ -74,13 +74,13 @@ export default function DashboardOverview({ userId }: DashboardOverviewProps) {
         ))}
       </div>
 
-      {/* Week Activity */}
-      <div className="panel">
-        <div className="panel-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+      {/* Week Activity - scrollable on mobile */}
+      <div className="panel" style={{ overflowX: 'auto' }}>
+        <div className="panel-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', minWidth: '500px' }}>
           <span>Actividad de esta Semana</span>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--text-faint)' }}>7 días</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px', minWidth: '500px' }}>
           {weekData.map((day, idx) => (
             <motion.div key={idx} whileHover={{ scale: 1.05 }}
               style={{
