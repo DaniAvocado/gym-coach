@@ -14,7 +14,7 @@ export default function PointsDisplay({ points }: PointsDisplayProps) {
   ]
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '10px', width: '100%' }}>
       {cards.map((card, idx) => (
         <motion.div
           key={idx}

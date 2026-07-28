@@ -31,23 +31,17 @@ export default function Dashboard() {
   const [points, setPoints] = useState<any>(null)
   const [activeTab, setActiveTab] = useState('overview')
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const router = useRouter()
+
+  useEffect(() => { setSidebarOpen(window.innerWidth > 768) }, [])
 
   useEffect(() => {
     const checkAuth = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-      if (!session) {
-        router.push('/auth')
-        return
-      }
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) { router.push('/auth'); return }
       setUser(session.user)
-      const { data } = await supabase
-        .from('user_points')
-        .select('*')
-        .eq('user_id', session.user.id)
-        .single()
+      const { data } = await supabase.from('user_points').select('*').eq('user_id', session.user.id).single()
       setPoints(data)
     }
     checkAuth()
@@ -84,9 +78,59 @@ export default function Dashboard() {
   }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--ink)' }}>
-      {/* Sidebar */}
-      <aside style={{
+    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--ink)', width: '100%', maxWidth: '100vw', overflow: 'hidden' }}>
+      {/* Mobile top bar */}
+      <div style={{
+        display: 'none',
+        position: 'fixed',
+        top: 0, left: 0, right: 0,
+        zIndex: 200,
+        background: 'var(--ink-sidebar)',
+        borderBottom: '1px solid var(--border)',
+        padding: '10px 16px',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }} className="sidebar-mobile-toggle" id="mobile-topbar">
+        <span style={{ fontFamily: 'Georgia, serif', fontWeight: 700, fontSize: '14px' }}>
+          💪 <span style={{ fontStyle: 'italic', color: 'var(--blue)' }}>Gym</span>
+        </span>
+        <button onClick={() => setMobileNavOpen(!mobileNavOpen)}
+          style={{ background: 'none', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '4px', padding: '6px 10px', cursor: 'pointer', fontSize: '14px' }}>
+          {mobileNavOpen ? '✕' : '☰'}
+        </button>
+      </div>
+
+      {/* Mobile nav dropdown */}
+      {mobileNavOpen && (
+        <div style={{
+          position: 'fixed',
+          top: '44px', left: 0, right: 0, bottom: 0,
+          zIndex: 199,
+          background: 'var(--ink-sidebar)',
+          overflowY: 'auto',
+          padding: '8px 0',
+        }} className="sidebar-mobile-toggle">
+          {navItems.map(item => (
+            <div key={item.id} onClick={() => { setActiveTab(item.id); setMobileNavOpen(false) }}
+              style={{
+                padding: '12px 20px',
+                cursor: 'pointer',
+                borderLeft: activeTab === item.id ? '3px solid var(--blue)' : '3px solid transparent',
+                background: activeTab === item.id ? 'rgba(91,141,239,0.08)' : 'transparent',
+              }}>
+              <span style={{ fontFamily: 'monospace', fontWeight: activeTab === item.id ? 700 : 400, fontSize: '14px', color: activeTab === item.id ? 'var(--blue)' : 'var(--text-muted)' }}>
+                {item.abbr} — {item.label}
+              </span>
+            </div>
+          ))}
+          <div onClick={handleLogout} style={{ padding: '12px 20px', cursor: 'pointer', borderTop: '1px solid var(--border)', marginTop: '8px' }}>
+            <span style={{ fontFamily: 'monospace', fontSize: '12px', color: 'var(--red)' }}>Cerrar sesión</span>
+          </div>
+        </div>
+      )}
+
+      {/* Sidebar desktop */}
+      <aside className="sidebar-desktop" style={{
         width: sidebarOpen ? 220 : 60,
         flexShrink: 0,
         background: 'var(--ink-sidebar)',
@@ -210,9 +254,9 @@ export default function Dashboard() {
       </aside>
 
       {/* Main Content */}
-      <main style={{ flex: 1, overflow: 'auto' }}>
+      <main style={{ flex: 1, overflow: 'auto', minWidth: 0, width: '100%' }}>
         {/* Header */}
-        <header style={{
+        <header className="hide-mobile" style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -276,7 +320,7 @@ export default function Dashboard() {
         </header>
 
         {/* Section Header */}
-        <div style={{ padding: '1rem 1.5rem 0 1.5rem' }}>
+        <div style={{ padding: '0.75rem 1rem 0 1rem' }} className="hide-mobile">
           <div className="section-header">
             <span className="section-num">{currentNav?.abbr}</span>
             <span className="section-title">{currentNav?.label}</span>
@@ -285,9 +329,9 @@ export default function Dashboard() {
         </div>
 
         {/* Content */}
-        <main style={{ padding: '1rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <main style={{ padding: '0.75rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%', maxWidth: '100%' }}>
           <PointsDisplay points={points} />
-          <div className="panel">
+          <div className="panel" style={{ width: '100%' }}>
             {renderContent()}
           </div>
         </main>
