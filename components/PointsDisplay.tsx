@@ -37,6 +37,8 @@ export default function PointsDisplay({ points }: PointsDisplayProps) {
                   color: 'var(--text)',
                   lineHeight: 1,
                   marginTop: '4px',
+                  overflowWrap: 'break-word',
+                  wordBreak: 'break-word',
                 }}
               >
                 {card.value}

@@ -91,7 +91,7 @@ export default function Dashboard() {
         alignItems: 'center',
         justifyContent: 'space-between',
       }} className="sidebar-mobile-toggle" id="mobile-topbar">
-        <span style={{ fontFamily: 'Georgia, serif', fontWeight: 700, fontSize: '14px' }}>
+        <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '14px' }}>
           💪 <span style={{ fontStyle: 'italic', color: 'var(--blue)' }}>Gym</span>
         </span>
         <button onClick={() => setMobileNavOpen(!mobileNavOpen)}
@@ -166,7 +166,7 @@ export default function Dashboard() {
         <div style={{ padding: '20px 16px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           {sidebarOpen && (
             <div>
-              <div style={{ fontFamily: 'Georgia, serif', fontWeight: 700, fontSize: '15px', lineHeight: 1.1 }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '15px', lineHeight: 1.1, letterSpacing: '-0.02em' }}>
                 💪 Gym <span style={{ fontStyle: 'italic', color: 'var(--blue)' }}>Coach</span>
               </div>
               <div style={{ fontFamily: 'monospace', fontSize: '9px', letterSpacing: '0.14em', color: 'var(--text-faint)', textTransform: 'uppercase', marginTop: '3px' }}>
@@ -287,7 +287,7 @@ export default function Dashboard() {
           zIndex: 100,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <span style={{ fontFamily: 'Georgia, serif', fontWeight: 700, fontSize: '1rem', letterSpacing: '-0.01em', color: 'var(--text)', lineHeight: 1 }}>
+            <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '1rem', letterSpacing: '-0.02em', color: 'var(--text)', lineHeight: 1 }}>
               💪 <span style={{ fontStyle: 'italic', color: 'var(--blue)' }}>Gym</span> Coach
             </span>
             <span style={{ color: 'var(--border2)', fontSize: '0.9rem' }}>·</span>
