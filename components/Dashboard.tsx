@@ -100,7 +100,7 @@ export default function Dashboard() {
         </button>
       </div>
 
-      {/* Mobile nav dropdown */}
+      {/* Mobile nav dropdown - vertical */}
       {mobileNavOpen && (
         <div style={{
           position: 'fixed',
@@ -109,22 +109,41 @@ export default function Dashboard() {
           background: 'var(--ink-sidebar)',
           overflowY: 'auto',
           padding: '8px 0',
+          display: 'flex',
+          flexDirection: 'column',
         }} className="sidebar-mobile-toggle">
-          {navItems.map(item => (
-            <div key={item.id} onClick={() => { setActiveTab(item.id); setMobileNavOpen(false) }}
-              style={{
-                padding: '12px 20px',
-                cursor: 'pointer',
-                borderLeft: activeTab === item.id ? '3px solid var(--blue)' : '3px solid transparent',
-                background: activeTab === item.id ? 'rgba(91,141,239,0.08)' : 'transparent',
-              }}>
-              <span style={{ fontFamily: 'monospace', fontWeight: activeTab === item.id ? 700 : 400, fontSize: '14px', color: activeTab === item.id ? 'var(--blue)' : 'var(--text-muted)' }}>
-                {item.abbr} — {item.label}
-              </span>
-            </div>
-          ))}
-          <div onClick={handleLogout} style={{ padding: '12px 20px', cursor: 'pointer', borderTop: '1px solid var(--border)', marginTop: '8px' }}>
-            <span style={{ fontFamily: 'monospace', fontSize: '12px', color: 'var(--red)' }}>Cerrar sesión</span>
+          {navItems.map(item => {
+            const icons: Record<string, string> = {
+              overview: '📊', profile: '👤', workout: '🏋️', routines: '📋',
+              recovery: '🧘', body: '🦾', meals: '🍽️', overload: '📈', coach: '🤖',
+            }
+            return (
+              <div key={item.id} onClick={() => { setActiveTab(item.id); setMobileNavOpen(false) }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '14px 20px',
+                  cursor: 'pointer',
+                  borderLeft: activeTab === item.id ? '3px solid var(--blue)' : '3px solid transparent',
+                  background: activeTab === item.id ? 'rgba(91,141,239,0.08)' : 'transparent',
+                  borderBottom: '1px solid var(--border)',
+                }}>
+                <span style={{ fontSize: '1.3rem', width: '28px', textAlign: 'center' }}>{icons[item.id] || '•'}</span>
+                <div>
+                  <div style={{ fontFamily: 'monospace', fontWeight: activeTab === item.id ? 700 : 400, fontSize: '14px', color: activeTab === item.id ? 'var(--text)' : 'var(--text-muted)' }}>
+                    {item.label}
+                  </div>
+                  <div style={{ fontFamily: 'monospace', fontSize: '11px', color: 'var(--text-faint)' }}>
+                    {item.sub}
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+          <div onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 20px', cursor: 'pointer', borderTop: '1px solid var(--border)', marginTop: 'auto' }}>
+            <span style={{ fontSize: '1.3rem', width: '28px', textAlign: 'center' }}>🚪</span>
+            <span style={{ fontFamily: 'monospace', fontSize: '13px', color: 'var(--red)' }}>Cerrar sesión</span>
           </div>
         </div>
       )}
