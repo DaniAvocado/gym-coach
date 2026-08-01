@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
@@ -78,7 +78,7 @@ export default function AuthPage() {
           />
           <input
             type="password"
-            placeholder="Contraseña"
+            placeholder="ContraseÃ±a"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             style={{
@@ -118,12 +118,12 @@ export default function AuthPage() {
               opacity: loading ? 0.5 : 1,
             }}
           >
-            {loading ? 'Cargando...' : isSignUp ? 'Registrarse' : 'Iniciar Sesión'}
+            {loading ? 'Cargando...' : isSignUp ? 'Registrarse' : 'Iniciar SesiÃ³n'}
           </button>
         </form>
 
         <p style={{ textAlign: 'center', marginTop: '1.5rem', fontFamily: 'monospace', fontSize: '12px', color: 'var(--text-muted)' }}>
-          {isSignUp ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?'}
+          {isSignUp ? 'Â¿Ya tienes cuenta?' : 'Â¿No tienes cuenta?'}
           <button
             onClick={() => setIsSignUp(!isSignUp)}
             style={{
@@ -137,7 +137,7 @@ export default function AuthPage() {
               fontSize: '12px',
             }}
           >
-            {isSignUp ? 'Inicia sesión' : 'Regístrate'}
+            {isSignUp ? 'Inicia sesiÃ³n' : 'RegÃ­strate'}
           </button>
         </p>
       </div>

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
@@ -34,7 +34,7 @@ export default function CoachRecommendations({ userId }: CoachRecommendationsPro
       setRecommendations(data.recommendations || [])
       setLastAnalysis(new Date())
     } catch (err) {
-      setError('Error al analizar. Registra más datos primero.')
+      setError('Error al analizar. Registra mÃ¡s datos primero.')
     } finally {
       setLoading(false)
     }
@@ -50,7 +50,7 @@ export default function CoachRecommendations({ userId }: CoachRecommendationsPro
 
       {lastAnalysis && (
         <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--text-faint)', textAlign: 'center' }}>
-          Último análisis: {lastAnalysis.toLocaleString('es-ES')}
+          Ãšltimo anÃ¡lisis: {lastAnalysis.toLocaleString('es-ES')}
         </p>
       )}
 
@@ -67,7 +67,7 @@ export default function CoachRecommendations({ userId }: CoachRecommendationsPro
             const isWarning = rec.startsWith('[!]')
             const isInfo = rec.startsWith('[D]') || rec.startsWith('[i]') || rec.startsWith('[^]') || rec.startsWith('[G]')
             const isAction = rec.startsWith('[>]') || rec.startsWith('[T]') || rec.startsWith('[Z]') || rec.startsWith('[W]')
-            const icon = rec.startsWith('[') ? rec.slice(0, rec.indexOf(']') + 1) : '•'
+            const icon = rec.startsWith('[') ? rec.slice(0, rec.indexOf(']') + 1) : 'â€¢'
             const text = rec.replace(/^\[[^\]]+\]\s*/, '')
             const color = isPositive ? 'var(--green)' : isWarning ? 'var(--orange)' : isInfo ? 'var(--blue)' : isAction ? 'var(--purple)' : 'var(--text)'
 
@@ -76,8 +76,8 @@ export default function CoachRecommendations({ userId }: CoachRecommendationsPro
                 style={{ display: 'flex', gap: '10px', padding: '12px 14px', background: 'var(--ink-panel)', border: `1px solid ${color}33`, borderRadius: '6px', borderLeft: `3px solid ${color}` }}>
                 <span style={{ flexShrink: 0, fontSize: '1rem' }}>{icon}</span>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text)', lineHeight: 1.6 }}>
-                  <span style={{ fontWeight: 700, color }}>{text.split('—')[0]}</span>
-                  {text.includes('—') && <span>—{text.split('—')[1]}</span>}
+                  <span style={{ fontWeight: 700, color }}>{text.split('â€”')[0]}</span>
+                  {text.includes('â€”') && <span>â€”{text.split('â€”')[1]}</span>}
                 </div>
               </motion.div>
             )

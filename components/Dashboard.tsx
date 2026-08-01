@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
@@ -21,10 +21,10 @@ const navItems = [
   { id: 'profile', abbr: 'PE', label: 'Mi Perfil', sub: 'Datos personales' },
   { id: 'workout', abbr: 'TR', label: 'Entrenamientos', sub: 'Registra tu rutina' },
   { id: 'routines', abbr: 'RU', label: 'Rutinas', sub: 'Plan de entrenamiento' },
-  { id: 'recovery', abbr: 'RC', label: 'Recuperación', sub: 'Estado muscular' },
-  { id: 'body', abbr: 'BM', label: 'Mapa Corporal', sub: 'Visualización' },
-  { id: 'meals', abbr: 'CM', label: 'Nutrición', sub: 'Tracker de comidas' },
-  { id: 'overload', abbr: 'SO', label: 'Sobrecarga', sub: 'Progresión' },
+  { id: 'recovery', abbr: 'RC', label: 'RecuperaciÃ³n', sub: 'Estado muscular' },
+  { id: 'body', abbr: 'BM', label: 'Mapa Corporal', sub: 'VisualizaciÃ³n' },
+  { id: 'meals', abbr: 'CM', label: 'NutriciÃ³n', sub: 'Tracker de comidas' },
+  { id: 'overload', abbr: 'SO', label: 'Sobrecarga', sub: 'ProgresiÃ³n' },
   { id: 'coach', abbr: 'IA', label: 'Coach IA', sub: 'Recomendaciones' },
 ]
 
@@ -101,11 +101,11 @@ export default function Dashboard() {
         justifyContent: 'space-between',
       }} className="sidebar-mobile-toggle" id="mobile-topbar">
         <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '14px' }}>
-          <span style={{ fontStyle: 'italic', color: 'var(--blue)' }}>Gym</span>
+          <span style={{ fontStyle: 'italic', color: 'var(--pink)' }}>Gym</span>
         </span>
         <button onClick={() => setMobileNavOpen(!mobileNavOpen)}
           style={{ background: 'none', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '4px', padding: '6px 10px', cursor: 'pointer', fontSize: '14px' }}>
-          {mobileNavOpen ? '✕' : '☰'}
+          {mobileNavOpen ? 'âœ•' : 'â˜°'}
         </button>
       </div>
 
@@ -131,7 +131,7 @@ export default function Dashboard() {
                   padding: '14px 20px',
                   cursor: 'pointer',
                   borderLeft: activeTab === item.id ? '3px solid var(--blue)' : '3px solid transparent',
-                  background: activeTab === item.id ? 'rgba(91,141,239,0.08)' : 'transparent',
+                  background: activeTab === item.id ? 'rgba(111,160,255,0.08)' : 'transparent',
                   borderBottom: '1px solid var(--border)',
                 }}>
                 <span style={{ fontSize: '1.3rem', width: '28px', textAlign: 'center' }}>{item.abbr}</span>
@@ -147,8 +147,8 @@ export default function Dashboard() {
             )
           })}
           <div onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 20px', cursor: 'pointer', borderTop: '1px solid var(--border)', marginTop: 'auto' }}>
-            <span style={{ fontSize: '1.3rem', width: '28px', textAlign: 'center' }}>→</span>
-            <span style={{ fontFamily: 'monospace', fontSize: '13px', color: 'var(--red)' }}>Cerrar sesión</span>
+            <span style={{ fontSize: '1.3rem', width: '28px', textAlign: 'center' }}>â†’</span>
+            <span style={{ fontFamily: 'monospace', fontSize: '13px', color: 'var(--red)' }}>Cerrar sesiÃ³n</span>
           </div>
         </div>
       )}
@@ -172,7 +172,7 @@ export default function Dashboard() {
           {sidebarOpen && (
             <div>
               <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '15px', lineHeight: 1.1, letterSpacing: '-0.02em' }}>
-                Gym <span style={{ fontStyle: 'italic', color: 'var(--blue)' }}>Coach</span>
+                Gym <span style={{ fontStyle: 'italic', color: 'var(--pink)' }}>Coach</span>
               </div>
               <div style={{ fontFamily: 'monospace', fontSize: '9px', letterSpacing: '0.14em', color: 'var(--text-faint)', textTransform: 'uppercase', marginTop: '3px' }}>
                 v1.0
@@ -196,7 +196,7 @@ export default function Dashboard() {
               borderRadius: '4px',
             }}
           >
-            {sidebarOpen ? '‹' : '›'}
+            {sidebarOpen ? 'â€¹' : 'â€º'}
           </button>
         </div>
 
@@ -272,7 +272,7 @@ export default function Dashboard() {
               marginTop: '4px',
             }}
           >
-            {sidebarOpen ? 'Cerrar sesión' : '⏻'}
+            {sidebarOpen ? 'Cerrar sesiÃ³n' : 'â»'}
           </button>
         </div>
       </aside>
@@ -293,15 +293,15 @@ export default function Dashboard() {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '1rem', letterSpacing: '-0.02em', color: 'var(--text)', lineHeight: 1 }}>
-              <span style={{ fontStyle: 'italic', color: 'var(--blue)' }}>Gym</span> Coach
+              <span style={{ fontStyle: 'italic', color: 'var(--pink)' }}>Gym</span> Coach
             </span>
-            <span style={{ color: 'var(--border2)', fontSize: '0.9rem' }}>·</span>
+            <span style={{ color: 'var(--border2)', fontSize: '0.9rem' }}>Â·</span>
             <div>
               <div style={{ fontFamily: 'monospace', fontWeight: 600, fontSize: '0.8rem', color: 'var(--text)', lineHeight: 1.2 }}>
                 Tu Dashboard Personal
               </div>
               <div style={{ fontFamily: 'monospace', fontSize: '0.6rem', color: 'var(--text-faint)', letterSpacing: '0.06em', textTransform: 'uppercase', marginTop: '1px' }}>
-                Entrenamiento · Nutrición · Progreso
+                Entrenamiento Â· NutriciÃ³n Â· Progreso
               </div>
             </div>
           </div>
@@ -313,10 +313,10 @@ export default function Dashboard() {
                 fontFamily: 'monospace',
                 fontSize: '0.75rem',
                 color: 'var(--blue)',
-                background: 'rgba(91,141,239,0.08)',
+                background: 'rgba(111,160,255,0.08)',
                 padding: '3px 10px',
                 borderRadius: '2px',
-                border: '1px solid rgba(91,141,239,0.25)',
+                border: '1px solid rgba(111,160,255,0.25)',
                 letterSpacing: '0.1em',
                 fontWeight: 700,
               }}>
@@ -330,10 +330,10 @@ export default function Dashboard() {
               fontFamily: 'monospace',
               fontSize: '0.65rem',
               color: 'var(--green)',
-              background: 'rgba(74,222,128,0.08)',
+              background: 'rgba(124,240,192,0.08)',
               padding: '3px 10px',
               borderRadius: '2px',
-              border: '1px solid rgba(74,222,128,0.25)',
+              border: '1px solid rgba(124,240,192,0.25)',
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
             }}>

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
@@ -17,8 +17,8 @@ const quickFoods: Record<string, { name: string; kcal: number; pro: number; carb
     { name: 'Huevos revueltos (3)', kcal: 210, pro: 18, carb: 1, fat: 15 },
     { name: 'Yogur griego (200g)', kcal: 150, pro: 20, carb: 7, fat: 5 },
     { name: 'Pan integral (2 rebanadas)', kcal: 160, pro: 8, carb: 30, fat: 2 },
-    { name: 'Batido de proteína', kcal: 150, pro: 25, carb: 5, fat: 3 },
-    { name: 'Plátano (1)', kcal: 105, pro: 1, carb: 27, fat: 0 },
+    { name: 'Batido de proteÃ­na', kcal: 150, pro: 25, carb: 5, fat: 3 },
+    { name: 'PlÃ¡tano (1)', kcal: 105, pro: 1, carb: 27, fat: 0 },
   ],
   lunch: [
     { name: 'Pollo a la plancha (150g)', kcal: 250, pro: 45, carb: 0, fat: 7 },
@@ -26,23 +26,23 @@ const quickFoods: Record<string, { name: string; kcal: number; pro: number; carb
     { name: 'Pescado al horno (150g)', kcal: 220, pro: 35, carb: 0, fat: 8 },
     { name: 'Lentejas (200g)', kcal: 230, pro: 18, carb: 40, fat: 1 },
     { name: 'Camote (200g)', kcal: 180, pro: 4, carb: 41, fat: 0 },
-    { name: 'Ensalada de atún', kcal: 280, pro: 28, carb: 12, fat: 14 },
+    { name: 'Ensalada de atÃºn', kcal: 280, pro: 28, carb: 12, fat: 14 },
   ],
   dinner: [
     { name: 'Pollo al horno (150g)', kcal: 230, pro: 40, carb: 0, fat: 6 },
     { name: 'Carne magra (150g)', kcal: 280, pro: 42, carb: 0, fat: 12 },
-    { name: 'Salmón (150g)', kcal: 310, pro: 30, carb: 0, fat: 21 },
+    { name: 'SalmÃ³n (150g)', kcal: 310, pro: 30, carb: 0, fat: 21 },
     { name: 'Ensalada de pollo', kcal: 250, pro: 32, carb: 10, fat: 10 },
     { name: 'Camarones (150g)', kcal: 160, pro: 30, carb: 2, fat: 3 },
     { name: 'Tortilla de verduras', kcal: 200, pro: 12, carb: 10, fat: 12 },
   ],
   snack: [
-    { name: 'Batido de proteína', kcal: 150, pro: 25, carb: 5, fat: 3 },
+    { name: 'Batido de proteÃ­na', kcal: 150, pro: 25, carb: 5, fat: 3 },
     { name: 'Almendras (30g)', kcal: 170, pro: 6, carb: 6, fat: 15 },
     { name: 'Yogur griego (200g)', kcal: 150, pro: 20, carb: 7, fat: 5 },
     { name: 'Manzana (1)', kcal: 95, pro: 0, carb: 25, fat: 0 },
     { name: 'Palta (1/2)', kcal: 160, pro: 2, carb: 8, fat: 15 },
-    { name: 'Requesón (100g)', kcal: 100, pro: 11, carb: 4, fat: 4 },
+    { name: 'RequesÃ³n (100g)', kcal: 100, pro: 11, carb: 4, fat: 4 },
     { name: 'Huevo duro (1)', kcal: 78, pro: 6, carb: 1, fat: 5 },
     { name: 'Cacahuetes (30g)', kcal: 170, pro: 8, carb: 5, fat: 14 },
   ],
@@ -63,7 +63,7 @@ export default function MealTracker({ userId }: MealTrackerProps) {
     breakfast: { label: 'Desayuno', icon: '', border: 'var(--orange)' },
     lunch: { label: 'Almuerzo', icon: '', border: 'var(--green)' },
     dinner: { label: 'Cena', icon: '', border: 'var(--purple)' },
-    snack: { label: 'Snack', icon: '', border: 'var(--pastel-pink)' },
+    snack: { label: 'Snack', icon: '', border: 'var(--pink-light)' },
   }
 
   useEffect(() => {
@@ -106,7 +106,7 @@ export default function MealTracker({ userId }: MealTrackerProps) {
   }
 
   const saveMeal = async () => {
-    if (!foodName || !calories) { alert('Completa al menos Alimento y Calorías'); return }
+    if (!foodName || !calories) { alert('Completa al menos Alimento y CalorÃ­as'); return }
     setLoading(true)
     const today = new Date().toISOString().split('T')[0]
     await supabase.from('meals').insert({
@@ -155,10 +155,10 @@ export default function MealTracker({ userId }: MealTrackerProps) {
         <div className="kpi-label" style={{ marginBottom: '8px' }}>PROGRESO DIARIO</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '12px' }}>
           {[
-            { label: 'Calorías', current: totals.calories, goal: macroGoals?.calories || 2500, color: 'var(--red)', unit: 'kcal' },
-            { label: 'Proteína', current: totals.protein, goal: macroGoals?.protein || 150, color: 'var(--blue)', unit: 'g' },
+            { label: 'CalorÃ­as', current: totals.calories, goal: macroGoals?.calories || 2500, color: 'var(--red)', unit: 'kcal' },
+            { label: 'ProteÃ­na', current: totals.protein, goal: macroGoals?.protein || 150, color: 'var(--blue)', unit: 'g' },
             { label: 'Carbos', current: totals.carbs, goal: macroGoals?.carbs || 300, color: 'var(--orange)', unit: 'g' },
-            { label: 'Grasas', current: totals.fats, goal: macroGoals?.fat || 60, color: 'var(--pastel-pink)', unit: 'g' },
+            { label: 'Grasas', current: totals.fats, goal: macroGoals?.fat || 60, color: 'var(--pink-light)', unit: 'g' },
           ].map((card, idx) => (
             <div key={idx}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: '11px', marginBottom: '2px' }}>
@@ -179,20 +179,20 @@ export default function MealTracker({ userId }: MealTrackerProps) {
       {/* Quick add */}
       <div className="panel" style={{ borderLeft: '3px solid var(--blue)' }}>
         <div className="kpi-label" style={{ marginBottom: '8px' }}>
-          AÑADIDO RÁPIDO — {mealTypes[mealType].label.toUpperCase()}
+          AÃ‘ADIDO RÃPIDO â€” {mealTypes[mealType].label.toUpperCase()}
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
           {(quickFoods[mealType] || []).map((food, idx) => (
             <motion.button key={idx} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
               onClick={() => quickAdd(food)}
-              title={`${food.kcal} kcal · P:${food.pro} C:${food.carb} G:${food.fat}`}
+              title={`${food.kcal} kcal Â· P:${food.pro} C:${food.carb} G:${food.fat}`}
               style={{ padding: '7px 10px', background: 'rgba(111,160,255,0.08)', border: '1px solid rgba(111,160,255,0.3)', color: 'var(--text)', borderRadius: '4px', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '11px' }}>
               {food.name}
             </motion.button>
           ))}
         </div>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-faint)', marginTop: '8px' }}>
-          Las comidas rápidas se añaden al tipo de comida seleccionado arriba. Cambia Desayuno/Almuerzo/Cena/Snack para ver más opciones.
+          Las comidas rÃ¡pidas se aÃ±aden al tipo de comida seleccionado arriba. Cambia Desayuno/Almuerzo/Cena/Snack para ver mÃ¡s opciones.
         </div>
       </div>
 
@@ -206,8 +206,8 @@ export default function MealTracker({ userId }: MealTrackerProps) {
           <input type="text" placeholder="Nombre del alimento" value={foodName} onChange={e => setFoodName(e.target.value)} style={{ ...inputStyle, width: '100%' }} />
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-          <input type="number" placeholder="Calorías" value={calories} onChange={e => setCalories(e.target.value)} style={inputStyle} />
-          <input type="number" placeholder="Proteína (g)" value={protein} onChange={e => setProtein(e.target.value)} style={inputStyle} />
+          <input type="number" placeholder="CalorÃ­as" value={calories} onChange={e => setCalories(e.target.value)} style={inputStyle} />
+          <input type="number" placeholder="ProteÃ­na (g)" value={protein} onChange={e => setProtein(e.target.value)} style={inputStyle} />
           <input type="number" placeholder="Carbos (g)" value={carbs} onChange={e => setCarbs(e.target.value)} style={inputStyle} />
           <input type="number" placeholder="Grasas (g)" value={fats} onChange={e => setFats(e.target.value)} style={inputStyle} />
         </div>
@@ -226,14 +226,14 @@ export default function MealTracker({ userId }: MealTrackerProps) {
               const info = mealTypes[meal.meal_type]
               return (
                 <motion.div key={meal.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.05 }}
-                  style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(91,141,239,0.06)', borderRadius: '4px', borderLeft: `3px solid ${info?.border || 'var(--border)'}` }}>
+                  style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(111,160,255,0.06)', borderRadius: '4px', borderLeft: `3px solid ${info?.border || 'var(--border)'}` }}>
                   <div>
                     <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '13px', color: 'var(--text)' }}>{meal.food_name}</div>
                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
-                      {meal.calories} kcal · P:{meal.protein}g · C:{meal.carbs}g · G:{meal.fats}g
+                      {meal.calories} kcal Â· P:{meal.protein}g Â· C:{meal.carbs}g Â· G:{meal.fats}g
                     </div>
                   </div>
-                  <button onClick={() => deleteMeal(meal.id)} style={{ color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px' }}>✕</button>
+                  <button onClick={() => deleteMeal(meal.id)} style={{ color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px' }}>âœ•</button>
                 </motion.div>
               )
             })}

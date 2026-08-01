@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
@@ -40,7 +40,7 @@ export default function SpotifyWidget({ userId }: SpotifyWidgetProps) {
 
   const save = async () => {
     const id = extractPlaylistId(url)
-    if (!id) { setError('Pega un link de playlist de Spotify válido'); return }
+    if (!id) { setError('Pega un link de playlist de Spotify vÃ¡lido'); return }
     setPlaylistId(id)
     setError('')
     await supabase.from('user_profiles').update({ spotify_playlist: url }).eq('id', userId)

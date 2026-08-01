@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
@@ -135,7 +135,7 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
         <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={addExerciseToWorkout}
           disabled={!selectedExercise || exerciseSets.length === 0}
           style={{ width: '100%', padding: '12px', background: 'var(--blue)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '12px', opacity: (!selectedExercise || exerciseSets.length === 0) ? 0.4 : 1 }}>
-          + Añadir a Entrenamiento
+          + AÃ±adir a Entrenamiento
         </motion.button>
       </div>
 
@@ -146,14 +146,14 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
             {currentWorkout.map((item, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
-                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(91,141,239,0.06)', borderRadius: '4px', borderLeft: '3px solid var(--blue)' }}>
+                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(111,160,255,0.06)', borderRadius: '4px', borderLeft: '3px solid var(--blue)' }}>
                 <div>
                   <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '13px', color: 'var(--text)' }}>{item.exercise_name}</div>
                   <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
-                    {item.sets.map((s: ExerciseSet) => `${s.setNumber}: ${s.weight}kg × ${s.reps}`).join(' | ')}
+                    {item.sets.map((s: ExerciseSet) => `${s.setNumber}: ${s.weight}kg Ã— ${s.reps}`).join(' | ')}
                   </div>
                 </div>
-                <button onClick={() => setCurrentWorkout(currentWorkout.filter((_, i) => i !== idx))} style={{ color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', padding: '4px' }}>✕</button>
+                <button onClick={() => setCurrentWorkout(currentWorkout.filter((_, i) => i !== idx))} style={{ color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', padding: '4px' }}>âœ•</button>
               </motion.div>
             ))}
           </div>

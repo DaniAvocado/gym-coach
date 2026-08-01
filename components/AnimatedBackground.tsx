@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useRef } from 'react'
 
@@ -33,7 +33,7 @@ export default function AnimatedBackground() {
     window.addEventListener('mousemove', onMove)
     window.addEventListener('touchmove', onTouch)
 
-    const palette = ['91,141,239', '167,139,250', '125,240,192', '255,179,221', '255,169,77']
+    const palette = ['91,141,239', '255,107,157', '167,139,250', '147,189,254', '255,196,216']
 
     interface P {
       x: number; y: number; vx: number; vy: number; r: number; c: string; a: number

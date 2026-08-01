@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
@@ -59,11 +59,11 @@ export default function BodyMapVisual({ userId }: BodyMapVisualProps) {
 
   const muscleMeta: Record<string, { icon: string; label: string; desc: string }> = {
     pecho: { icon: '', label: 'Pecho', desc: 'Press banca, Aperturas, Flexiones' },
-    espalda: { icon: '', label: 'Espalda', desc: 'Dominadas, Remo, Jalón al pecho' },
+    espalda: { icon: '', label: 'Espalda', desc: 'Dominadas, Remo, JalÃ³n al pecho' },
     piernas: { icon: '', label: 'Piernas', desc: 'Sentadilla, Peso muerto, Prensa' },
     hombros: { icon: '', label: 'Hombros', desc: 'Press militar, Elevaciones laterales' },
-    brazos: { icon: '', label: 'Brazos', desc: 'Curl bíceps, Press francés' },
-    core: { icon: '', label: 'Core', desc: 'Plancha, Crunch, Elevación piernas' },
+    brazos: { icon: '', label: 'Brazos', desc: 'Curl bÃ­ceps, Press francÃ©s' },
+    core: { icon: '', label: 'Core', desc: 'Plancha, Crunch, ElevaciÃ³n piernas' },
   }
 
   if (loading) return <div style={{ textAlign: 'center', padding: '2rem', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-faint)' }}>Cargando mapa muscular...</div>
@@ -161,12 +161,12 @@ export default function BodyMapVisual({ userId }: BodyMapVisualProps) {
               </div>
             </div>
             <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '4px', padding: '10px' }}>
-              <div className="kpi-label">Recomendación</div>
+              <div className="kpi-label">RecomendaciÃ³n</div>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text)', marginTop: '4px', lineHeight: 1.4 }}>
-                {(muscleData[selectedMuscle] || 0) === 0 && 'Considera añadir ejercicios a tu rutina.'}
+                {(muscleData[selectedMuscle] || 0) === 0 && 'Considera aÃ±adir ejercicios a tu rutina.'}
                 {(muscleData[selectedMuscle] || 0) > 0 && (muscleData[selectedMuscle] || 0) <= 2 && 'Aumenta el volumen de entrenamiento.'}
-                {(muscleData[selectedMuscle] || 0) > 2 && (muscleData[selectedMuscle] || 0) <= 5 && 'Buen balance. Mantén este nivel.'}
-                {(muscleData[selectedMuscle] || 0) > 5 && 'Excelente volumen. Asegura recuperación.'}
+                {(muscleData[selectedMuscle] || 0) > 2 && (muscleData[selectedMuscle] || 0) <= 5 && 'Buen balance. MantÃ©n este nivel.'}
+                {(muscleData[selectedMuscle] || 0) > 5 && 'Excelente volumen. Asegura recuperaciÃ³n.'}
               </div>
             </div>
           </div>
