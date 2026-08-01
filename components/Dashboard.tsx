@@ -1,4 +1,4 @@
-﻿'use client'
+?'use client'
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
@@ -21,10 +21,10 @@ const navItems = [
   { id: 'profile', abbr: 'PE', label: 'Mi Perfil', sub: 'Datos personales' },
   { id: 'workout', abbr: 'TR', label: 'Entrenamientos', sub: 'Registra tu rutina' },
   { id: 'routines', abbr: 'RU', label: 'Rutinas', sub: 'Plan de entrenamiento' },
-  { id: 'recovery', abbr: 'RC', label: 'RecuperaciÃ³n', sub: 'Estado muscular' },
-  { id: 'body', abbr: 'BM', label: 'Mapa Corporal', sub: 'VisualizaciÃ³n' },
-  { id: 'meals', abbr: 'CM', label: 'NutriciÃ³n', sub: 'Tracker de comidas' },
-  { id: 'overload', abbr: 'SO', label: 'Sobrecarga', sub: 'ProgresiÃ³n' },
+  { id: 'recovery', abbr: 'RC', label: 'Recuperación', sub: 'Estado muscular' },
+  { id: 'body', abbr: 'BM', label: 'Mapa Corporal', sub: 'Visualización' },
+  { id: 'meals', abbr: 'CM', label: 'Nutrición', sub: 'Tracker de comidas' },
+  { id: 'overload', abbr: 'SO', label: 'Sobrecarga', sub: 'Progresión' },
   { id: 'coach', abbr: 'IA', label: 'Coach IA', sub: 'Recomendaciones' },
 ]
 
@@ -107,7 +107,7 @@ export default function Dashboard() {
         </span>
         <button onClick={() => setMobileNavOpen(!mobileNavOpen)}
           style={{ background: 'none', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '4px', padding: '6px 10px', cursor: 'pointer', fontSize: '14px' }}>
-          {mobileNavOpen ? 'âœ•' : 'â˜°'}
+          {mobileNavOpen ? '✕' : '☰'}
         </button>
       </div>
 
@@ -151,8 +151,8 @@ export default function Dashboard() {
             )
           })}
           <div onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 20px', cursor: 'pointer', borderTop: '1px solid var(--border)', marginTop: 'auto' }}>
-            <span style={{ fontSize: '1.3rem', width: '28px', textAlign: 'center' }}>â†’</span>
-            <span style={{ fontFamily: 'monospace', fontSize: '13px', color: 'var(--red)' }}>Cerrar sesiÃ³n</span>
+            <span style={{ fontSize: '1.3rem', width: '28px', textAlign: 'center' }}>→</span>
+            <span style={{ fontFamily: 'monospace', fontSize: '13px', color: 'var(--red)' }}>Cerrar sesión</span>
           </div>
         </div>
       )}
@@ -202,7 +202,7 @@ export default function Dashboard() {
               borderRadius: '4px',
             }}
           >
-            {sidebarOpen ? 'â€¹' : 'â€º'}
+            {sidebarOpen ? '‹' : '›'}
           </button>
         </div>
 
@@ -278,7 +278,7 @@ export default function Dashboard() {
               marginTop: '4px',
             }}
           >
-            {sidebarOpen ? 'Cerrar sesiÃ³n' : 'â»'}
+            {sidebarOpen ? 'Cerrar sesión' : '⏻'}
           </button>
         </div>
       </aside>
@@ -301,13 +301,13 @@ export default function Dashboard() {
             <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '1rem', letterSpacing: '-0.02em', color: 'var(--text)', lineHeight: 1 }}>
               <span style={{ fontStyle: 'italic', color: 'var(--pink)' }}>Gym</span> Coach
             </span>
-            <span style={{ color: 'var(--border2)', fontSize: '0.9rem' }}>Â·</span>
+            <span style={{ color: 'var(--border2)', fontSize: '0.9rem' }}>·</span>
             <div>
               <div style={{ fontFamily: 'monospace', fontWeight: 600, fontSize: '0.8rem', color: 'var(--text)', lineHeight: 1.2 }}>
                 Tu Dashboard Personal
               </div>
               <div style={{ fontFamily: 'monospace', fontSize: '0.6rem', color: 'var(--text-faint)', letterSpacing: '0.06em', textTransform: 'uppercase', marginTop: '1px' }}>
-                Entrenamiento Â· NutriciÃ³n Â· Progreso
+                Entrenamiento · Nutrición · Progreso
               </div>
             </div>
           </div>

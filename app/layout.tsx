@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+?import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -14,8 +14,8 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Gym Coach â€” Tu Entrenador Personal",
-  description: "Trackea tus entrenamientos, nutriciÃ³n y progreso",
+  title: "Gym Coach — Tu Entrenador Personal",
+  description: "Trackea tus entrenamientos, nutrición y progreso",
 };
 
 export default function RootLayout({

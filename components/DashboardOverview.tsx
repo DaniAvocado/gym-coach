@@ -1,4 +1,4 @@
-﻿'use client'
+?'use client'
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
@@ -37,7 +37,7 @@ export default function DashboardOverview({ userId }: DashboardOverviewProps) {
         const dateStr = date.toISOString().split('T')[0]
         const dayWorkouts = workouts?.filter(w => w.date.split('T')[0] === dateStr) || []
         return {
-          day: ['Dom', 'Lun', 'Mar', 'MiÃ©', 'Jue', 'Vie', 'Sab'][date.getDay()],
+          day: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab'][date.getDay()],
           workouts: dayWorkouts.length,
           sets: dayWorkouts.reduce((sum: number, w: any) => sum + (w.workout_sets?.length || 0), 0),
         }
@@ -48,7 +48,7 @@ export default function DashboardOverview({ userId }: DashboardOverviewProps) {
     } finally { setLoading(false) }
   }
 
-  if (loading) return <div style={{ textAlign: 'center', padding: '2rem', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-faint)' }}>Cargando estadÃ­sticas...</div>
+  if (loading) return <div style={{ textAlign: 'center', padding: '2rem', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-faint)' }}>Cargando estadísticas...</div>
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -57,7 +57,7 @@ export default function DashboardOverview({ userId }: DashboardOverviewProps) {
         {[
           { label: 'Entrenamientos (7d)', value: stats?.totalWorkouts || 0, border: 'var(--blue)', icon: '' },
           { label: 'Sets Completados', value: stats?.totalSets || 0, border: 'var(--purple)', icon: '' },
-          { label: 'CalorÃ­as (7d)', value: stats?.totalCalories || 0, sub: `${stats?.avgCaloriesPerDay}/dÃ­a`, border: 'var(--orange)', icon: '' },
+          { label: 'Calorías (7d)', value: stats?.totalCalories || 0, sub: `${stats?.avgCaloriesPerDay}/día`, border: 'var(--orange)', icon: '' },
           { label: 'Puntos Totales', value: stats?.points || 0, border: 'var(--green)', icon: '' },
         ].map((card, idx) => (
           <motion.div key={idx} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.08 }}
@@ -78,7 +78,7 @@ export default function DashboardOverview({ userId }: DashboardOverviewProps) {
       <div className="panel" style={{ overflowX: 'auto' }}>
         <div className="panel-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', minWidth: '500px' }}>
           <span>Actividad de esta Semana</span>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--text-faint)' }}>7 dÃ­as</span>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--text-faint)' }}>7 días</span>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px', minWidth: '500px' }}>
           {weekData.map((day, idx) => (
@@ -103,7 +103,7 @@ export default function DashboardOverview({ userId }: DashboardOverviewProps) {
       <div className="callout" style={{ borderLeftColor: 'var(--green)' }}>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text)', lineHeight: 1.6 }}>
           {stats?.totalWorkouts >= 5
-            ? `Â¡Excelente consistencia! Has entrenado ${stats.totalWorkouts} veces esta semana`
+            ? `¡Excelente consistencia! Has entrenado ${stats.totalWorkouts} veces esta semana`
             : 'Intenta entrenar al menos 4-5 veces por semana para mejores resultados'}
         </div>
       </div>

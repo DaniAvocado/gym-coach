@@ -1,4 +1,4 @@
-﻿'use client'
+?'use client'
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
@@ -37,9 +37,9 @@ export default function SetDetail({ setNumber, onUpdate, onRemove, initialWeight
         Serie {setNumber}
       </span>
       <input type="number" placeholder="kg" value={weight} onChange={(e) => setWeight(e.target.value)} onBlur={() => onUpdate(parseFloat(weight) || 0, parseInt(reps) || 0)} step="0.5" style={inputStyle} />
-      <span style={{ color: 'var(--text-faint)' }}>Ã—</span>
+      <span style={{ color: 'var(--text-faint)' }}>×</span>
       <input type="number" placeholder="reps" value={reps} onChange={(e) => setReps(e.target.value)} onBlur={() => onUpdate(parseFloat(weight) || 0, parseInt(reps) || 0)} style={inputStyle} />
-      <motion.button whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} onClick={onRemove} style={{ color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '4px', marginLeft: 'auto' }}>âœ•</motion.button>
+      <motion.button whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} onClick={onRemove} style={{ color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '4px', marginLeft: 'auto' }}>✕</motion.button>
     </motion.div>
   )
 }

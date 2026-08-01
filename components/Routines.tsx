@@ -1,4 +1,4 @@
-﻿'use client'
+?'use client'
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
@@ -36,7 +36,7 @@ export default function Routines({ userId }: RoutinesProps) {
   }
 
   const createRoutine = async () => {
-    if (!routineName || selectedExercises.length === 0) { alert('Completa el nombre y aÃ±ade ejercicios'); return }
+    if (!routineName || selectedExercises.length === 0) { alert('Completa el nombre y añade ejercicios'); return }
     setLoading(true)
     const { data: routine } = await supabase.from('routines').insert({ user_id: userId, name: routineName, description: routineDescription }).select()
     if (routine?.[0]) {
@@ -66,7 +66,7 @@ export default function Routines({ userId }: RoutinesProps) {
       <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
         onClick={() => setShowCreateForm(!showCreateForm)}
         style={{ padding: '12px', background: showCreateForm ? 'transparent' : 'var(--blue)', color: showCreateForm ? 'var(--blue)' : '#0b0b12', border: `1px solid ${showCreateForm ? 'var(--blue)' : 'transparent'}`, borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
-        {showCreateForm ? 'âœ• Cancelar' : '+ Nueva Rutina'}
+        {showCreateForm ? '✕ Cancelar' : '+ Nueva Rutina'}
       </motion.button>
 
       {/* Create form */}
@@ -75,9 +75,9 @@ export default function Routines({ userId }: RoutinesProps) {
           <div className="kpi-label" style={{ marginBottom: '12px' }}>NUEVA RUTINA</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <input type="text" placeholder="Nombre de la rutina" value={routineName} onChange={e => setRoutineName(e.target.value)} style={inputStyle} />
-            <textarea placeholder="DescripciÃ³n (opcional)" value={routineDescription} onChange={e => setRoutineDescription(e.target.value)} rows={2} style={inputStyle} />
+            <textarea placeholder="Descripción (opcional)" value={routineDescription} onChange={e => setRoutineDescription(e.target.value)} rows={2} style={inputStyle} />
             <select onChange={e => { addExercise(e.target.value); e.target.value = '' }} style={inputStyle}>
-              <option value="">+ AÃ±adir ejercicio...</option>
+              <option value="">+ Añadir ejercicio...</option>
               {exercises.map(ex => <option key={ex.id} value={ex.id}>{ex.name} ({ex.category})</option>)}
             </select>
 
@@ -89,12 +89,12 @@ export default function Routines({ userId }: RoutinesProps) {
                       <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '12px', color: 'var(--text)' }}>{item.exercise.name}</div>
                       <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
                         <input type="number" value={item.sets} onChange={e => { const u = [...selectedExercises]; u[idx].sets = parseInt(e.target.value); setSelectedExercises(u) }} style={{ ...inputStyle, width: '60px', fontSize: '11px', padding: '6px 8px' }} />
-                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-faint)', alignSelf: 'center' }}>Ã—</span>
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-faint)', alignSelf: 'center' }}>×</span>
                         <input type="number" value={item.reps} onChange={e => { const u = [...selectedExercises]; u[idx].reps = parseInt(e.target.value); setSelectedExercises(u) }} style={{ ...inputStyle, width: '60px', fontSize: '11px', padding: '6px 8px' }} />
                         <input type="number" value={item.rest_seconds} onChange={e => { const u = [...selectedExercises]; u[idx].rest_seconds = parseInt(e.target.value); setSelectedExercises(u) }} style={{ ...inputStyle, width: '80px', fontSize: '11px', padding: '6px 8px' }} placeholder="desc(s)" />
                       </div>
                     </div>
-                    <button onClick={() => setSelectedExercises(selectedExercises.filter((_, i) => i !== idx))} style={{ color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '4px' }}>âœ•</button>
+                    <button onClick={() => setSelectedExercises(selectedExercises.filter((_, i) => i !== idx))} style={{ color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '4px' }}>✕</button>
                   </div>
                 ))}
               </div>
@@ -119,13 +119,13 @@ export default function Routines({ userId }: RoutinesProps) {
                   <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '14px', color: 'var(--text)' }}>{routine.name}</div>
                   {routine.description && <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>{routine.description}</div>}
                 </div>
-                <button onClick={() => deleteRoutine(routine.id)} style={{ color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '2px' }}>âœ•</button>
+                <button onClick={() => deleteRoutine(routine.id)} style={{ color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '2px' }}>✕</button>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 {routine.routine_exercises?.map((re: any, i: number) => (
                   <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 8px', background: 'rgba(255,255,255,0.03)', borderRadius: '4px' }}>
                     <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text)' }}>{re.exercises?.name}</span>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)' }}>{re.sets}Ã—{re.reps} Â· {re.rest_seconds}s</span>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)' }}>{re.sets}×{re.reps} · {re.rest_seconds}s</span>
                   </div>
                 ))}
               </div>

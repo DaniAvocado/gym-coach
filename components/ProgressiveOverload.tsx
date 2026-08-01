@@ -1,4 +1,4 @@
-﻿'use client'
+?'use client'
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
@@ -68,10 +68,10 @@ export default function ProgressiveOverload({ userId }: ProgressiveOverloadProps
         const lastSets = latestSet.sets || 1
 
         // Progressive overload logic based on Stronger by Science research:
-        // 1. If user completed target reps (>10) at current weight â†’ increase weight
-        // 2. If user hit target reps (8-12) consistently â†’ increase weight by 2.5-5%
-        // 3. If user struggling (failed reps) â†’ maintain weight, increase reps
-        // 4. If multiple sessions at same weight â†’ suggest deload
+        // 1. If user completed target reps (>10) at current weight → increase weight
+        // 2. If user hit target reps (8-12) consistently → increase weight by 2.5-5%
+        // 3. If user struggling (failed reps) → maintain weight, increase reps
+        // 4. If multiple sessions at same weight → suggest deload
 
         let suggestedWeight = lastWeight
         let suggestedReps = lastReps
@@ -81,7 +81,7 @@ export default function ProgressiveOverload({ userId }: ProgressiveOverloadProps
 
         // Primary recommendation: weight increase for hypertrophy
         if (lastReps >= 12) {
-          // User exceeded target rep range â†’ increase weight
+          // User exceeded target rep range → increase weight
           const increment = category === 'Pierna' ? 2.5 : 1.25
           suggestedWeight = Math.round((lastWeight + increment) * 4) / 4
           suggestedReps = 8 // Reset to lower rep range with new weight
@@ -89,15 +89,15 @@ export default function ProgressiveOverload({ userId }: ProgressiveOverloadProps
           reason = `Pudiste hacer ${lastReps} reps. Sube ${increment}kg y empieza con 8 reps.`
           confidence = 'high'
         } else if (lastReps >= 8 && lastReps <= 11) {
-          // In the sweet spot â†’ try to increase reps first
+          // In the sweet spot → try to increase reps first
           suggestedReps = lastReps + 1
           suggestionType = 'increase_reps'
-          reason = `EstÃ¡s en el rango ideal (8-12). Intenta ${lastReps + 1} reps antes de subir peso.`
+          reason = `Estás en el rango ideal (8-12). Intenta ${lastReps + 1} reps antes de subir peso.`
           confidence = 'medium'
         } else if (lastReps < 8) {
-          // Below target â†’ maintain weight, focus on form
+          // Below target → maintain weight, focus on form
           suggestionType = 'maintain'
-          reason = `EstÃ¡s por debajo del rango objetivo. MantÃ©n ${lastWeight}kg y enfÃ³cate en tÃ©cnica.`
+          reason = `Estás por debajo del rango objetivo. Mantén ${lastWeight}kg y enfócate en técnica.`
           confidence = 'medium'
         }
 
@@ -108,7 +108,7 @@ export default function ProgressiveOverload({ userId }: ProgressiveOverloadProps
 
           if (lastWeight > prevWeight && lastReps >= 8) {
             // Successfully progressed in weight
-            reason = `Â¡ProgresiÃ³n exitosa! Subiste ${lastWeight - prevWeight}kg. Intenta otra subida o mÃ¡s reps.`
+            reason = `¡Progresión exitosa! Subiste ${lastWeight - prevWeight}kg. Intenta otra subida o más reps.`
             confidence = 'high'
           }
         }
@@ -143,10 +143,10 @@ export default function ProgressiveOverload({ userId }: ProgressiveOverloadProps
 
   const getSuggestionIcon = (type: ExerciseRecommendation['suggestion_type']) => {
     switch (type) {
-      case 'increase_weight': return 'â†‘'
+      case 'increase_weight': return '↑'
       case 'increase_reps': return '+'
-      case 'maintain': return 'â†’'
-      case 'deload': return 'â†“'
+      case 'maintain': return '→'
+      case 'deload': return '↓'
     }
   }
 
@@ -178,19 +178,19 @@ export default function ProgressiveOverload({ userId }: ProgressiveOverloadProps
         {loading ? 'Analizando progreso...' : 'Analizar Sobrecarga Progresiva'}
       </motion.button>
 
-      {lastAnalysis && <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--text-faint)' }}>Ãšltimo anÃ¡lisis: {lastAnalysis.toLocaleString('es-ES')}</p>}
+      {lastAnalysis && <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--text-faint)' }}>Último análisis: {lastAnalysis.toLocaleString('es-ES')}</p>}
 
       {/* Info callout */}
       <div className="callout" style={{ borderLeftColor: 'var(--purple)' }}>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text)', lineHeight: 1.6 }}>
-          <strong>Basado en investigaciÃ³n:</strong> Chaves et al (2024) y Plotkin et al (2022) demostraron que tanto la progresiÃ³n de peso como de reps producen ganancias similares en fuerza e hipertrofia. Para hipertrofia, tienes flexibilidad; para fuerza, subir peso es esencial.
+          <strong>Basado en investigación:</strong> Chaves et al (2024) y Plotkin et al (2022) demostraron que tanto la progresión de peso como de reps producen ganancias similares en fuerza e hipertrofia. Para hipertrofia, tienes flexibilidad; para fuerza, subir peso es esencial.
         </div>
       </div>
 
       {/* Recommendations */}
       {recommendations.length > 0 && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <div className="kpi-label">RECOMENDACIONES PARA TU PRÃ“XIMA SESIÃ“N</div>
+          <div className="kpi-label">RECOMENDACIONES PARA TU PRÓXIMA SESIÓN</div>
           {recommendations.map((rec, idx) => (
             <motion.div key={idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.08 }}
               style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '6px', borderLeft: `3px solid ${rec.confidence === 'high' ? 'var(--green)' : rec.confidence === 'medium' ? 'var(--orange)' : 'var(--red)'}` }}>
@@ -201,7 +201,7 @@ export default function ProgressiveOverload({ userId }: ProgressiveOverloadProps
                   <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-faint)', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '3px' }}>{rec.category}</span>
                 </div>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px' }}>
-                  Ãšltimo: {rec.last_weight}kg Ã— {rec.last_reps} reps ({rec.last_sets} sets)
+                  Último: {rec.last_weight}kg × {rec.last_reps} reps ({rec.last_sets} sets)
                 </div>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text)' }}>
                   {rec.reason}
@@ -212,7 +212,7 @@ export default function ProgressiveOverload({ userId }: ProgressiveOverloadProps
                   {getSuggestionLabel(rec.suggestion_type)}
                 </div>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.1rem', fontWeight: 700, color: 'var(--green)' }}>
-                  {rec.suggested_weight}kg Ã— {rec.suggested_reps}
+                  {rec.suggested_weight}kg × {rec.suggested_reps}
                 </div>
               </div>
             </motion.div>
@@ -223,7 +223,7 @@ export default function ProgressiveOverload({ userId }: ProgressiveOverloadProps
       {recommendations.length === 0 && !loading && (
         <div style={{ textAlign: 'center', padding: '3rem', border: '1px dashed var(--border)', borderRadius: '6px' }}>
           <p style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-muted)', marginTop: '12px' }}>
-            Registra mÃ¡s entrenamientos para obtener recomendaciones de sobrecarga progresiva
+            Registra más entrenamientos para obtener recomendaciones de sobrecarga progresiva
           </p>
         </div>
       )}

@@ -1,4 +1,4 @@
-﻿'use client'
+?'use client'
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
@@ -74,22 +74,22 @@ export default function RecoveryZone({ userId }: RecoveryZoneProps) {
 
   const muscleDetails: Record<string, string> = {
     pecho: 'Ejercicios: Press banca, Aperturas, Flexiones',
-    espalda: 'Ejercicios: Dominadas, Remos, JalÃ³n al pecho',
+    espalda: 'Ejercicios: Dominadas, Remos, Jalón al pecho',
     piernas: 'Ejercicios: Sentadilla, Peso muerto, Prensa',
     hombros: 'Ejercicios: Press militar, Elevaciones laterales',
-    brazos: 'Ejercicios: Curl bÃ­ceps, Press francÃ©s trÃ­ceps',
-    core: 'Ejercicios: Plancha, Crunch, ElevaciÃ³n piernas',
+    brazos: 'Ejercicios: Curl bíceps, Press francés tríceps',
+    core: 'Ejercicios: Plancha, Crunch, Elevación piernas',
   }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       {/* Legend */}
       <div className="panel">
-        <div className="kpi-label" style={{ marginBottom: '10px' }}>LEYENDA DE RECUPERACIÃ“N</div>
+        <div className="kpi-label" style={{ marginBottom: '10px' }}>LEYENDA DE RECUPERACIÓN</div>
         <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
           {[
             { color: '#4ade80', label: 'Fresco (48h+)', desc: 'Listo para entrenar' },
-            { color: '#fbbf24', label: 'Moderado (24-48h)', desc: 'Entrenar con precauciÃ³n' },
+            { color: '#fbbf24', label: 'Moderado (24-48h)', desc: 'Entrenar con precaución' },
             { color: '#f87171', label: 'Fatigado (<24h)', desc: 'Necesita descanso' },
           ].map((item, idx) => (
             <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -130,7 +130,7 @@ export default function RecoveryZone({ userId }: RecoveryZoneProps) {
 
       {/* Auto-refresh indicator */}
       <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--text-faint)', textAlign: 'center' }}>
-        Se actualiza automÃ¡ticamente cada 30 segundos
+        Se actualiza automáticamente cada 30 segundos
       </div>
     </div>
   )

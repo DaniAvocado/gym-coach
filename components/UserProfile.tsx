@@ -1,4 +1,4 @@
-﻿'use client'
+?'use client'
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
@@ -14,10 +14,10 @@ const activityMultipliers: Record<string, number> = {
 
 const activityLabels: Record<string, string> = {
   sedentary: 'Sedentario (poco o nada)',
-  light: 'Ligero (1-3 dÃ­as/sem)',
-  moderate: 'Moderado (3-5 dÃ­as/sem)',
-  active: 'Activo (6-7 dÃ­as/sem)',
-  very_active: 'Muy activo (2x/dÃ­a)',
+  light: 'Ligero (1-3 días/sem)',
+  moderate: 'Moderado (3-5 días/sem)',
+  active: 'Activo (6-7 días/sem)',
+  very_active: 'Muy activo (2x/día)',
 }
 
 const metaAdjustments: Record<string, number> = {
@@ -25,9 +25,9 @@ const metaAdjustments: Record<string, number> = {
 }
 
 const metaLabels: Record<string, string> = {
-  slow: 'Lento (subo de peso fÃ¡cil)',
+  slow: 'Lento (subo de peso fácil)',
   normal: 'Normal',
-  fast: 'RÃ¡pido (como mucho y no subo)',
+  fast: 'Rápido (como mucho y no subo)',
 }
 
 export default function UserProfile({ userId }: UserProfileProps) {
@@ -148,12 +148,12 @@ export default function UserProfile({ userId }: UserProfileProps) {
       <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
         onClick={() => setEditing(!editing)}
         style={{ padding: '12px', background: editing ? 'transparent' : 'var(--blue)', color: editing ? 'var(--blue)' : '#0b0b12', border: `1px solid ${editing ? 'var(--blue)' : 'transparent'}`, borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
-        {editing ? 'âœ• Cancelar' : 'Editar Perfil'}
+        {editing ? '✕ Cancelar' : 'Editar Perfil'}
       </motion.button>
 
       {editing ? (
         <div className="panel" style={{ borderLeft: '3px solid var(--blue)' }}>
-          <div className="kpi-label" style={{ marginBottom: '12px' }}>EDITAR INFORMACIÃ“N</div>
+          <div className="kpi-label" style={{ marginBottom: '12px' }}>EDITAR INFORMACIÓN</div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
             <div><label style={labelStyle}>Peso (kg)</label><input type="number" value={weight} onChange={e => setWeight(e.target.value)} step="0.5" placeholder="ej: 75" style={inputStyle} /></div>
             <div><label style={labelStyle}>Estatura (cm)</label><input type="number" value={height} onChange={e => setHeight(e.target.value)} placeholder="ej: 175" style={inputStyle} /></div>
@@ -182,10 +182,10 @@ export default function UserProfile({ userId }: UserProfileProps) {
           <div style={{ marginBottom: '16px' }}>
             <label style={labelStyle}>Objetivo</label>
             <select value={goal} onChange={e => setGoal(e.target.value)} style={inputStyle}>
-              <option value="hypertrophy">Hipertrofia (ganar mÃºsculo)</option>
+              <option value="hypertrophy">Hipertrofia (ganar músculo)</option>
               <option value="strength">Fuerza</option>
               <option value="endurance">Resistencia</option>
-              <option value="weight_loss">PÃ©rdida de peso</option>
+              <option value="weight_loss">Pérdida de peso</option>
             </select>
           </div>
           <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={saveProfile}
@@ -200,7 +200,7 @@ export default function UserProfile({ userId }: UserProfileProps) {
             {[
               { label: 'Peso', value: weight ? `${weight} kg` : '-', border: 'var(--blue)', icon: '' },
               { label: 'Estatura', value: height ? `${height} cm` : '-', border: 'var(--purple)', icon: '' },
-              { label: 'Edad', value: age ? `${age} aÃ±os` : '-', border: 'var(--pink-light)', icon: '' },
+              { label: 'Edad', value: age ? `${age} años` : '-', border: 'var(--pink-light)', icon: '' },
               { label: 'Actividad', value: activityLabels[activityLevel]?.split(' ')[0] || '-', border: 'var(--green)', icon: '' },
               { label: 'Metabolismo', value: metaLabels[metabolicRate]?.split(' ')[0] || '-', border: 'var(--orange)', icon: '' },
               { label: 'Objetivo', value: goal === 'hypertrophy' ? 'Hipertrofia' : goal === 'strength' ? 'Fuerza' : goal === 'endurance' ? 'Resistencia' : 'Perdida', border: 'var(--green)', icon: '' },
@@ -227,14 +227,14 @@ export default function UserProfile({ userId }: UserProfileProps) {
                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: imcCategory?.color }}>{imcCategory?.label}</div>
                   </div>
                   <div>
-                    <div className="kpi-label">Tasa MetabÃ³lica Basal</div>
+                    <div className="kpi-label">Tasa Metabólica Basal</div>
                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.8rem', fontWeight: 700, color: 'var(--blue)', marginTop: '4px' }}>{stats.bmr}</div>
-                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)' }}>kcal/dÃ­a</div>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)' }}>kcal/día</div>
                   </div>
                   <div>
                     <div className="kpi-label">Gasto Diario (TDEE)</div>
                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.8rem', fontWeight: 700, color: 'var(--orange)', marginTop: '4px' }}>{stats.tdee}</div>
-                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)' }}>kcal/dÃ­a</div>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)' }}>kcal/día</div>
                   </div>
                 </div>
               </div>
@@ -243,11 +243,11 @@ export default function UserProfile({ userId }: UserProfileProps) {
               <div className="panel" style={{ borderLeft: '3px solid var(--green)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '10px' }}>
                   <div className="kpi-label" style={{ fontSize: '0.7rem' }}>MACROS OBJETIVO</div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: 'var(--text-faint)' }}>{stats.calories} kcal/dÃ­a</div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: 'var(--text-faint)' }}>{stats.calories} kcal/día</div>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
                   <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '4px', padding: '10px', textAlign: 'center' }}>
-                    <div className="kpi-label">ProteÃ­na</div>
+                    <div className="kpi-label">Proteína</div>
                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.5rem', fontWeight: 700, color: 'var(--blue)', marginTop: '4px' }}>{stats.protein}g</div>
                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--text-faint)' }}>{Math.round(stats.protein * 4)} kcal</div>
                   </div>
@@ -263,16 +263,16 @@ export default function UserProfile({ userId }: UserProfileProps) {
                   </div>
                 </div>
                 <div style={{ marginTop: '12px', fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-faint)', lineHeight: 1.5 }}>
-                  Mifflin-St Jeor Â· Actividad: {activityLabels[activityLevel]} Â· Metabolismo: {metaLabels[metabolicRate]}
+                  Mifflin-St Jeor · Actividad: {activityLabels[activityLevel]} · Metabolismo: {metaLabels[metabolicRate]}
                 </div>
               </div>
 
               {/* Tips */}
               <div className="callout" style={{ borderLeftColor: 'var(--purple)' }}>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text)', lineHeight: 1.6 }}>
-                  {goal === 'hypertrophy' && `SuperÃ¡vit de 300 kcal/dÃ­a. ProteÃ­na: ${stats.protein}g/dÃ­a (2.2g/kg). Entrena 5-6 veces/semana, 10-15 series por grupo.`}
-                  {goal === 'strength' && `SuperÃ¡vit leve de 200 kcal/dÃ­a. Entrena en rangos de 3-6 reps al 85-90% 1RM. Descansa 3-5 min entre series.`}
-                  {goal === 'weight_loss' && `DÃ©ficit de 400 kcal/dÃ­a. ProteÃ­na alta (${stats.protein}g/dÃ­a) para preservar mÃºsculo. AÃ±ade cardio 3-4 veces/semana.`}
+                  {goal === 'hypertrophy' && `Superávit de 300 kcal/día. Proteína: ${stats.protein}g/día (2.2g/kg). Entrena 5-6 veces/semana, 10-15 series por grupo.`}
+                  {goal === 'strength' && `Superávit leve de 200 kcal/día. Entrena en rangos de 3-6 reps al 85-90% 1RM. Descansa 3-5 min entre series.`}
+                  {goal === 'weight_loss' && `Déficit de 400 kcal/día. Proteína alta (${stats.protein}g/día) para preservar músculo. Añade cardio 3-4 veces/semana.`}
                 </div>
               </div>
             </>
