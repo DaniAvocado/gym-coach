@@ -47,7 +47,7 @@ export default function AuthPage() {
   return (
     <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--ink)', fontFamily: 'var(--font-mono)', overflow: 'hidden' }}>
       <AnimatedBackground />
-      <div style={{ position: 'relative', zIndex: 1, background: 'rgba(20,20,31,0.9)', backdropFilter: 'blur(6px)', border: '1px solid var(--border)', borderRadius: '8px', padding: '2.5rem', width: '100%', maxWidth: '400px' }}>
+      <div style={{ position: 'relative', zIndex: 1, background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '14px', padding: '2.5rem', width: '100%', maxWidth: '400px', boxShadow: '0 8px 32px rgba(0,0,0,0.35)' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <h1 style={{ fontFamily: 'Georgia, serif', fontWeight: 700, fontSize: '1.5rem', color: 'var(--text)', marginBottom: '4px' }}>
             Gym <span style={{ fontStyle: 'italic', color: 'var(--blue)' }}>Coach</span>

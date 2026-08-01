@@ -193,7 +193,7 @@ export default function ProgressiveOverload({ userId }: ProgressiveOverloadProps
           <div className="kpi-label">RECOMENDACIONES PARA TU PRÃ“XIMA SESIÃ“N</div>
           {recommendations.map((rec, idx) => (
             <motion.div key={idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.08 }}
-              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', background: 'var(--ink-panel)', border: '1px solid var(--border)', borderRadius: '6px', borderLeft: `3px solid ${rec.confidence === 'high' ? 'var(--green)' : rec.confidence === 'medium' ? 'var(--orange)' : 'var(--red)'}` }}>
+              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '6px', borderLeft: `3px solid ${rec.confidence === 'high' ? 'var(--green)' : rec.confidence === 'medium' ? 'var(--orange)' : 'var(--red)'}` }}>
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                   <span style={{ fontSize: '1.2rem' }}>{getSuggestionIcon(rec.suggestion_type)}</span>

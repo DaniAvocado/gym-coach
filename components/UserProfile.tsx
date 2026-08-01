@@ -206,7 +206,7 @@ export default function UserProfile({ userId }: UserProfileProps) {
               { label: 'Objetivo', value: goal === 'hypertrophy' ? 'Hipertrofia' : goal === 'strength' ? 'Fuerza' : goal === 'endurance' ? 'Resistencia' : 'Perdida', border: 'var(--green)', icon: '' },
             ].map((card, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }}
-                style={{ borderTop: `2px solid ${card.border}`, background: 'var(--ink-panel)', border: '1px solid var(--border)', borderRadius: '6px', padding: '10px 12px' }}>
+                style={{ borderTop: `2px solid ${card.border}`, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '6px', padding: '10px 12px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div className="kpi-label">{card.label}</div>
                   <span style={{ fontSize: '1rem' }}>{card.icon}</span>

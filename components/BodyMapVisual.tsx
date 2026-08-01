@@ -87,7 +87,7 @@ export default function BodyMapVisual({ userId }: BodyMapVisualProps) {
               onClick={() => setSelectedMuscle(isSelected ? null : muscle)}
               style={{
                 cursor: 'pointer',
-                background: 'var(--ink-panel)',
+                background: 'rgba(255,255,255,0.05)',
                 border: `2px solid ${isSelected ? 'var(--blue)' : 'var(--border)'}`,
                 borderRadius: '6px',
                 padding: '14px 16px',

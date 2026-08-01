@@ -73,7 +73,7 @@ export default function CoachRecommendations({ userId }: CoachRecommendationsPro
 
             return (
               <motion.div key={idx} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.06 }}
-                style={{ display: 'flex', gap: '10px', padding: '12px 14px', background: 'var(--ink-panel)', border: `1px solid ${color}33`, borderRadius: '6px', borderLeft: `3px solid ${color}` }}>
+                style={{ display: 'flex', gap: '10px', padding: '12px 14px', background: 'rgba(255,255,255,0.05)', border: `1px solid ${color}33`, borderRadius: '6px', borderLeft: `3px solid ${color}` }}>
                 <span style={{ flexShrink: 0, fontSize: '1rem' }}>{icon}</span>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text)', lineHeight: 1.6 }}>
                   <span style={{ fontWeight: 700, color }}>{text.split('â€”')[0]}</span>

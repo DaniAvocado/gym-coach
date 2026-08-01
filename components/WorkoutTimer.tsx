@@ -35,7 +35,7 @@ export default function WorkoutTimer() {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '1rem 1.25rem',
-        background: 'var(--ink-panel)',
+        background: 'rgba(255,255,255,0.05)',
         border: '1px solid var(--border)',
         borderLeft: '3px solid var(--purple)',
         borderRadius: '6px',

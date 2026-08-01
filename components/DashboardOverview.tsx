@@ -61,7 +61,7 @@ export default function DashboardOverview({ userId }: DashboardOverviewProps) {
           { label: 'Puntos Totales', value: stats?.points || 0, border: 'var(--green)', icon: '' },
         ].map((card, idx) => (
           <motion.div key={idx} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.08 }}
-            style={{ borderTop: `2px solid ${card.border}`, background: 'var(--ink-panel)', border: '1px solid var(--border)', borderRadius: '6px', padding: '14px 18px' }}>
+            style={{ borderTop: `2px solid ${card.border}`, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '6px', padding: '14px 18px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div className="kpi-label">{card.label}</div>
               <span style={{ fontSize: '1.2rem' }}>{card.icon}</span>
