@@ -1,36 +1,112 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gym Coach - Tu Entrenador Personal
 
-## Getting Started
+App web de entrenamiento personal con trackers de **entrenamientos, nutrición, recuperación muscular** y un **Coach IA** basado en ciencia.
 
-First, run the development server:
+**Stack:** Next.js 16 (App Router) · React 19 · Tailwind 4 · Supabase · Vercel
+**Diseño:** Glassmorphism con paleta rosa/azul/morado + fondo animado interactivo
+
+---
+
+## Desplegar Localmente
+
+### Requisitos
+- Node.js 20+ (recomendado 22)
+- npm
+
+### Pasos
+
+```bash
+# 1. Clonar el repo
+git clone https://github.com/DaniAvocado/gym-coach.git
+cd gym-coach
+
+# 2. Instalar dependencias
+npm install
+
+# 3. Crear archivo de entorno
+# Copia .env.local.example a .env.local y llena los valores (ver sección Supabase)
+```
+
+### Configurar Supabase
+
+1. Crea un proyecto gratis en [supabase.com](https://supabase.com)
+2. Ve a **SQL Editor** y ejecuta el contenido de `lib/schema.sql`
+3. En **Table Editor** → tabla `exercises`, inserta los ejercicios de `lib/exercises_seed.sql`
+4. Ve a **Settings → API** y copia:
+   - `Project URL`
+   - `anon public` key
+5. Crea el archivo `.env.local`:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=https://TU-PROYECTO.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=TU-ANON-KEY
+```
+
+6. (Opcional) Desactiva "Confirm email" en **Authentication → Providers → Email** para que el registro sea directo
+
+### Ejecutar
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre **http://localhost:3000**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Desplegar en Vercel
 
-## Learn More
+### Requisitos
+- Cuenta en [vercel.com](https://vercel.com) (puedes entrar con GitHub)
+- Repo subido a GitHub
 
-To learn more about Next.js, take a look at the following resources:
+### Pasos
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Sube el código a GitHub** (si no lo has hecho):
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+git init
+git add .
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/TU-USUARIO/gym-coach.git
+git push -u origin main
+```
 
-## Deploy on Vercel
+2. **Conecta con Vercel:**
+   - Ve a [vercel.com/new](https://vercel.com/new)
+   - Haz clic en **"Continue with GitHub"** e importa el repo `gym-coach`
+   - Vercel detecta Next.js automáticamente
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Añade las variables de entorno** (Settings → Environment Variables):
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Name | Value |
+|------|-------|
+| `NEXT_PUBLIC_SUPABASE_URL` | `https://TU-PROYECTO.supabase.co` |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Tu anon public key |
+
+4. Haz clic en **"Deploy"**
+5. Listo - Vercel te da una URL como `https://gym-coach.vercel.app`
+
+### Deploys automáticos
+Cada `git push` a `main` genera un nuevo deploy. No hay que hacer nada manual.
+
+---
+
+## Memoria para Agentes IA
+
+Este repo incluye `PROJECT_CONTEXT.md` - la fuente de verdad del proyecto (arquitectura, fórmulas, decisiones, historial). Cualquier agente IA debe leerlo antes de trabajar. `AGENTS.md` lo instruye automáticamente.
+
+## Changelog
+
+Ver `CHANGELOG.md` para el historial completo de cambios.
+
+## Stack técnico
+
+| Capa | Tecnología |
+|------|-----------|
+| Frontend | Next.js 16, React 19, Tailwind 4 |
+| Estilos | Glassmorphism, Framer Motion, Canvas animado |
+| Backend | Supabase (Postgres + Auth) |
+| Deploy | Vercel |
+| Automatización | n8n (local) - workflows en `workflows/` |
