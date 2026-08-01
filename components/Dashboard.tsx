@@ -95,7 +95,7 @@ export default function Dashboard() {
         justifyContent: 'space-between',
       }} className="sidebar-mobile-toggle" id="mobile-topbar">
         <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '14px' }}>
-          💪 <span style={{ fontStyle: 'italic', color: 'var(--blue)' }}>Gym</span>
+          <span style={{ fontStyle: 'italic', color: 'var(--blue)' }}>Gym</span>
         </span>
         <button onClick={() => setMobileNavOpen(!mobileNavOpen)}
           style={{ background: 'none', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '4px', padding: '6px 10px', cursor: 'pointer', fontSize: '14px' }}>
@@ -116,10 +116,6 @@ export default function Dashboard() {
           flexDirection: 'column',
         }} className="sidebar-mobile-toggle">
           {navItems.map(item => {
-            const icons: Record<string, string> = {
-              overview: '📊', profile: '👤', workout: '🏋️', routines: '📋',
-              recovery: '🧘', body: '🦾', meals: '🍽️', overload: '📈', coach: '🤖',
-            }
             return (
               <div key={item.id} onClick={() => { setActiveTab(item.id); setMobileNavOpen(false) }}
                 style={{
@@ -132,7 +128,7 @@ export default function Dashboard() {
                   background: activeTab === item.id ? 'rgba(91,141,239,0.08)' : 'transparent',
                   borderBottom: '1px solid var(--border)',
                 }}>
-                <span style={{ fontSize: '1.3rem', width: '28px', textAlign: 'center' }}>{icons[item.id] || '•'}</span>
+                <span style={{ fontSize: '1.3rem', width: '28px', textAlign: 'center' }}>{item.abbr}</span>
                 <div>
                   <div style={{ fontFamily: 'monospace', fontWeight: activeTab === item.id ? 700 : 400, fontSize: '14px', color: activeTab === item.id ? 'var(--text)' : 'var(--text-muted)' }}>
                     {item.label}
@@ -145,7 +141,7 @@ export default function Dashboard() {
             )
           })}
           <div onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 20px', cursor: 'pointer', borderTop: '1px solid var(--border)', marginTop: 'auto' }}>
-            <span style={{ fontSize: '1.3rem', width: '28px', textAlign: 'center' }}>🚪</span>
+            <span style={{ fontSize: '1.3rem', width: '28px', textAlign: 'center' }}>→</span>
             <span style={{ fontFamily: 'monospace', fontSize: '13px', color: 'var(--red)' }}>Cerrar sesión</span>
           </div>
         </div>
@@ -170,7 +166,7 @@ export default function Dashboard() {
           {sidebarOpen && (
             <div>
               <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '15px', lineHeight: 1.1, letterSpacing: '-0.02em' }}>
-                💪 Gym <span style={{ fontStyle: 'italic', color: 'var(--blue)' }}>Coach</span>
+                Gym <span style={{ fontStyle: 'italic', color: 'var(--blue)' }}>Coach</span>
               </div>
               <div style={{ fontFamily: 'monospace', fontSize: '9px', letterSpacing: '0.14em', color: 'var(--text-faint)', textTransform: 'uppercase', marginTop: '3px' }}>
                 v1.0
@@ -291,12 +287,12 @@ export default function Dashboard() {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '1rem', letterSpacing: '-0.02em', color: 'var(--text)', lineHeight: 1 }}>
-              💪 <span style={{ fontStyle: 'italic', color: 'var(--blue)' }}>Gym</span> Coach
+              <span style={{ fontStyle: 'italic', color: 'var(--blue)' }}>Gym</span> Coach
             </span>
             <span style={{ color: 'var(--border2)', fontSize: '0.9rem' }}>·</span>
             <div>
               <div style={{ fontFamily: 'monospace', fontWeight: 600, fontSize: '0.8rem', color: 'var(--text)', lineHeight: 1.2 }}>
-                🏋️ Tu Dashboard Personal
+                Tu Dashboard Personal
               </div>
               <div style={{ fontFamily: 'monospace', fontSize: '0.6rem', color: 'var(--text-faint)', letterSpacing: '0.06em', textTransform: 'uppercase', marginTop: '1px' }}>
                 Entrenamiento · Nutrición · Progreso
@@ -318,7 +314,7 @@ export default function Dashboard() {
                 letterSpacing: '0.1em',
                 fontWeight: 700,
               }}>
-                🏆 {points.total_points || 0} pts
+                {points.total_points || 0} pts
               </span>
             )}
             <span style={{

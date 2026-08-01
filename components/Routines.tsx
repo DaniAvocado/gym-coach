@@ -66,7 +66,7 @@ export default function Routines({ userId }: RoutinesProps) {
       <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
         onClick={() => setShowCreateForm(!showCreateForm)}
         style={{ padding: '12px', background: showCreateForm ? 'transparent' : 'var(--blue)', color: showCreateForm ? 'var(--blue)' : '#0b0b12', border: `1px solid ${showCreateForm ? 'var(--blue)' : 'transparent'}`, borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
-        {showCreateForm ? '✕ Cancelar' : '➕ Nueva Rutina'}
+        {showCreateForm ? '✕ Cancelar' : '+ Nueva Rutina'}
       </motion.button>
 
       {/* Create form */}
@@ -77,7 +77,7 @@ export default function Routines({ userId }: RoutinesProps) {
             <input type="text" placeholder="Nombre de la rutina" value={routineName} onChange={e => setRoutineName(e.target.value)} style={inputStyle} />
             <textarea placeholder="Descripción (opcional)" value={routineDescription} onChange={e => setRoutineDescription(e.target.value)} rows={2} style={inputStyle} />
             <select onChange={e => { addExercise(e.target.value); e.target.value = '' }} style={inputStyle}>
-              <option value="">➕ Añadir ejercicio...</option>
+              <option value="">+ Añadir ejercicio...</option>
               {exercises.map(ex => <option key={ex.id} value={ex.id}>{ex.name} ({ex.category})</option>)}
             </select>
 
@@ -102,7 +102,7 @@ export default function Routines({ userId }: RoutinesProps) {
 
             <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={createRoutine} disabled={loading}
               style={{ width: '100%', padding: '12px', background: 'var(--green)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '12px', opacity: loading ? 0.5 : 1 }}>
-              {loading ? '⏳ Creando...' : '✅ Guardar Rutina'}
+              {loading ? 'Creando...' : 'Guardar Rutina'}
             </motion.button>
           </div>
         </motion.div>
@@ -135,7 +135,6 @@ export default function Routines({ userId }: RoutinesProps) {
       ) : (
         !showCreateForm && (
           <div style={{ textAlign: 'center', padding: '3rem', border: '1px dashed var(--border)', borderRadius: '6px' }}>
-            <span style={{ fontSize: '2rem' }}>📋</span>
             <p style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-muted)', marginTop: '8px' }}>No tienes rutinas creadas. Haz clic en "Nueva Rutina".</p>
           </div>
         )

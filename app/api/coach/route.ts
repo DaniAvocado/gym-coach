@@ -43,55 +43,55 @@ export async function POST(req: NextRequest) {
     // 1. Calorie assessment
     if (avgCals > 0) {
       const diff = avgCals - calTarget
-      if (Math.abs(diff) < 200) recs.push(`✅ **Nutrición en punto** — Tu ingesta promedio (${avgCals} kcal) está alineada con tu objetivo de ${calTarget} kcal.`)
+      if (Math.abs(diff) < 200) recs.push(`[OK] **Nutrición en punto** — Tu ingesta promedio (${avgCals} kcal) está alineada con tu objetivo de ${calTarget} kcal.`)
       else if (diff > 0 && (goal === 'weight_loss' || goal === 'definition'))
-        recs.push(`⚠️ **Superávit no deseado** — Estás consumiendo ${diff} kcal sobre tu objetivo. Reduce ~${Math.abs(diff)} kcal/día o aumenta el NEAT.`)
+        recs.push(`[!] **Superávit no deseado** — Estás consumiendo ${diff} kcal sobre tu objetivo. Reduce ~${Math.abs(diff)} kcal/día o aumenta el NEAT.`)
       else if (diff < 0 && (goal === 'hypertrophy' || goal === 'strength'))
-        recs.push(`⚠️ **Déficit involuntario** — Estás ${Math.abs(diff)} kcal bajo tu objetivo de ${calTarget} kcal. Añade una comida extra o aumenta porciones.`)
-      else recs.push(`📊 **Ingesta actual:** ${avgCals} kcal/día. Objetivo: ~${calTarget} kcal.`)
+        recs.push(`[!] **Déficit involuntario** — Estás ${Math.abs(diff)} kcal bajo tu objetivo de ${calTarget} kcal. Añade una comida extra o aumenta porciones.`)
+      else recs.push(`[D] **Ingesta actual:** ${avgCals} kcal/día. Objetivo: ~${calTarget} kcal.`)
     }
 
     // 2. Protein assessment
     if (avgProtein > 0) {
       const pct = Math.round((avgProtein / proteinTarget) * 100)
-      if (pct >= 90) recs.push(`✅ **Proteína en rango** — Consumes ~${avgProtein}g/día (${pct}% de tu meta de ${proteinTarget}g).`)
-      else recs.push(`⚠️ **Aumenta proteína** — Consumes ${avgProtein}g/día, necesitas ~${proteinTarget}g. Añade ${Math.round((proteinTarget - avgProtein) / 3)} porciones de 20g proteína.`)
+      if (pct >= 90) recs.push(`[OK] **Proteína en rango** — Consumes ~${avgProtein}g/día (${pct}% de tu meta de ${proteinTarget}g).`)
+      else recs.push(`[!] **Aumenta proteína** — Consumes ${avgProtein}g/día, necesitas ~${proteinTarget}g. Añade ${Math.round((proteinTarget - avgProtein) / 3)} porciones de 20g proteína.`)
     } else {
-      recs.push(`💡 **Proteína objetivo:** ${proteinTarget}g/día (${(proteinTarget / w).toFixed(1)} g/kg). Buenas fuentes: pollo, huevos, pescado, legumbres.`)
+      recs.push(`[i] **Proteína objetivo:** ${proteinTarget}g/día (${(proteinTarget / w).toFixed(1)} g/kg). Buenas fuentes: pollo, huevos, pescado, legumbres.`)
     }
 
     // 3. Workout assessment
     const sessions = workouts?.length || 0
-    if (sessions >= 5) recs.push(`✅ **Frecuencia:** ${sessions} sesiones/semana. Excelente para ${goal === 'hypertrophy' ? 'hipertrofia' : goal === 'strength' ? 'fuerza' : 'tu objetivo'}.`)
-    else if (sessions >= 3) recs.push(`📈 **Frecuencia:** ${sessions} sesiones. Bien, pero apunta a 5-6 para maximizar resultados.`)
-    else recs.push(`⚠️ **Frecuencia baja:** ${sessions} sesiones. Mínimo recomendado: 4-5/semana para progreso consistente.`)
+    if (sessions >= 5) recs.push(`[OK] **Frecuencia:** ${sessions} sesiones/semana. Excelente para ${goal === 'hypertrophy' ? 'hipertrofia' : goal === 'strength' ? 'fuerza' : 'tu objetivo'}.`)
+    else if (sessions >= 3) recs.push(`[^] **Frecuencia:** ${sessions} sesiones. Bien, pero apunta a 5-6 para maximizar resultados.`)
+    else recs.push(`[!] **Frecuencia baja:** ${sessions} sesiones. Mínimo recomendado: 4-5/semana para progreso consistente.`)
 
     // Volume
-    if (totalSets >= 40) recs.push(`✅ **Volumen:** ${totalSets} sets/semana. Rango óptimo para hipertrofia (10-20 sets/grupo).`)
-    else if (totalSets >= 20) recs.push(`📊 **Volumen:** ${totalSets} sets/semana. Intenta llegar a 40+ para maximizar crecimiento.`)
-    else recs.push(`💪 **Volumen bajo:** ${totalSets} sets. Apunta a 10-20 sets por grupo muscular grande.`)
+    if (totalSets >= 40) recs.push(`[OK] **Volumen:** ${totalSets} sets/semana. Rango óptimo para hipertrofia (10-20 sets/grupo).`)
+    else if (totalSets >= 20) recs.push(`[D] **Volumen:** ${totalSets} sets/semana. Intenta llegar a 40+ para maximizar crecimiento.`)
+    else recs.push(`[G] **Volumen bajo:** ${totalSets} sets. Apunta a 10-20 sets por grupo muscular grande.`)
 
     // 4. Experience-based recommendations
-    if (exp === 'beginner') recs.push(`🎯 **Eres principiante** — La sobrecarga progresiva lineal funciona mejor: sube 2.5kg o 1 rep por sesión. No necesitas programas complejos aún.`)
-    else if (exp === 'intermediate') recs.push(`🎯 **Nivel intermedio** — Usa periodización: 3-4 semanas de progresión seguidas de 1 semana de descarga al 60-70%.`)
+    if (exp === 'beginner') recs.push(`[>] **Eres principiante** — La sobrecarga progresiva lineal funciona mejor: sube 2.5kg o 1 rep por sesión. No necesitas programas complejos aún.`)
+    else if (exp === 'intermediate') recs.push(`[>] **Nivel intermedio** — Usa periodización: 3-4 semanas de progresión seguidas de 1 semana de descarga al 60-70%.`)
 
     // 5. Progressive overload guidance
-    recs.push(`📈 **Sobrecarga progresiva** — Intenta subir 2.5kg en ejercicios compuestos cuando completes todas las reps del rango objetivo. Para aislamiento, prioriza reps antes que peso.`)
+    recs.push(`[^] **Sobrecarga progresiva** — Intenta subir 2.5kg en ejercicios compuestos cuando completes todas las reps del rango objetivo. Para aislamiento, prioriza reps antes que peso.`)
 
     // 6. Overtraining warning
-    if (totalSets > 60) recs.push(`⚠️ **Volumen muy alto** — Más de 60 sets/semana puede llevar a sobreentrenamiento. Considera una semana de descarga.`)
+    if (totalSets > 60) recs.push(`[!] **Volumen muy alto** — Más de 60 sets/semana puede llevar a sobreentrenamiento. Considera una semana de descarga.`)
 
     // 7. RIR/RPE guidance
-    recs.push(`🎯 **RIR (Reps in Reserve)** — Deja 1-2 reps en reserve en la mayoría de series. Solo llega a fallo en la última serie del último ejercicio.`)
+    recs.push(`[>] **RIR (Reps in Reserve)** — Deja 1-2 reps en reserve en la mayoría de series. Solo llega a fallo en la última serie del último ejercicio.`)
 
     // 8. Meal timing
-    recs.push(`⏰ **Distribución de comidas** — Distribuye tus ${Math.round(calTarget)} kcal en 4-5 comidas. 25% desayuno, 35% almuerzo, 30% cena, 10% snacks post-entreno.`)
+    recs.push(`[T] **Distribución de comidas** — Distribuye tus ${Math.round(calTarget)} kcal en 4-5 comidas. 25% desayuno, 35% almuerzo, 30% cena, 10% snacks post-entreno.`)
 
     // 9. Sleep & recovery
-    recs.push(`😴 **Recuperación** — 7-9h de sueño. El crecimiento muscular ocurre fuera del gym, no dentro.`)
+    recs.push(`[Z] **Recuperación** — 7-9h de sueño. El crecimiento muscular ocurre fuera del gym, no dentro.`)
 
     // 10 Hydration
-    recs.push(`💧 **Hidratación** — ${Math.round(w * 0.04)}L de agua al día (${w}kg × 40ml).`)
+    recs.push(`[W] **Hidratación** — ${Math.round(w * 0.04)}L de agua al día (${w}kg × 40ml).`)
 
     return NextResponse.json({ recommendations: recs })
   } catch (error) {

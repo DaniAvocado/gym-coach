@@ -45,7 +45,7 @@ export default function CoachRecommendations({ userId }: CoachRecommendationsPro
       <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
         onClick={analyzeProgress} disabled={loading}
         style={{ width: '100%', padding: '16px', background: 'var(--blue)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '13px', opacity: loading ? 0.5 : 1 }}>
-        {loading ? '⚙️ Analizando con IA...' : '🤖 Analizar mi Progreso'}
+        {loading ? 'Analizando con IA...' : 'Analizar mi Progreso'}
       </motion.button>
 
       {lastAnalysis && (
@@ -63,12 +63,12 @@ export default function CoachRecommendations({ userId }: CoachRecommendationsPro
       {recommendations.length > 0 && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {recommendations.map((rec, idx) => {
-            const isPositive = rec.startsWith('✅')
-            const isWarning = rec.startsWith('⚠️')
-            const isInfo = rec.startsWith('📊') || rec.startsWith('💡') || rec.startsWith('📈') || rec.startsWith('💪')
-            const isAction = rec.startsWith('🎯') || rec.startsWith('⏰') || rec.startsWith('😴') || rec.startsWith('💧')
-            const icon = rec.match(/^[^\w\s]{1,2}/)?.[0] || '•'
-            const text = rec.replace(/^[^\w\s]{1,2}\s*/, '')
+            const isPositive = rec.startsWith('[OK]')
+            const isWarning = rec.startsWith('[!]')
+            const isInfo = rec.startsWith('[D]') || rec.startsWith('[i]') || rec.startsWith('[^]') || rec.startsWith('[G]')
+            const isAction = rec.startsWith('[>]') || rec.startsWith('[T]') || rec.startsWith('[Z]') || rec.startsWith('[W]')
+            const icon = rec.startsWith('[') ? rec.slice(0, rec.indexOf(']') + 1) : '•'
+            const text = rec.replace(/^\[[^\]]+\]\s*/, '')
             const color = isPositive ? 'var(--green)' : isWarning ? 'var(--orange)' : isInfo ? 'var(--blue)' : isAction ? 'var(--purple)' : 'var(--text)'
 
             return (
@@ -87,7 +87,6 @@ export default function CoachRecommendations({ userId }: CoachRecommendationsPro
 
       {recommendations.length === 0 && !loading && !error && (
         <div style={{ textAlign: 'center', padding: '3rem', border: '1px dashed var(--border)', borderRadius: '6px' }}>
-          <span style={{ fontSize: '3rem' }}>🤖</span>
           <p style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-muted)', marginTop: '12px' }}>
             Haz clic en "Analizar mi Progreso" para obtener un plan personalizado basado en ciencia
           </p>

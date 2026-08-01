@@ -148,16 +148,16 @@ export default function UserProfile({ userId }: UserProfileProps) {
       <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
         onClick={() => setEditing(!editing)}
         style={{ padding: '12px', background: editing ? 'transparent' : 'var(--blue)', color: editing ? 'var(--blue)' : '#0b0b12', border: `1px solid ${editing ? 'var(--blue)' : 'transparent'}`, borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
-        {editing ? '✕ Cancelar' : '✏️ Editar Perfil'}
+        {editing ? '✕ Cancelar' : 'Editar Perfil'}
       </motion.button>
 
       {editing ? (
         <div className="panel" style={{ borderLeft: '3px solid var(--blue)' }}>
           <div className="kpi-label" style={{ marginBottom: '12px' }}>EDITAR INFORMACIÓN</div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
-            <div><label style={labelStyle}>Peso (kg)</label><input type="number" value={weight} onChange={e => setWeight(e.target.value)} step="0.5" style={inputStyle} /></div>
-            <div><label style={labelStyle}>Estatura (cm)</label><input type="number" value={height} onChange={e => setHeight(e.target.value)} style={inputStyle} /></div>
-            <div><label style={labelStyle}>Edad</label><input type="number" value={age} onChange={e => setAge(e.target.value)} style={inputStyle} /></div>
+            <div><label style={labelStyle}>Peso (kg)</label><input type="number" value={weight} onChange={e => setWeight(e.target.value)} step="0.5" placeholder="ej: 75" style={inputStyle} /></div>
+            <div><label style={labelStyle}>Estatura (cm)</label><input type="number" value={height} onChange={e => setHeight(e.target.value)} placeholder="ej: 175" style={inputStyle} /></div>
+            <div><label style={labelStyle}>Edad</label><input type="number" value={age} onChange={e => setAge(e.target.value)} placeholder="ej: 25" style={inputStyle} /></div>
             <div><label style={labelStyle}>Sexo</label>
               <select value={gender} onChange={e => setGender(e.target.value)} style={inputStyle}>
                 <option value="male">Masculino</option>
@@ -182,15 +182,15 @@ export default function UserProfile({ userId }: UserProfileProps) {
           <div style={{ marginBottom: '16px' }}>
             <label style={labelStyle}>Objetivo</label>
             <select value={goal} onChange={e => setGoal(e.target.value)} style={inputStyle}>
-              <option value="hypertrophy">💪 Hipertrofia (ganar músculo)</option>
-              <option value="strength">🏋️ Fuerza</option>
-              <option value="endurance">🏃 Resistencia</option>
-              <option value="weight_loss">🔥 Pérdida de peso</option>
+              <option value="hypertrophy">Hipertrofia (ganar músculo)</option>
+              <option value="strength">Fuerza</option>
+              <option value="endurance">Resistencia</option>
+              <option value="weight_loss">Pérdida de peso</option>
             </select>
           </div>
           <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={saveProfile}
             style={{ width: '100%', padding: '12px', background: 'var(--green)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
-            ✅ Guardar Cambios
+            Guardar Cambios
           </motion.button>
         </div>
       ) : (
@@ -198,12 +198,12 @@ export default function UserProfile({ userId }: UserProfileProps) {
           {/* KPIs */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '10px' }}>
             {[
-              { label: 'Peso', value: weight ? `${weight} kg` : '-', border: 'var(--blue)', icon: '⚖️' },
-              { label: 'Estatura', value: height ? `${height} cm` : '-', border: 'var(--purple)', icon: '📏' },
-              { label: 'Edad', value: age ? `${age} años` : '-', border: 'var(--pastel-pink)', icon: '🎂' },
-              { label: 'Actividad', value: activityLabels[activityLevel]?.split(' ')[0] || '-', border: 'var(--green)', icon: '🏃' },
-              { label: 'Metabolismo', value: metaLabels[metabolicRate]?.split(' ')[0] || '-', border: 'var(--orange)', icon: '🔥' },
-              { label: 'Objetivo', value: goal === 'hypertrophy' ? '💪 Hipertrofia' : goal === 'strength' ? '🏋️ Fuerza' : goal === 'endurance' ? '🏃 Resistencia' : '🔥 Perdida', border: 'var(--green)', icon: '🎯' },
+              { label: 'Peso', value: weight ? `${weight} kg` : '-', border: 'var(--blue)', icon: '' },
+              { label: 'Estatura', value: height ? `${height} cm` : '-', border: 'var(--purple)', icon: '' },
+              { label: 'Edad', value: age ? `${age} años` : '-', border: 'var(--pastel-pink)', icon: '' },
+              { label: 'Actividad', value: activityLabels[activityLevel]?.split(' ')[0] || '-', border: 'var(--green)', icon: '' },
+              { label: 'Metabolismo', value: metaLabels[metabolicRate]?.split(' ')[0] || '-', border: 'var(--orange)', icon: '' },
+              { label: 'Objetivo', value: goal === 'hypertrophy' ? 'Hipertrofia' : goal === 'strength' ? 'Fuerza' : goal === 'endurance' ? 'Resistencia' : 'Perdida', border: 'var(--green)', icon: '' },
             ].map((card, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }}
                 style={{ borderTop: `2px solid ${card.border}`, background: 'var(--ink-panel)', border: '1px solid var(--border)', borderRadius: '6px', padding: '10px 12px' }}>
@@ -269,7 +269,6 @@ export default function UserProfile({ userId }: UserProfileProps) {
 
               {/* Tips */}
               <div className="callout" style={{ borderLeftColor: 'var(--purple)' }}>
-                <span style={{ fontSize: '14px' }}>💡</span>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text)', lineHeight: 1.6 }}>
                   {goal === 'hypertrophy' && `Superávit de 300 kcal/día. Proteína: ${stats.protein}g/día (2.2g/kg). Entrena 5-6 veces/semana, 10-15 series por grupo.`}
                   {goal === 'strength' && `Superávit leve de 200 kcal/día. Entrena en rangos de 3-6 reps al 85-90% 1RM. Descansa 3-5 min entre series.`}

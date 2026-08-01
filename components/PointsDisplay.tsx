@@ -8,9 +8,9 @@ interface PointsDisplayProps {
 
 export default function PointsDisplay({ points }: PointsDisplayProps) {
   const cards = [
-    { label: 'Puntos Totales', value: points?.total_points || 0, icon: '🏆', border: 'var(--blue)' },
-    { label: 'Racha de Consistencia', value: points?.streak_days || 0, subtitle: 'días seguidos', icon: '🔥', border: 'var(--orange)' },
-    { label: 'Última Actividad', value: points?.last_activity ? new Date(points.last_activity).toLocaleDateString('es-ES') : 'Sin registros', icon: '📅', border: 'var(--green)' },
+    { label: 'Puntos Totales', value: points?.total_points || 0, icon: '', border: 'var(--blue)' },
+    { label: 'Racha de Consistencia', value: points?.streak_days || 0, subtitle: 'días seguidos', icon: '', border: 'var(--orange)' },
+    { label: 'Última Actividad', value: points?.last_activity ? new Date(points.last_activity).toLocaleDateString('es-ES') : 'Sin registros', icon: '', border: 'var(--green)' },
   ]
 
   return (

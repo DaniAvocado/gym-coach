@@ -49,7 +49,6 @@ export default function AuthPage() {
       <AnimatedBackground />
       <div style={{ position: 'relative', zIndex: 1, background: 'rgba(20,20,31,0.9)', backdropFilter: 'blur(6px)', border: '1px solid var(--border)', borderRadius: '8px', padding: '2.5rem', width: '100%', maxWidth: '400px' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>💪</div>
           <h1 style={{ fontFamily: 'Georgia, serif', fontWeight: 700, fontSize: '1.5rem', color: 'var(--text)', marginBottom: '4px' }}>
             Gym <span style={{ fontStyle: 'italic', color: 'var(--blue)' }}>Coach</span>
           </h1>

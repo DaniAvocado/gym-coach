@@ -43,7 +43,7 @@ export default function WorkoutTimer() {
     >
       <div>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-faint)', marginBottom: '4px' }}>
-          ⏱️ Tiempo de Entrenamiento
+          Tiempo de Entrenamiento
         </div>
         <motion.p
           key={seconds}
@@ -78,7 +78,7 @@ export default function WorkoutTimer() {
             color: '#0b0b12',
           }}
         >
-          {isRunning ? '⏸ Pausar' : '▶ Iniciar'}
+          {isRunning ? 'Pausar' : 'Iniciar'}
         </motion.button>
         <motion.button
           whileHover={{ scale: 1.05 }}
@@ -96,7 +96,7 @@ export default function WorkoutTimer() {
             fontSize: '0.8rem',
           }}
         >
-          🔄 Reset
+          Reset
         </motion.button>
       </div>
     </motion.div>

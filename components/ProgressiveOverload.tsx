@@ -143,10 +143,10 @@ export default function ProgressiveOverload({ userId }: ProgressiveOverloadProps
 
   const getSuggestionIcon = (type: ExerciseRecommendation['suggestion_type']) => {
     switch (type) {
-      case 'increase_weight': return '⬆️'
-      case 'increase_reps': return '➕'
-      case 'maintain': return '🔄'
-      case 'deload': return '⬇️'
+      case 'increase_weight': return '↑'
+      case 'increase_reps': return '+'
+      case 'maintain': return '→'
+      case 'deload': return '↓'
     }
   }
 
@@ -175,14 +175,13 @@ export default function ProgressiveOverload({ userId }: ProgressiveOverloadProps
       {/* Header */}
       <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={analyzeProgress} disabled={loading}
         style={{ width: '100%', padding: '16px', background: 'var(--purple)', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '13px', opacity: loading ? 0.5 : 1 }}>
-        {loading ? '⚙️ Analizando progreso...' : '📈 Analizar Sobrecarga Progresiva'}
+        {loading ? 'Analizando progreso...' : 'Analizar Sobrecarga Progresiva'}
       </motion.button>
 
       {lastAnalysis && <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--text-faint)' }}>Último análisis: {lastAnalysis.toLocaleString('es-ES')}</p>}
 
       {/* Info callout */}
       <div className="callout" style={{ borderLeftColor: 'var(--purple)' }}>
-        <span style={{ fontSize: '14px' }}>📚</span>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text)', lineHeight: 1.6 }}>
           <strong>Basado en investigación:</strong> Chaves et al (2024) y Plotkin et al (2022) demostraron que tanto la progresión de peso como de reps producen ganancias similares en fuerza e hipertrofia. Para hipertrofia, tienes flexibilidad; para fuerza, subir peso es esencial.
         </div>
@@ -205,7 +204,7 @@ export default function ProgressiveOverload({ userId }: ProgressiveOverloadProps
                   Último: {rec.last_weight}kg × {rec.last_reps} reps ({rec.last_sets} sets)
                 </div>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text)' }}>
-                  💡 {rec.reason}
+                  {rec.reason}
                 </div>
               </div>
               <div style={{ textAlign: 'right', minWidth: '120px' }}>
@@ -223,7 +222,6 @@ export default function ProgressiveOverload({ userId }: ProgressiveOverloadProps
 
       {recommendations.length === 0 && !loading && (
         <div style={{ textAlign: 'center', padding: '3rem', border: '1px dashed var(--border)', borderRadius: '6px' }}>
-          <span style={{ fontSize: '3rem' }}>📈</span>
           <p style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-muted)', marginTop: '12px' }}>
             Registra más entrenamientos para obtener recomendaciones de sobrecarga progresiva
           </p>

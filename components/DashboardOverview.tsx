@@ -55,10 +55,10 @@ export default function DashboardOverview({ userId }: DashboardOverviewProps) {
       {/* Stats KPIs */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px' }}>
         {[
-          { label: 'Entrenamientos (7d)', value: stats?.totalWorkouts || 0, border: 'var(--blue)', icon: '🏋️' },
-          { label: 'Sets Completados', value: stats?.totalSets || 0, border: 'var(--purple)', icon: '💪' },
-          { label: 'Calorías (7d)', value: stats?.totalCalories || 0, sub: `${stats?.avgCaloriesPerDay}/día`, border: 'var(--orange)', icon: '🔥' },
-          { label: 'Puntos Totales', value: stats?.points || 0, border: 'var(--green)', icon: '🏆' },
+          { label: 'Entrenamientos (7d)', value: stats?.totalWorkouts || 0, border: 'var(--blue)', icon: '' },
+          { label: 'Sets Completados', value: stats?.totalSets || 0, border: 'var(--purple)', icon: '' },
+          { label: 'Calorías (7d)', value: stats?.totalCalories || 0, sub: `${stats?.avgCaloriesPerDay}/día`, border: 'var(--orange)', icon: '' },
+          { label: 'Puntos Totales', value: stats?.points || 0, border: 'var(--green)', icon: '' },
         ].map((card, idx) => (
           <motion.div key={idx} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.08 }}
             style={{ borderTop: `2px solid ${card.border}`, background: 'var(--ink-panel)', border: '1px solid var(--border)', borderRadius: '6px', padding: '14px 18px' }}>
@@ -101,11 +101,10 @@ export default function DashboardOverview({ userId }: DashboardOverviewProps) {
 
       {/* Insights */}
       <div className="callout" style={{ borderLeftColor: 'var(--green)' }}>
-        <span style={{ fontSize: '14px' }}>💡</span>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text)', lineHeight: 1.6 }}>
           {stats?.totalWorkouts >= 5
-            ? `✅ ¡Excelente consistencia! Has entrenado ${stats.totalWorkouts} veces esta semana`
-            : '⚠️ Intenta entrenar al menos 4-5 veces por semana para mejores resultados'}
+            ? `¡Excelente consistencia! Has entrenado ${stats.totalWorkouts} veces esta semana`
+            : 'Intenta entrenar al menos 4-5 veces por semana para mejores resultados'}
         </div>
       </div>
     </div>

@@ -58,12 +58,12 @@ export default function BodyMapVisual({ userId }: BodyMapVisualProps) {
   }
 
   const muscleMeta: Record<string, { icon: string; label: string; desc: string }> = {
-    pecho: { icon: '🫀', label: 'Pecho', desc: 'Press banca, Aperturas, Flexiones' },
-    espalda: { icon: '🔙', label: 'Espalda', desc: 'Dominadas, Remo, Jalón al pecho' },
-    piernas: { icon: '🦵', label: 'Piernas', desc: 'Sentadilla, Peso muerto, Prensa' },
-    hombros: { icon: '💪', label: 'Hombros', desc: 'Press militar, Elevaciones laterales' },
-    brazos: { icon: '💯', label: 'Brazos', desc: 'Curl bíceps, Press francés' },
-    core: { icon: '🔥', label: 'Core', desc: 'Plancha, Crunch, Elevación piernas' },
+    pecho: { icon: '', label: 'Pecho', desc: 'Press banca, Aperturas, Flexiones' },
+    espalda: { icon: '', label: 'Espalda', desc: 'Dominadas, Remo, Jalón al pecho' },
+    piernas: { icon: '', label: 'Piernas', desc: 'Sentadilla, Peso muerto, Prensa' },
+    hombros: { icon: '', label: 'Hombros', desc: 'Press militar, Elevaciones laterales' },
+    brazos: { icon: '', label: 'Brazos', desc: 'Curl bíceps, Press francés' },
+    core: { icon: '', label: 'Core', desc: 'Plancha, Crunch, Elevación piernas' },
   }
 
   if (loading) return <div style={{ textAlign: 'center', padding: '2rem', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-faint)' }}>Cargando mapa muscular...</div>
@@ -95,7 +95,6 @@ export default function BodyMapVisual({ userId }: BodyMapVisualProps) {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ fontSize: '1.8rem', flexShrink: 0 }}>{meta?.icon}</div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
                     <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '14px', color: 'var(--text)' }}>
@@ -138,7 +137,6 @@ export default function BodyMapVisual({ userId }: BodyMapVisualProps) {
           style={{ borderLeft: '3px solid var(--blue)' }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-            <span style={{ fontSize: '2rem' }}>{muscleMeta[selectedMuscle].icon}</span>
             <div>
               <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '16px', color: 'var(--text)' }}>
                 {muscleMeta[selectedMuscle].label}

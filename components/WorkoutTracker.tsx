@@ -33,7 +33,7 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
 
   const initializeSets = () => {
     const sets = Array.from({ length: parseInt(numSets) || 3 }, (_, i) => ({
-      setNumber: i + 1, weight: 0, reps: 0,
+      setNumber: i + 1, weight: 20, reps: 10,
     }))
     setExerciseSets(sets)
   }
@@ -135,7 +135,7 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
         <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={addExerciseToWorkout}
           disabled={!selectedExercise || exerciseSets.length === 0}
           style={{ width: '100%', padding: '12px', background: 'var(--blue)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '12px', opacity: (!selectedExercise || exerciseSets.length === 0) ? 0.4 : 1 }}>
-          ➕ Añadir a Entrenamiento
+          + Añadir a Entrenamiento
         </motion.button>
       </div>
 
@@ -160,7 +160,7 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
 
           <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={saveWorkout} disabled={loading}
             style={{ width: '100%', padding: '14px', background: 'var(--green)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '13px', opacity: loading ? 0.5 : 1 }}>
-            {loading ? '⏳ Guardando...' : '✅ Guardar Entrenamiento'}
+            {loading ? 'Guardando...' : 'Guardar Entrenamiento'}
           </motion.button>
         </div>
       )}

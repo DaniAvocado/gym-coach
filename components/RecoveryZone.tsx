@@ -64,12 +64,12 @@ export default function RecoveryZone({ userId }: RecoveryZoneProps) {
   }
 
   const muscleLabels: Record<string, string> = {
-    pecho: '🫀 Pecho',
-    espalda: '🔙 Espalda',
-    piernas: '🦵 Piernas',
-    hombros: '💪 Hombros',
-    brazos: '💯 Brazos',
-    core: '🔥 Core',
+    pecho: 'Pecho',
+    espalda: 'Espalda',
+    piernas: 'Piernas',
+    hombros: 'Hombros',
+    brazos: 'Brazos',
+    core: 'Core',
   }
 
   const muscleDetails: Record<string, string> = {
@@ -111,9 +111,8 @@ export default function RecoveryZone({ userId }: RecoveryZoneProps) {
             <motion.div key={muscle} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: idx * 0.08 }}
               whileHover={{ scale: 1.03, y: -3 }}
               style={{ background: 'var(--ink-panel)', border: `2px solid ${colors.fill}`, borderRadius: '6px', padding: '14px', textAlign: 'center', cursor: 'default' }}>
-              <div style={{ fontSize: '1.5rem', marginBottom: '4px' }}>{muscleLabels[muscle].split(' ')[0]}</div>
               <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '13px', color: 'var(--text)' }}>
-                {muscleLabels[muscle].split(' ').slice(1).join(' ')}
+                {muscleLabels[muscle]}
               </div>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.5rem', fontWeight: 700, color: colors.fill, marginTop: '8px' }}>
                 {count} sets
@@ -131,7 +130,7 @@ export default function RecoveryZone({ userId }: RecoveryZoneProps) {
 
       {/* Auto-refresh indicator */}
       <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--text-faint)', textAlign: 'center' }}>
-        ⏱️ Se actualiza automáticamente cada 30 segundos
+        Se actualiza automáticamente cada 30 segundos
       </div>
     </div>
   )

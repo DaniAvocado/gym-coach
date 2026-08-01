@@ -11,6 +11,19 @@ interface MealTrackerProps {
 const activityMultipliers: Record<string, number> = { sedentary: 1.2, light: 1.375, moderate: 1.55, active: 1.725, very_active: 1.9 }
 const metaAdjustments: Record<string, number> = { slow: 0.9, normal: 1.0, fast: 1.1 }
 
+const quickFoods = [
+  { name: 'Pollo a la plancha (150g)', kcal: 250, pro: 45, carb: 0, fat: 7 },
+  { name: 'Huevos revueltos (3)', kcal: 210, pro: 18, carb: 1, fat: 15 },
+  { name: 'Arroz blanco (150g)', kcal: 200, pro: 4, carb: 44, fat: 0 },
+  { name: 'Avena (50g)', kcal: 190, pro: 7, carb: 33, fat: 4 },
+  { name: 'Atún en lata (1)', kcal: 120, pro: 26, carb: 0, fat: 1 },
+  { name: 'Plátano (1)', kcal: 105, pro: 1, carb: 27, fat: 0 },
+  { name: 'Batido de proteína', kcal: 150, pro: 25, carb: 5, fat: 3 },
+  { name: 'Yogur griego (200g)', kcal: 150, pro: 20, carb: 7, fat: 5 },
+  { name: 'Palta (1/2)', kcal: 160, pro: 2, carb: 8, fat: 15 },
+  { name: 'Camote (200g)', kcal: 180, pro: 4, carb: 41, fat: 0 },
+]
+
 export default function MealTracker({ userId }: MealTrackerProps) {
   const [mealType, setMealType] = useState('breakfast')
   const [foodName, setFoodName] = useState('')
@@ -23,10 +36,10 @@ export default function MealTracker({ userId }: MealTrackerProps) {
   const [macroGoals, setMacroGoals] = useState<{ calories: number; protein: number; fat: number; carbs: number } | null>(null)
 
   const mealTypes: Record<string, { label: string; icon: string; border: string }> = {
-    breakfast: { label: 'Desayuno', icon: '🍳', border: 'var(--orange)' },
-    lunch: { label: 'Almuerzo', icon: '🍗', border: 'var(--green)' },
-    dinner: { label: 'Cena', icon: '🍖', border: 'var(--purple)' },
-    snack: { label: 'Snack', icon: '🥜', border: 'var(--pastel-pink)' },
+    breakfast: { label: 'Desayuno', icon: '', border: 'var(--orange)' },
+    lunch: { label: 'Almuerzo', icon: '', border: 'var(--green)' },
+    dinner: { label: 'Cena', icon: '', border: 'var(--purple)' },
+    snack: { label: 'Snack', icon: '', border: 'var(--pastel-pink)' },
   }
 
   useEffect(() => {
@@ -84,6 +97,15 @@ export default function MealTracker({ userId }: MealTrackerProps) {
 
   const deleteMeal = async (id: string) => { await supabase.from('meals').delete().eq('id', id); fetchTodayMeals() }
 
+  const quickAdd = async (food: typeof quickFoods[number]) => {
+    const today = new Date().toISOString().split('T')[0]
+    await supabase.from('meals').insert({
+      user_id: userId, date: today, meal_type: mealType, food_name: food.name,
+      calories: food.kcal, protein: food.pro, carbs: food.carb, fats: food.fat,
+    })
+    fetchTodayMeals()
+  }
+
   const totals = todayMeals.reduce((acc, m) => ({
     calories: acc.calories + (m.calories || 0),
     protein: acc.protein + (m.protein || 0),
@@ -130,12 +152,27 @@ export default function MealTracker({ userId }: MealTrackerProps) {
         </div>
       </div>
 
+      {/* Quick add */}
+      <div className="panel" style={{ borderLeft: '3px solid var(--blue)' }}>
+        <div className="kpi-label" style={{ marginBottom: '8px' }}>AÑADIDO RÁPIDO</div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+          {quickFoods.map((food, idx) => (
+            <motion.button key={idx} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
+              onClick={() => quickAdd(food)}
+              title={`${food.kcal} kcal · P:${food.pro} C:${food.carb} G:${food.fat}`}
+              style={{ padding: '7px 10px', background: 'rgba(111,160,255,0.08)', border: '1px solid rgba(111,160,255,0.3)', color: 'var(--text)', borderRadius: '4px', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '11px' }}>
+              {food.name}
+            </motion.button>
+          ))}
+        </div>
+      </div>
+
       {/* Form */}
       <div className="panel" style={{ borderLeft: '3px solid var(--green)' }}>
         <div className="kpi-label" style={{ marginBottom: '12px' }}>REGISTRAR COMIDA</div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '12px', marginBottom: '16px' }}>
           <select value={mealType} onChange={e => setMealType(e.target.value)} style={{ ...inputStyle, width: '100%' }}>
-            {Object.entries(mealTypes).map(([k, v]) => <option key={k} value={k}>{v.icon} {v.label}</option>)}
+            {Object.entries(mealTypes).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
           </select>
           <input type="text" placeholder="Nombre del alimento" value={foodName} onChange={e => setFoodName(e.target.value)} style={{ ...inputStyle, width: '100%' }} />
         </div>
@@ -147,7 +184,7 @@ export default function MealTracker({ userId }: MealTrackerProps) {
         </div>
         <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={saveMeal} disabled={loading}
           style={{ width: '100%', padding: '12px', background: 'var(--green)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '12px', opacity: loading ? 0.5 : 1 }}>
-          {loading ? '⏳ Guardando...' : '✅ Registrar Comida'}
+          {loading ? 'Guardando...' : 'Registrar Comida'}
         </motion.button>
       </div>
 
@@ -162,7 +199,7 @@ export default function MealTracker({ userId }: MealTrackerProps) {
                 <motion.div key={meal.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.05 }}
                   style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(91,141,239,0.06)', borderRadius: '4px', borderLeft: `3px solid ${info?.border || 'var(--border)'}` }}>
                   <div>
-                    <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '13px', color: 'var(--text)' }}>{info?.icon} {meal.food_name}</div>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '13px', color: 'var(--text)' }}>{meal.food_name}</div>
                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
                       {meal.calories} kcal · P:{meal.protein}g · C:{meal.carbs}g · G:{meal.fats}g
                     </div>

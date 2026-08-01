@@ -14,7 +14,7 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "💪 Gym Coach — Tu Entrenador Personal",
+  title: "Gym Coach — Tu Entrenador Personal",
   description: "Trackea tus entrenamientos, nutrición y progreso",
 };
 
