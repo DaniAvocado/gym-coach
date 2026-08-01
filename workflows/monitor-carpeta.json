@@ -1,0 +1,196 @@
+{
+    "updatedAt":  "2026-08-01T03:48:39.383Z",
+    "createdAt":  "2026-08-01T03:43:32.727Z",
+    "id":  "wSo4qDlBFaLrpZjI",
+    "name":  "Monitor Carpeta",
+    "description":  null,
+    "active":  true,
+    "isArchived":  false,
+    "nodes":  [
+                  {
+                      "parameters":  {
+                                         "rule":  {
+                                                      "interval":  [
+                                                                       {
+                                                                           "field":  "minutes",
+                                                                           "minutesInterval":  1
+                                                                       }
+                                                                   ]
+                                                  }
+                                     },
+                      "id":  "schedule-trigger",
+                      "name":  "Cada Minuto",
+                      "type":  "n8n-nodes-base.scheduleTrigger",
+                      "typeVersion":  1.2,
+                      "position":  [
+                                       256,
+                                       304
+                                   ]
+                  },
+                  {
+                      "parameters":  {
+                                         "operation":  "readFilesFromDirectory"
+                                     },
+                      "id":  "read-files",
+                      "name":  "Leer Archivos",
+                      "type":  "n8n-nodes-base.readWriteFile",
+                      "typeVersion":  1,
+                      "position":  [
+                                       576,
+                                       304
+                                   ]
+                  }
+              ],
+    "connections":  {
+                        "Cada Minuto":  {
+                                            "main":  [
+                                                         [
+                                                             {
+                                                                 "node":  "Leer Archivos",
+                                                                 "type":  "main",
+                                                                 "index":  0
+                                                             }
+                                                         ]
+                                                     ]
+                                        }
+                    },
+    "settings":  {
+                     "executionOrder":  "v1",
+                     "binaryMode":  "separate"
+                 },
+    "staticData":  {
+                       "node:Cada Minuto":  {
+                                                "recurrenceRules":  [
+                                                                        null
+                                                                    ],
+                                                "recurrenceRuleSignatures":  [
+                                                                                 null
+                                                                             ]
+                                            }
+                   },
+    "meta":  null,
+    "nodeGroups":  [
+
+                   ],
+    "pinData":  {
+
+                },
+    "versionId":  "62d87622-7f1b-4764-9b12-176a57118a48",
+    "activeVersionId":  "565cf275-2d62-4a8d-b6e1-1263e1606d2e",
+    "versionCounter":  3,
+    "triggerCount":  1,
+    "sourceWorkflowId":  null,
+    "shared":  [
+                   {
+                       "updatedAt":  "2026-08-01T03:43:32.731Z",
+                       "createdAt":  "2026-08-01T03:43:32.731Z",
+                       "role":  "workflow:owner",
+                       "workflowId":  "wSo4qDlBFaLrpZjI",
+                       "projectId":  "FRzcTMkaeFFIkgcY",
+                       "project":  {
+                                       "updatedAt":  "2026-08-01T03:23:13.948Z",
+                                       "createdAt":  "2026-08-01T03:21:58.704Z",
+                                       "id":  "FRzcTMkaeFFIkgcY",
+                                       "name":  "Daniel Carrillo \u003cfragozodanielcarrillo@gmail.com\u003e",
+                                       "type":  "personal",
+                                       "icon":  null,
+                                       "description":  null,
+                                       "customTelemetryTags":  [
+
+                                                               ],
+                                       "creatorId":  "90f0d428-2839-4575-802a-64338aa18978"
+                                   }
+                   }
+               ],
+    "tags":  [
+
+             ],
+    "activeVersion":  {
+                          "updatedAt":  "2026-08-01T03:43:32.731Z",
+                          "createdAt":  "2026-08-01T03:43:32.731Z",
+                          "versionId":  "565cf275-2d62-4a8d-b6e1-1263e1606d2e",
+                          "workflowId":  "wSo4qDlBFaLrpZjI",
+                          "nodes":  [
+                                        {
+                                            "parameters":  {
+                                                               "rule":  {
+                                                                            "interval":  [
+                                                                                             {
+                                                                                                 "field":  "minutes",
+                                                                                                 "minutesInterval":  1
+                                                                                             }
+                                                                                         ]
+                                                                        }
+                                                           },
+                                            "id":  "schedule-trigger",
+                                            "name":  "Cada Minuto",
+                                            "type":  "n8n-nodes-base.scheduleTrigger",
+                                            "typeVersion":  1.2,
+                                            "position":  [
+                                                             250,
+                                                             300
+                                                         ]
+                                        },
+                                        {
+                                            "parameters":  {
+                                                               "operation":  "readFilesFromDirectory",
+                                                               "directory":  "C:\\Users\\DANIEL\\Downloads\\monitor"
+                                                           },
+                                            "id":  "read-files",
+                                            "name":  "Leer Archivos",
+                                            "type":  "n8n-nodes-base.readWriteFile",
+                                            "typeVersion":  1,
+                                            "position":  [
+                                                             520,
+                                                             300
+                                                         ]
+                                        }
+                                    ],
+                          "connections":  {
+                                              "Cada Minuto":  {
+                                                                  "main":  [
+                                                                               [
+                                                                                   {
+                                                                                       "node":  "Leer Archivos",
+                                                                                       "type":  "main",
+                                                                                       "index":  0
+                                                                                   }
+                                                                               ]
+                                                                           ]
+                                                              }
+                                          },
+                          "nodeGroups":  [
+
+                                         ],
+                          "authors":  "Daniel Carrillo",
+                          "name":  null,
+                          "description":  null,
+                          "autosaved":  false,
+                          "workflowPublishHistory":  [
+                                                         {
+                                                             "createdAt":  "2026-08-01T03:43:58.239Z",
+                                                             "id":  1,
+                                                             "workflowId":  "wSo4qDlBFaLrpZjI",
+                                                             "versionId":  "565cf275-2d62-4a8d-b6e1-1263e1606d2e",
+                                                             "event":  "activated",
+                                                             "userId":  "90f0d428-2839-4575-802a-64338aa18978"
+                                                         },
+                                                         {
+                                                             "createdAt":  "2026-08-01T03:47:36.814Z",
+                                                             "id":  3,
+                                                             "workflowId":  "wSo4qDlBFaLrpZjI",
+                                                             "versionId":  "565cf275-2d62-4a8d-b6e1-1263e1606d2e",
+                                                             "event":  "activated",
+                                                             "userId":  "90f0d428-2839-4575-802a-64338aa18978"
+                                                         },
+                                                         {
+                                                             "createdAt":  "2026-08-01T03:47:36.804Z",
+                                                             "id":  2,
+                                                             "workflowId":  "wSo4qDlBFaLrpZjI",
+                                                             "versionId":  "565cf275-2d62-4a8d-b6e1-1263e1606d2e",
+                                                             "event":  "deactivated",
+                                                             "userId":  "90f0d428-2839-4575-802a-64338aa18978"
+                                                         }
+                                                     ]
+                      }
+}

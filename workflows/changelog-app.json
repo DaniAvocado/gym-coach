@@ -1,0 +1,116 @@
+{
+    "updatedAt":  "2026-08-01T03:49:47.672Z",
+    "createdAt":  "2026-08-01T03:49:47.672Z",
+    "id":  "uWIzt088maE7MorY",
+    "name":  "Changelog de la App",
+    "description":  null,
+    "active":  false,
+    "isArchived":  false,
+    "nodes":  [
+                  {
+                      "parameters":  {
+
+                                     },
+                      "id":  "manual-trigger",
+                      "name":  "Ejecutar",
+                      "type":  "n8n-nodes-base.manualTrigger",
+                      "typeVersion":  1,
+                      "position":  [
+                                       220,
+                                       300
+                                   ]
+                  },
+                  {
+                      "parameters":  {
+                                         "jsCode":  "const commits = [\n  \u002791f3f2a fix: remove corrupted BOM artifact\u0027,\n  \u0027436a7c3 fix: restore UTF-8 accents\u0027,\n  \u0027ea9ed3a feat: glassmorphism landing page + panels\u0027,\n  \u0027bdfe9b6 feat: pink/blue/purple palette across app\u0027,\n  \u0027e19c1bb feat: Spotify playlist widget, grouped quick-add foods\u0027,\n  \u0027bc98720 feat: quick-add foods, predefined set defaults, placeholders\u0027,\n  \u0027463bf31 feat: cursor-reactive animated background, contrast colors\u0027,\n  \u0027d6e7605 feat: coach IA with science-based recommendations\u0027,\n  \u0027a78d44a fix: consistent monospace font for Gym logo\u0027,\n  \u0027064beb9 fix: mobile responsive, week activity scroll, overflow\u0027,\n  \u0027eeaee96 fix: mobile nav vertical with icons, panels overflow\u0027,\n  \u00277c2a2f1 fix: responsive layout, mobile nav, overflow\u0027,\n  \u0027ca24f36 fix: TypeScript errors in CoachRecommendations\u0027,\n  \u0027e19c1bb feat: Spotify playlist widget, grouped quick-add foods\u0027\n];\nconst header = \u0027# Changelog - Gym Coach\\n\\nGenerado: \u0027 + new Date().toLocaleString(\u0027es-CO\u0027) + \u0027\\n\\nTotal: \u0027 + commits.length + \u0027 commits\\n\\n## Historial\\n\u0027;\nconst body = commits.map(c =\u003e \u0027- \u0027 + c).join(\u0027\\n\u0027);\nreturn [{ json: { changelog: header + \u0027\\n\u0027 + body, count: commits.length } }];"
+                                     },
+                      "id":  "code-format",
+                      "name":  "Generar Changelog",
+                      "type":  "n8n-nodes-base.code",
+                      "typeVersion":  2,
+                      "position":  [
+                                       480,
+                                       300
+                                   ]
+                  },
+                  {
+                      "parameters":  {
+                                         "operation":  "writeFileFromContent",
+                                         "fileName":  "C:\\Users\\DANIEL\\Downloads\\CHANGELOG.md",
+                                         "dataPropertyName":  "changelog"
+                                     },
+                      "id":  "write-changelog",
+                      "name":  "Guardar CHANGELOG",
+                      "type":  "n8n-nodes-base.readWriteFile",
+                      "typeVersion":  1,
+                      "position":  [
+                                       740,
+                                       300
+                                   ]
+                  }
+              ],
+    "connections":  {
+                        "Ejecutar":  {
+                                         "main":  [
+                                                      [
+                                                          {
+                                                              "node":  "Generar Changelog",
+                                                              "type":  "main",
+                                                              "index":  0
+                                                          }
+                                                      ]
+                                                  ]
+                                     },
+                        "Generar Changelog":  {
+                                                  "main":  [
+                                                               [
+                                                                   {
+                                                                       "node":  "Guardar CHANGELOG",
+                                                                       "type":  "main",
+                                                                       "index":  0
+                                                                   }
+                                                               ]
+                                                           ]
+                                              }
+                    },
+    "settings":  {
+                     "executionOrder":  "v1"
+                 },
+    "staticData":  null,
+    "meta":  null,
+    "nodeGroups":  [
+
+                   ],
+    "pinData":  null,
+    "versionId":  "c6b91e81-61f5-4b3a-9c1b-7bb29d579fa5",
+    "activeVersionId":  null,
+    "versionCounter":  1,
+    "triggerCount":  0,
+    "sourceWorkflowId":  null,
+    "shared":  [
+                   {
+                       "updatedAt":  "2026-08-01T03:49:47.686Z",
+                       "createdAt":  "2026-08-01T03:49:47.686Z",
+                       "role":  "workflow:owner",
+                       "workflowId":  "uWIzt088maE7MorY",
+                       "projectId":  "FRzcTMkaeFFIkgcY",
+                       "project":  {
+                                       "updatedAt":  "2026-08-01T03:23:13.948Z",
+                                       "createdAt":  "2026-08-01T03:21:58.704Z",
+                                       "id":  "FRzcTMkaeFFIkgcY",
+                                       "name":  "Daniel Carrillo \u003cfragozodanielcarrillo@gmail.com\u003e",
+                                       "type":  "personal",
+                                       "icon":  null,
+                                       "description":  null,
+                                       "customTelemetryTags":  [
+
+                                                               ],
+                                       "creatorId":  "90f0d428-2839-4575-802a-64338aa18978"
+                                   }
+                   }
+               ],
+    "tags":  [
+
+             ],
+    "activeVersion":  null
+}
