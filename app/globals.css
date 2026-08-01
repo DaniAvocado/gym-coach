@@ -2,23 +2,24 @@
 
 :root {
   --ink: #0b0b12;
-  --ink-panel: #111118;
+  --ink-panel: #14141f;
   --ink-sidebar: #0a0a10;
-  --border: #1e1e2e;
-  --border2: #2a2a3e;
-  --blue: #5b8def;
-  --purple: #a78bfa;
-  --pastel-blue: #93c5fd;
-  --pastel-purple: #c4b5fd;
-  --pastel-pink: #f9a8d4;
-  --pastel-mint: #6ee7b7;
-  --text: #e2e8f0;
-  --text-muted: #8b8fa3;
-  --text-faint: #4a4e68;
+  --border: #2a2a42;
+  --border2: #3d3d5c;
+  --blue: #6fa0ff;
+  --purple: #b794ff;
+  --pastel-blue: #a5d8ff;
+  --pastel-purple: #d0bfff;
+  --pastel-pink: #ffb3dd;
+  --pastel-mint: #7df0c0;
+  --text: #f0f4ff;
+  --text-muted: #b6bdd4;
+  --text-faint: #7a81a0;
   --accent: #7c3aed;
   --green: #4ade80;
-  --orange: #fb923c;
-  --red: #f87171;
+  --orange: #ffa94d;
+  --red: #ff8585;
+  --yellow: #ffd43b;
 }
 
 * {
@@ -55,7 +56,8 @@ input, select, textarea, button {
 
 /* Panel base */
 .panel {
-  background: var(--ink-panel);
+  background: rgba(20, 20, 31, 0.88);
+  backdrop-filter: blur(6px);
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 1rem 1.25rem;

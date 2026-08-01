@@ -13,6 +13,7 @@ import DashboardOverview from '@/components/DashboardOverview'
 import BodyMapVisual from '@/components/BodyMapVisual'
 import UserProfile from '@/components/UserProfile'
 import ProgressiveOverload from '@/components/ProgressiveOverload'
+import AnimatedBackground from '@/components/AnimatedBackground'
 
 const navItems = [
   { id: 'overview', abbr: 'RE', label: 'Resumen', sub: 'Tu progreso' },
@@ -78,7 +79,9 @@ export default function Dashboard() {
   }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--ink)', width: '100%', maxWidth: '100vw', overflow: 'hidden' }}>
+    <div style={{ position: 'relative', minHeight: '100vh', background: 'var(--ink)', width: '100%', maxWidth: '100vw', overflow: 'hidden' }}>
+      <AnimatedBackground />
+      <div style={{ position: 'relative', zIndex: 1, display: 'flex', minHeight: '100vh' }}>
       {/* Mobile top bar */}
       <div style={{
         display: 'none',
@@ -355,6 +358,7 @@ export default function Dashboard() {
           </div>
         </main>
       </main>
+      </div>
     </div>
   )
 }
