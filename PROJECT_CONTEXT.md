@@ -14,13 +14,16 @@ App web de entrenamiento personal (Next.js + Supabase) con trackers de:
 - Spotify widget para playlist de entreno
 
 ## 2. STACK
+- Ruta local: C:\Users\DANIEL\OneDrive - mail.uniatlantico.edu.co\Documentos\PROYECTOS\gym-coach
 - Frontend: Next.js 16 (App Router) + React 19 + Tailwind 4
 - Estilos: glassmorphism (blur + rgba) con paleta ROSA/AZUL/MORADO
+- Tipografia: Barlow Condensed (fitness) segun ui-ux-pro-max
 - Backend/DB: Supabase (Postgres + Auth)
 - Fondo animado: canvas con particulas reactivas al cursor
 - Animaciones: framer-motion (decorativo)
 - Deploy: Vercel (gym-coach-acme-de5d.vercel.app)
 - Repo: https://github.com/DaniAvocado/gym-coach
+- n8n: localhost:5678 (API key en env N8N_API_KEY); workflows exportados en workflows/*.json
 
 ## 3. ESTRUCTURA DE COMPONENTES
 - app/page.tsx -> landing page glassmorphism
@@ -72,3 +75,4 @@ RLS: desactivado para desarrollo. Schema completo en lib/schema.sql.
 - Nodulos n8n disponibles: scheduleTrigger, manualTrigger, code, readWriteFile
 - NODULOS NO DISPONIBLES: localFileTrigger, executeCommand
 - Los archivos deben guardarse en UTF-8 (PowerShell 5.1 corrompe acentos si se usa Get-Content/WriteAllText)
+- AGENTS.md instruye leer este archivo antes de trabajar
