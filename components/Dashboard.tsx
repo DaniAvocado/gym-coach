@@ -14,6 +14,7 @@ import BodyMapVisual from '@/components/BodyMapVisual'
 import UserProfile from '@/components/UserProfile'
 import ProgressiveOverload from '@/components/ProgressiveOverload'
 import AnimatedBackground from '@/components/AnimatedBackground'
+import SpotifyWidget from '@/components/SpotifyWidget'
 
 const navItems = [
   { id: 'overview', abbr: 'RE', label: 'Resumen', sub: 'Tu progreso' },
@@ -67,7 +68,12 @@ export default function Dashboard() {
     switch (activeTab) {
       case 'overview': return <DashboardOverview userId={user.id} />
       case 'profile': return <UserProfile userId={user.id} />
-      case 'workout': return <WorkoutTracker userId={user.id} />
+      case 'workout': return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <SpotifyWidget userId={user.id} />
+          <WorkoutTracker userId={user.id} />
+        </div>
+      )
       case 'routines': return <Routines userId={user.id} />
       case 'recovery': return <RecoveryZone userId={user.id} />
       case 'body': return <BodyMapVisual userId={user.id} />

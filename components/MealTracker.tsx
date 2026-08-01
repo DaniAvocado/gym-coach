@@ -11,18 +11,42 @@ interface MealTrackerProps {
 const activityMultipliers: Record<string, number> = { sedentary: 1.2, light: 1.375, moderate: 1.55, active: 1.725, very_active: 1.9 }
 const metaAdjustments: Record<string, number> = { slow: 0.9, normal: 1.0, fast: 1.1 }
 
-const quickFoods = [
-  { name: 'Pollo a la plancha (150g)', kcal: 250, pro: 45, carb: 0, fat: 7 },
-  { name: 'Huevos revueltos (3)', kcal: 210, pro: 18, carb: 1, fat: 15 },
-  { name: 'Arroz blanco (150g)', kcal: 200, pro: 4, carb: 44, fat: 0 },
-  { name: 'Avena (50g)', kcal: 190, pro: 7, carb: 33, fat: 4 },
-  { name: 'Atún en lata (1)', kcal: 120, pro: 26, carb: 0, fat: 1 },
-  { name: 'Plátano (1)', kcal: 105, pro: 1, carb: 27, fat: 0 },
-  { name: 'Batido de proteína', kcal: 150, pro: 25, carb: 5, fat: 3 },
-  { name: 'Yogur griego (200g)', kcal: 150, pro: 20, carb: 7, fat: 5 },
-  { name: 'Palta (1/2)', kcal: 160, pro: 2, carb: 8, fat: 15 },
-  { name: 'Camote (200g)', kcal: 180, pro: 4, carb: 41, fat: 0 },
-]
+const quickFoods: Record<string, { name: string; kcal: number; pro: number; carb: number; fat: number }[]> = {
+  breakfast: [
+    { name: 'Avena (50g)', kcal: 190, pro: 7, carb: 33, fat: 4 },
+    { name: 'Huevos revueltos (3)', kcal: 210, pro: 18, carb: 1, fat: 15 },
+    { name: 'Yogur griego (200g)', kcal: 150, pro: 20, carb: 7, fat: 5 },
+    { name: 'Pan integral (2 rebanadas)', kcal: 160, pro: 8, carb: 30, fat: 2 },
+    { name: 'Batido de proteína', kcal: 150, pro: 25, carb: 5, fat: 3 },
+    { name: 'Plátano (1)', kcal: 105, pro: 1, carb: 27, fat: 0 },
+  ],
+  lunch: [
+    { name: 'Pollo a la plancha (150g)', kcal: 250, pro: 45, carb: 0, fat: 7 },
+    { name: 'Arroz blanco (150g)', kcal: 200, pro: 4, carb: 44, fat: 0 },
+    { name: 'Pescado al horno (150g)', kcal: 220, pro: 35, carb: 0, fat: 8 },
+    { name: 'Lentejas (200g)', kcal: 230, pro: 18, carb: 40, fat: 1 },
+    { name: 'Camote (200g)', kcal: 180, pro: 4, carb: 41, fat: 0 },
+    { name: 'Ensalada de atún', kcal: 280, pro: 28, carb: 12, fat: 14 },
+  ],
+  dinner: [
+    { name: 'Pollo al horno (150g)', kcal: 230, pro: 40, carb: 0, fat: 6 },
+    { name: 'Carne magra (150g)', kcal: 280, pro: 42, carb: 0, fat: 12 },
+    { name: 'Salmón (150g)', kcal: 310, pro: 30, carb: 0, fat: 21 },
+    { name: 'Ensalada de pollo', kcal: 250, pro: 32, carb: 10, fat: 10 },
+    { name: 'Camarones (150g)', kcal: 160, pro: 30, carb: 2, fat: 3 },
+    { name: 'Tortilla de verduras', kcal: 200, pro: 12, carb: 10, fat: 12 },
+  ],
+  snack: [
+    { name: 'Batido de proteína', kcal: 150, pro: 25, carb: 5, fat: 3 },
+    { name: 'Almendras (30g)', kcal: 170, pro: 6, carb: 6, fat: 15 },
+    { name: 'Yogur griego (200g)', kcal: 150, pro: 20, carb: 7, fat: 5 },
+    { name: 'Manzana (1)', kcal: 95, pro: 0, carb: 25, fat: 0 },
+    { name: 'Palta (1/2)', kcal: 160, pro: 2, carb: 8, fat: 15 },
+    { name: 'Requesón (100g)', kcal: 100, pro: 11, carb: 4, fat: 4 },
+    { name: 'Huevo duro (1)', kcal: 78, pro: 6, carb: 1, fat: 5 },
+    { name: 'Cacahuetes (30g)', kcal: 170, pro: 8, carb: 5, fat: 14 },
+  ],
+}
 
 export default function MealTracker({ userId }: MealTrackerProps) {
   const [mealType, setMealType] = useState('breakfast')
@@ -97,7 +121,7 @@ export default function MealTracker({ userId }: MealTrackerProps) {
 
   const deleteMeal = async (id: string) => { await supabase.from('meals').delete().eq('id', id); fetchTodayMeals() }
 
-  const quickAdd = async (food: typeof quickFoods[number]) => {
+  const quickAdd = async (food: { name: string; kcal: number; pro: number; carb: number; fat: number }) => {
     const today = new Date().toISOString().split('T')[0]
     await supabase.from('meals').insert({
       user_id: userId, date: today, meal_type: mealType, food_name: food.name,
@@ -154,9 +178,11 @@ export default function MealTracker({ userId }: MealTrackerProps) {
 
       {/* Quick add */}
       <div className="panel" style={{ borderLeft: '3px solid var(--blue)' }}>
-        <div className="kpi-label" style={{ marginBottom: '8px' }}>AÑADIDO RÁPIDO</div>
+        <div className="kpi-label" style={{ marginBottom: '8px' }}>
+          AÑADIDO RÁPIDO — {mealTypes[mealType].label.toUpperCase()}
+        </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-          {quickFoods.map((food, idx) => (
+          {(quickFoods[mealType] || []).map((food, idx) => (
             <motion.button key={idx} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
               onClick={() => quickAdd(food)}
               title={`${food.kcal} kcal · P:${food.pro} C:${food.carb} G:${food.fat}`}
@@ -164,6 +190,9 @@ export default function MealTracker({ userId }: MealTrackerProps) {
               {food.name}
             </motion.button>
           ))}
+        </div>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-faint)', marginTop: '8px' }}>
+          Las comidas rápidas se añaden al tipo de comida seleccionado arriba. Cambia Desayuno/Almuerzo/Cena/Snack para ver más opciones.
         </div>
       </div>
 
