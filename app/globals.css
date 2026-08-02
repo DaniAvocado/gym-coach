@@ -213,6 +213,31 @@ option {
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
 
+/* Nav item desktop */
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  margin: 4px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(111, 160, 255, 0.2);
+  transform: translateX(2px);
+}
+
+.nav-item.active {
+  background: rgba(111, 160, 255, 0.12);
+  border-color: var(--blue);
+  box-shadow: 0 2px 8px rgba(91, 141, 239, 0.15);
+}
+
 /* Animations */
 @keyframes pulse {
   0%, 100% { opacity: 1; }

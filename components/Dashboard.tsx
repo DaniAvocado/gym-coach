@@ -133,10 +133,13 @@ export default function Dashboard() {
                   alignItems: 'center',
                   gap: '12px',
                   padding: '14px 20px',
+                  margin: '4px 12px',
                   cursor: 'pointer',
-                  borderLeft: activeTab === item.id ? '3px solid var(--blue)' : '3px solid transparent',
-                  background: activeTab === item.id ? 'rgba(111,160,255,0.08)' : 'transparent',
-                  borderBottom: '1px solid var(--border)',
+                  borderRadius: '8px',
+                  border: activeTab === item.id ? '1px solid var(--blue)' : '1px solid rgba(255,255,255,0.06)',
+                  background: activeTab === item.id ? 'rgba(111,160,255,0.12)' : 'rgba(255,255,255,0.02)',
+                  transition: 'all 0.2s ease',
+                  boxShadow: activeTab === item.id ? '0 2px 8px rgba(91,141,239,0.15)' : 'none',
                 }}>
                 <span style={{ fontSize: '1.3rem', width: '28px', textAlign: 'center' }}>{item.abbr}</span>
                 <div>
