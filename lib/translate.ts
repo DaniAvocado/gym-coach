@@ -74,122 +74,20 @@ const MUSCLE_MAP: Record<string, string> = {
   ankle: 'tobillo',
 }
 
-const NAME_WORD_MAP: Record<string, string> = {
-  barbell: 'barra',
-  dumbbell: 'mancuerna',
-  dumbbells: 'mancuernas',
-  cable: 'polea',
-  'body weight': 'peso corporal',
-  'pull-up': 'dominada',
-  'pull-ups': 'dominadas',
-  pullup: 'dominada',
-  'push-up': 'flexión',
-  'push-ups': 'flexiones',
-  pushup: 'flexión',
-  'sit-up': 'abdominal',
-  'sit-ups': 'abdominales',
-  crunch: 'crunch',
-  crunchs: 'crunches',
-  plank: 'plancha',
-  squat: 'sentadilla',
-  squats: 'sentadillas',
-  deadlift: 'peso muerto',
-  'bench press': 'press banca',
-  press: 'press',
-  row: 'remo',
-  curl: 'curl',
-  curls: 'curls',
-  raise: 'elevación',
-  raises: 'elevaciones',
-  fly: 'apertura',
-  flies: 'aperturas',
-  lunge: 'zancada',
-  lunges: 'zancadas',
-  extension: 'extensión',
-  kickback: 'patada',
-  kickbacks: 'patadas',
-  leg: 'pierna',
-  legs: 'piernas',
-  arm: 'brazo',
-  arms: 'brazos',
-  chest: 'pecho',
-  back: 'espalda',
-  shoulder: 'hombro',
-  shoulders: 'hombros',
-  hip: 'cadera',
-  hips: 'caderas',
-  calf: 'pantorrilla',
-  calves: 'pantorrillas',
-  biceps: 'bíceps',
-  triceps: 'tríceps',
-  hamstring: 'isquiotibial',
-  hamstrings: 'isquiotibiales',
-  glute: 'glúteo',
-  glutes: 'glúteos',
-  lat: 'dorsal',
-  lats: 'dorsales',
-  trap: 'trapecio',
-  traps: 'trapecios',
-  delt: 'deltoides',
-  delts: 'deltoides',
-  abs: 'abdominales',
-  ab: 'abdominal',
-  overhead: 'sobre la cabeza',
-  seated: 'sentado',
-  standing: 'de pie',
-  incline: 'inclinado',
-  decline: 'declinado',
-  lying: 'acostado',
-  front: 'frontal',
-  lateral: 'lateral',
-  reverse: 'inverso',
-  alternating: 'alternado',
-  alternate: 'alternado',
-  'single-arm': 'un brazo',
-  'one-arm': 'un brazo',
-  machine: 'máquina',
-  smith: 'Smith',
-  kettlebell: 'kettlebell',
-  band: 'banda',
-  rope: 'soga',
-  assisted: 'asistido',
-  weighted: 'con peso',
-  'stability ball': 'balón suizo',
-  'ez barbell': 'barra EZ',
-  landmine: 'landmine',
-  twist: 'giro',
-  'hip thrust': 'empuje de cadera',
-  bridge: 'puente',
-  hold: 'aguante',
-  neck: 'cuello',
-  wrist: 'muñeca',
-  forearm: 'antebrazo',
-  ankle: 'tobillo',
-  toe: 'dedo',
-  heel: 'talón',
-  bench: 'banca',
-  bar: 'barra',
-  ball: 'balón',
-  wheel: 'rueda',
-  roller: 'rodillo',
-  step: 'paso',
-  skip: 'salto',
-  jump: 'salto',
-  jog: 'trote',
-  walk: 'caminata',
-  run: 'carrera',
-  'run in place': 'correr en el sitio',
-  stretch: 'estiramiento',
-  thrust: 'empuje',
+const NAME_WORD_MAP: Record<string, string> = {}
+
+export function titleCase(s: string): string {
+  return s
+    .toLowerCase()
+    .split(' ')
+    .filter(Boolean)
+    .map(w => (/^\d/.test(w) ? w : w.charAt(0).toUpperCase() + w.slice(1)))
+    .join(' ')
 }
 
 export function translateName(name: string): string {
   if (!name) return name
-  let t = name
-  for (const [en, es] of Object.entries(NAME_WORD_MAP)) {
-    t = t.split(en).join(es)
-  }
-  return t
+  return titleCase(name)
 }
 
 export function translateMuscle(m: string): string {

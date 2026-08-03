@@ -15,6 +15,7 @@ import UserProfile from '@/components/UserProfile'
 import ProgressiveOverload from '@/components/ProgressiveOverload'
 import AnimatedBackground from '@/components/AnimatedBackground'
 import SpotifyWidget from '@/components/SpotifyWidget'
+import ExerciseCatalog from '@/components/ExerciseCatalog'
 
 const navItems = [
   { id: 'overview', abbr: 'RE', label: 'Resumen', sub: 'Tu progreso' },
@@ -26,6 +27,7 @@ const navItems = [
   { id: 'meals', abbr: 'CM', label: 'Nutrición', sub: 'Tracker de comidas' },
   { id: 'overload', abbr: 'SO', label: 'Sobrecarga', sub: 'Progresión' },
   { id: 'coach', abbr: 'IA', label: 'Coach IA', sub: 'Recomendaciones' },
+  { id: 'exercises', abbr: 'EJ', label: 'Ejercicios', sub: 'Todos los disponibles' },
 ]
 
 export default function Dashboard() {
@@ -80,6 +82,7 @@ export default function Dashboard() {
       case 'meals': return <MealTracker userId={user.id} />
       case 'overload': return <ProgressiveOverload userId={user.id} />
       case 'coach': return <CoachRecommendations userId={user.id} />
+      case 'exercises': return <ExerciseCatalog />
       default: return null
     }
   }
