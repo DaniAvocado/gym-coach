@@ -8,6 +8,211 @@ interface RoutinesProps {
   userId: string
 }
 
+const EQUIPMENT_MAP: Record<string, string> = {
+  'body weight': 'peso corporal',
+  dumbbell: 'mancuernas',
+  cable: 'polea',
+  barbell: 'barra',
+  'leverage machine': 'máquina',
+  band: 'banda elástica',
+  'smith machine': 'máquina Smith',
+  kettlebell: 'kettlebell',
+  weighted: 'con peso',
+  'stability ball': 'balón suizo',
+  'ez barbell': 'barra EZ',
+  'medicine ball': 'balón medicinal',
+  rope: 'soga',
+  machine: 'máquina',
+  other: 'otro',
+}
+
+const MUSCLE_MAP: Record<string, string> = {
+  abs: 'abdominales',
+  abdominals: 'abdominales',
+  'rectus abdominis': 'recto abdominal',
+  obliques: 'oblicuos',
+  biceps: 'bíceps',
+  'biceps brachii': 'bíceps braquial',
+  triceps: 'tríceps',
+  'triceps brachii': 'tríceps braquial',
+  shoulders: 'hombros',
+  'delts': 'deltoides',
+  deltoids: 'deltoides',
+  'deltoid': 'deltoides',
+  'anterior deltoid': 'deltoides anterior',
+  'lateral deltoid': 'deltoides lateral',
+  'medial deltoid': 'deltoides medio',
+  'posterior deltoid': 'deltoides posterior',
+  chest: 'pecho',
+  'pecs': 'pectorales',
+  pectorals: 'pectorales',
+  'pectoralis major': 'pectoral mayor',
+  'pectoralis minor': 'pectoral menor',
+  back: 'espalda',
+  'lats': 'dorsales',
+  'latissimus dorsi': 'dorsal ancho',
+  'traps': 'trapecios',
+  'trapezius': 'trapecios',
+  'rhomboids': 'romboides',
+  'erector spinae': 'erectores espinales',
+  'serratus': 'serrato',
+  'lower back': 'lumbar',
+  'hip flexors': 'flexores de cadera',
+  forearms: 'antebrazos',
+  'brachialis': 'braquial',
+  calves: 'pantorrillas',
+  'gastrocnemius': 'gastrocnemio',
+  soleus: 'sóleo',
+  'tibialis anterior': 'tibial anterior',
+  quads: 'cuádriceps',
+  'quadriceps': 'cuádriceps',
+  hamstrings: 'isquiotibiales',
+  glutes: 'glúteos',
+  'gluteals': 'glúteos',
+  'gluteus maximus': 'glúteo mayor',
+  hips: 'caderas',
+  adductors: 'aductores',
+  abductors: 'abductores',
+  neck: 'cuello',
+  'levator scapulae': 'elevador de escápula',
+  core: 'core',
+  'infraspinatus': 'infraespinoso',
+  'supraspinatus': 'supraespinoso',
+  'teres major': 'redondo mayor',
+  'teres minor': 'redondo menor',
+  'wrist': 'muñeca',
+  'ankle': 'tobillo',
+}
+
+const NAME_WORD_MAP: Record<string, string> = {
+  barbell: 'barra',
+  dumbbell: 'mancuerna',
+  'dumbbells': 'mancuernas',
+  cable: 'polea',
+  'body weight': 'peso corporal',
+  'pull-up': 'dominada',
+  'pull-ups': 'dominadas',
+  'pullup': 'dominada',
+  'push-up': 'flexión',
+  'push-ups': 'flexiones',
+  'pushup': 'flexión',
+  'sit-up': 'abdominal',
+  'sit-ups': 'abdominales',
+  crunch: 'crunch',
+  'crunchs': 'crunches',
+  plank: 'plancha',
+  squat: 'sentadilla',
+  'squats': 'sentadillas',
+  'deadlift': 'peso muerto',
+  'bench press': 'press banca',
+  'press': 'press',
+  row: 'remo',
+  curl: 'curl',
+  'curls': 'curls',
+  raise: 'elevación',
+  'raises': 'elevaciones',
+  fly: 'apertura',
+  'flies': 'aperturas',
+  lunge: 'zancada',
+  'lunges': 'zancadas',
+  extension: 'extensión',
+  kickback: 'patada',
+  'kickbacks': 'patadas',
+  'leg': 'pierna',
+  'legs': 'piernas',
+  'arm': 'brazo',
+  'arms': 'brazos',
+  chest: 'pecho',
+  back: 'espalda',
+  shoulder: 'hombro',
+  'shoulders': 'hombros',
+  'hip': 'cadera',
+  'hips': 'caderas',
+  calf: 'pantorrilla',
+  'calves': 'pantorrillas',
+  'biceps': 'bíceps',
+  'triceps': 'tríceps',
+  'hamstring': 'isquiotibial',
+  'hamstrings': 'isquiotibiales',
+  'glute': 'glúteo',
+  'glutes': 'glúteos',
+  'lat': 'dorsal',
+  'lats': 'dorsales',
+  'trap': 'trapecio',
+  'traps': 'trapecios',
+  'delt': 'deltoides',
+  'delts': 'deltoides',
+  'abs': 'abdominales',
+  'ab': 'abdominal',
+  'overhead': 'sobre la cabeza',
+  seated: 'sentado',
+  standing: 'de pie',
+  incline: 'inclinado',
+  decline: 'declinado',
+  lying: 'acostado',
+  front: 'frontal',
+  lateral: 'lateral',
+  reverse: 'inverso',
+  alternating: 'alternado',
+  alternate: 'alternado',
+  'single-arm': 'un brazo',
+  'one-arm': 'un brazo',
+  machine: 'máquina',
+  'smith': 'Smith',
+  'kettlebell': 'kettlebell',
+  band: 'banda',
+  rope: 'soga',
+  assisted: 'asistido',
+  weighted: 'con peso',
+  'stability ball': 'balón suizo',
+  'ez barbell': 'barra EZ',
+  'landmine': 'landmine',
+  twist: 'giro',
+  'hip thrust': 'empuje de cadera',
+  bridge: 'puente',
+  hold: 'aguante',
+  'neck': 'cuello',
+  'wrist': 'muñeca',
+  'forearm': 'antebrazo',
+  'ankle': 'tobillo',
+  'toe': 'dedo',
+  'heel': 'talón',
+  'bench': 'banca',
+  'bar': 'barra',
+  'ball': 'balón',
+  'wheel': 'rueda',
+  'roller': 'rodillo',
+  'step': 'paso',
+  'skip': 'salto',
+  'jump': 'salto',
+  'jog': 'trote',
+  'walk': 'caminata',
+  'run': 'carrera',
+  'run in place': 'correr en el sitio',
+  'stretch': 'estiramiento',
+  'thrust': 'empuje',
+}
+
+function translateName(name: string): string {
+  if (!name) return name
+  let t = name
+  for (const [en, es] of Object.entries(NAME_WORD_MAP)) {
+    t = t.split(en).join(es)
+  }
+  return t
+}
+
+function translateMuscle(m: string): string {
+  if (!m) return m
+  const key = m.trim().toLowerCase()
+  return MUSCLE_MAP[key] || MUSCLE_MAP[key.replace(/s$/, '')] || m
+}
+
+function translateEquipment(eq: string): string {
+  if (!eq) return eq
+  return EQUIPMENT_MAP[eq.trim().toLowerCase()] || eq
+}
+
 export default function Routines({ userId }: RoutinesProps) {
   const [routines, setRoutines] = useState<any[]>([])
   const [exercises, setExercises] = useState<any[]>([])
@@ -18,6 +223,7 @@ export default function Routines({ userId }: RoutinesProps) {
   const [loading, setLoading] = useState(false)
   const [detailExercise, setDetailExercise] = useState<any>(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [categoryFilter, setCategoryFilter] = useState('')
 
   useEffect(() => { fetchRoutines(); fetchExercises() }, [])
 
@@ -27,7 +233,7 @@ export default function Routines({ userId }: RoutinesProps) {
   }
 
   const fetchExercises = async () => {
-    const { data } = await supabase.from('exercises').select('*').order('category')
+    const { data } = await supabase.from('exercises').select('*').order('name')
     setExercises(data || [])
   }
 
@@ -60,12 +266,18 @@ export default function Routines({ userId }: RoutinesProps) {
     fetchRoutines()
   }
 
-  const inputStyle = { background: 'var(--ink)', color: 'var(--text)', border: '1px solid var(--border2)', borderRadius: '4px', padding: '10px 12px', fontFamily: 'var(--font-mono)', fontSize: '12px', outline: 'none', width: '100%' }
+  const inputStyle = { background: 'var(--ink)', color: 'var(--text)', border: '1px solid var(--border2)', borderRadius: '4px', padding: '10px 12px', fontFamily: 'var(--font-mono)', fontSize: '14px', outline: 'none', width: '100%' }
 
   const steps = detailExercise?.instruction_steps_es || []
 
+  const categories = Array.from(new Set(exercises.map(e => e.category))).sort()
+
   const filteredExercises = exercises
-    .filter(ex => ex.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    .filter(ex => {
+      const matchesTerm = !searchTerm || translateName(ex.name).toLowerCase().includes(searchTerm.toLowerCase()) || ex.category.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesCategory = !categoryFilter || ex.category === categoryFilter
+      return matchesTerm && matchesCategory
+    })
     .slice(0, 30)
 
   return (
@@ -73,7 +285,7 @@ export default function Routines({ userId }: RoutinesProps) {
       {/* Action */}
       <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
         onClick={() => setShowCreateForm(!showCreateForm)}
-        style={{ padding: '12px', background: showCreateForm ? 'transparent' : 'var(--blue)', color: showCreateForm ? 'var(--blue)' : '#0b0b12', border: `1px solid ${showCreateForm ? 'var(--blue)' : 'transparent'}`, borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
+        style={{ padding: '12px', background: showCreateForm ? 'transparent' : 'var(--blue)', color: showCreateForm ? 'var(--blue)' : '#0b0b12', border: `1px solid ${showCreateForm ? 'var(--blue)' : 'transparent'}`, borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '14px' }}>
         {showCreateForm ? '✕ Cancelar' : '+ Nueva Rutina'}
       </motion.button>
 
@@ -85,21 +297,37 @@ export default function Routines({ userId }: RoutinesProps) {
             <input type="text" placeholder="Nombre de la rutina" value={routineName} onChange={e => setRoutineName(e.target.value)} style={inputStyle} />
             <textarea placeholder="Descripción (opcional)" value={routineDescription} onChange={e => setRoutineDescription(e.target.value)} rows={2} style={inputStyle} />
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <input type="text" placeholder="Buscar ejercicio..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} style={inputStyle} />
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxHeight: '220px', overflowY: 'auto', border: '1px solid var(--border)', borderRadius: '4px', padding: '4px', background: 'var(--ink)' }}>
+              <input type="text" placeholder="Buscar ejercicio en español..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} style={inputStyle} />
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                <button onClick={() => setCategoryFilter('')} style={{
+                  fontFamily: 'var(--font-mono)', fontSize: '13px', padding: '5px 10px', borderRadius: '3px', cursor: 'pointer',
+                  border: categoryFilter === '' ? '1px solid var(--blue)' : '1px solid var(--border)',
+                  background: categoryFilter === '' ? 'rgba(91,141,239,0.15)' : 'transparent',
+                  color: categoryFilter === '' ? 'var(--blue-light)' : 'var(--text-muted)',
+                }}>Todos</button>
+                {categories.map(cat => (
+                  <button key={cat} onClick={() => setCategoryFilter(categoryFilter === cat ? '' : cat)} style={{
+                    fontFamily: 'var(--font-mono)', fontSize: '13px', padding: '5px 10px', borderRadius: '3px', cursor: 'pointer',
+                    border: categoryFilter === cat ? '1px solid var(--blue)' : '1px solid var(--border)',
+                    background: categoryFilter === cat ? 'rgba(91,141,239,0.15)' : 'transparent',
+                    color: categoryFilter === cat ? 'var(--blue-light)' : 'var(--text-muted)',
+                  }}>{cat}</button>
+                ))}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxHeight: '240px', overflowY: 'auto', border: '1px solid var(--border)', borderRadius: '4px', padding: '4px', background: 'var(--ink)' }}>
                 {filteredExercises.map(ex => (
-                  <div key={ex.id} onClick={() => { addExercise(ex.id); setSearchTerm('') }}
-                    style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 10px', cursor: 'pointer', borderRadius: '3px', fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)', transition: 'background 0.15s ease' }}
+                  <div key={ex.id} onClick={() => { addExercise(ex.id); setSearchTerm(''); setCategoryFilter('') }}
+                    style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 10px', cursor: 'pointer', borderRadius: '3px', fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-muted)', transition: 'background 0.15s ease' }}
                     onMouseEnter={e => (e.currentTarget.style.background = 'rgba(111,160,255,0.1)')}
                     onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
                     <span style={{ fontWeight: 700, color: 'var(--blue-light)' }}>+</span>
-                    <span>{ex.name}</span>
-                    <span style={{ marginLeft: 'auto', fontSize: '10px', color: 'var(--text-faint)' }}>{ex.category}</span>
+                    <span>{translateName(ex.name)}</span>
+                    <span style={{ marginLeft: 'auto', fontSize: '12px', color: 'var(--text-faint)' }}>{ex.category}</span>
                   </div>
                 ))}
-                {filteredExercises.length === 0 && searchTerm && (
-                  <div style={{ padding: '10px', fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-faint)', textAlign: 'center' }}>
-                    Sin resultados para "{searchTerm}"
+                {filteredExercises.length === 0 && (
+                  <div style={{ padding: '10px', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-faint)', textAlign: 'center' }}>
+                    {searchTerm || categoryFilter ? `Sin resultados para "${searchTerm}"` : 'Escribe o selecciona una categoría para buscar'}
                   </div>
                 )}
               </div>
@@ -110,12 +338,12 @@ export default function Routines({ userId }: RoutinesProps) {
                 {selectedExercises.map((item, idx) => (
                   <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 12px', background: 'rgba(111,160,255,0.06)', borderRadius: '4px', borderLeft: '3px solid var(--blue)' }}>
                     <div style={{ flex: 1, cursor: 'pointer' }} onClick={() => setDetailExercise(item.exercise)}>
-                      <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '12px', color: 'var(--text)' }}>{item.exercise.name}</div>
+                      <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '14px', color: 'var(--text)' }}>{translateName(item.exercise.name)}</div>
                       <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
-                        <input type="number" value={item.sets} onChange={e => { const u = [...selectedExercises]; u[idx].sets = parseInt(e.target.value); setSelectedExercises(u) }} style={{ ...inputStyle, width: '60px', fontSize: '11px', padding: '6px 8px' }} />
-                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-faint)', alignSelf: 'center' }}>×</span>
-                        <input type="number" value={item.reps} onChange={e => { const u = [...selectedExercises]; u[idx].reps = parseInt(e.target.value); setSelectedExercises(u) }} style={{ ...inputStyle, width: '60px', fontSize: '11px', padding: '6px 8px' }} />
-                        <input type="number" value={item.rest_seconds} onChange={e => { const u = [...selectedExercises]; u[idx].rest_seconds = parseInt(e.target.value); setSelectedExercises(u) }} style={{ ...inputStyle, width: '80px', fontSize: '11px', padding: '6px 8px' }} placeholder="desc(s)" />
+                        <input type="number" value={item.sets} onChange={e => { const u = [...selectedExercises]; u[idx].sets = parseInt(e.target.value); setSelectedExercises(u) }} style={{ ...inputStyle, width: '60px', fontSize: '13px', padding: '6px 8px' }} />
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-faint)', alignSelf: 'center' }}>×</span>
+                        <input type="number" value={item.reps} onChange={e => { const u = [...selectedExercises]; u[idx].reps = parseInt(e.target.value); setSelectedExercises(u) }} style={{ ...inputStyle, width: '60px', fontSize: '13px', padding: '6px 8px' }} />
+                        <input type="number" value={item.rest_seconds} onChange={e => { const u = [...selectedExercises]; u[idx].rest_seconds = parseInt(e.target.value); setSelectedExercises(u) }} style={{ ...inputStyle, width: '80px', fontSize: '13px', padding: '6px 8px' }} placeholder="desc(s)" />
                       </div>
                     </div>
                     <button onClick={() => setSelectedExercises(selectedExercises.filter((_, i) => i !== idx))} style={{ color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '4px' }}>✕</button>
@@ -125,7 +353,7 @@ export default function Routines({ userId }: RoutinesProps) {
             )}
 
             <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={createRoutine} disabled={loading}
-              style={{ width: '100%', padding: '12px', background: 'var(--green)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '12px', opacity: loading ? 0.5 : 1 }}>
+              style={{ width: '100%', padding: '12px', background: 'var(--green)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '14px', opacity: loading ? 0.5 : 1 }}>
               {loading ? 'Creando...' : 'Guardar Rutina'}
             </motion.button>
           </div>
@@ -140,16 +368,16 @@ export default function Routines({ userId }: RoutinesProps) {
               style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '6px', padding: '16px', borderLeft: '3px solid var(--purple)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
                 <div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '14px', color: 'var(--text)' }}>{routine.name}</div>
-                  {routine.description && <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>{routine.description}</div>}
+                  <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '16px', color: 'var(--text)' }}>{routine.name}</div>
+                  {routine.description && <div style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-muted)', marginTop: '2px' }}>{routine.description}</div>}
                 </div>
                 <button onClick={() => deleteRoutine(routine.id)} style={{ color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '2px' }}>✕</button>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 {routine.routine_exercises?.map((re: any, i: number) => (
                   <div key={i} onClick={() => setDetailExercise(re.exercises)} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 8px', background: 'rgba(255,255,255,0.03)', borderRadius: '4px', cursor: 'pointer', transition: 'background 0.15s ease' }} onMouseEnter={e => (e.currentTarget.style.background = 'rgba(111,160,255,0.08)')} onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.03)')}>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text)' }}>{re.exercises?.name}</span>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)' }}>{re.sets}×{re.reps} · {re.rest_seconds}s</span>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text)' }}>{translateName(re.exercises?.name)}</span>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-muted)' }}>{re.sets}×{re.reps} · {re.rest_seconds}s</span>
                   </div>
                 ))}
               </div>
@@ -159,7 +387,7 @@ export default function Routines({ userId }: RoutinesProps) {
       ) : (
         !showCreateForm && (
           <div style={{ textAlign: 'center', padding: '3rem', border: '1px dashed var(--border)', borderRadius: '6px' }}>
-            <p style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-muted)', marginTop: '8px' }}>No tienes rutinas creadas. Haz clic en "Nueva Rutina".</p>
+            <p style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color: 'var(--text-muted)', marginTop: '8px' }}>No tienes rutinas creadas. Haz clic en "Nueva Rutina".</p>
           </div>
         )
       )}
@@ -175,9 +403,9 @@ export default function Routines({ userId }: RoutinesProps) {
             style={{ background: 'var(--ink-panel)', border: '1px solid var(--border2)', borderRadius: '12px', width: '100%', maxWidth: '520px', maxHeight: '85vh', overflowY: 'auto', padding: '20px', boxShadow: '0 20px 60px rgba(0,0,0,0.5)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', marginBottom: '12px' }}>
               <div>
-                <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '15px', color: 'var(--text)', lineHeight: 1.2 }}>{detailExercise.name}</div>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-faint)', marginTop: '3px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                  {detailExercise.category} {detailExercise.equipment ? `· ${detailExercise.equipment}` : ''}
+                <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '18px', color: 'var(--text)', lineHeight: 1.2 }}>{translateName(detailExercise.name)}</div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-faint)', marginTop: '3px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                  {detailExercise.category} {detailExercise.equipment ? `· ${translateEquipment(detailExercise.equipment)}` : ''}
                 </div>
               </div>
               <button onClick={() => setDetailExercise(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '18px', padding: '2px' }}>✕</button>
@@ -185,30 +413,30 @@ export default function Routines({ userId }: RoutinesProps) {
 
             {detailExercise.gif_url && (
               <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border)', marginBottom: '12px', background: '#0b0b12', display: 'flex', justifyContent: 'center' }}>
-                <img src={detailExercise.gif_url} alt={detailExercise.name} style={{ maxHeight: '220px', objectFit: 'contain', display: 'block' }} />
+                <img src={detailExercise.gif_url} alt={translateName(detailExercise.name)} style={{ maxHeight: '240px', objectFit: 'contain', display: 'block' }} />
               </div>
             )}
 
             {detailExercise.target_muscle && (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '12px' }}>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', padding: '3px 8px', borderRadius: '3px', background: 'rgba(255,107,157,0.12)', color: 'var(--pink-light)', border: '1px solid rgba(255,107,157,0.3)' }}>
-                  Foco: {detailExercise.target_muscle}
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '3px 8px', borderRadius: '3px', background: 'rgba(255,107,157,0.12)', color: 'var(--pink-light)', border: '1px solid rgba(255,107,157,0.3)' }}>
+                  Foco: {translateMuscle(detailExercise.target_muscle)}
                 </span>
                 {(detailExercise.secondary_muscles || []).map((m: string, i: number) => (
-                  <span key={i} style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', padding: '3px 8px', borderRadius: '3px', background: 'rgba(91,141,239,0.1)', color: 'var(--blue-light)', border: '1px solid rgba(91,141,239,0.25)' }}>
-                    {m}
+                  <span key={i} style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', padding: '3px 8px', borderRadius: '3px', background: 'rgba(91,141,239,0.1)', color: 'var(--blue-light)', border: '1px solid rgba(91,141,239,0.25)' }}>
+                    {translateMuscle(m)}
                   </span>
                 ))}
               </div>
             )}
 
-            <div className="kpi-label" style={{ marginBottom: '8px' }}>CÓMO EJECUTARLO</div>
+            <div className="kpi-label" style={{ marginBottom: '8px', fontSize: '0.65rem' }}>CÓMO EJECUTARLO</div>
             {steps.length > 0 ? (
-              <ol style={{ display: 'flex', flexDirection: 'column', gap: '8px', paddingLeft: '20px', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+              <ol style={{ display: 'flex', flexDirection: 'column', gap: '8px', paddingLeft: '20px', fontFamily: 'var(--font-mono)', fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.6 }}>
                 {steps.map((s: string, i: number) => <li key={i}>{s}</li>)}
               </ol>
             ) : (
-              <p style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+              <p style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.6 }}>
                 {detailExercise.description || 'Sin instrucciones disponibles.'}
               </p>
             )}
