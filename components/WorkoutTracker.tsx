@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { motion } from 'framer-motion'
+import { translateName } from '@/lib/translate'
 import WorkoutTimer from './WorkoutTimer'
 import SetDetail from './SetDetail'
 
@@ -27,7 +28,7 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
   useEffect(() => { fetchExercises() }, [])
 
   const fetchExercises = async () => {
-    const { data } = await supabase.from('exercises').select('*').order('category')
+    const { data } = await supabase.from('exercises').select('*').order('name')
     setExercises(data || [])
   }
 
@@ -113,7 +114,7 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
         <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '12px', marginBottom: '16px' }}>
           <select value={selectedExercise} onChange={(e) => setSelectedExercise(e.target.value)} style={{ ...inputStyle, cursor: 'pointer' }}>
             <option value="">Selecciona ejercicio...</option>
-            {exercises.map(ex => <option key={ex.id} value={ex.id}>{ex.name} ({ex.category})</option>)}
+            {exercises.map(ex => <option key={ex.id} value={ex.id}>{translateName(ex.name)} ({ex.category})</option>)}
           </select>
           <div style={{ display: 'flex', gap: '8px' }}>
             <input type="number" value={numSets} onChange={(e) => setNumSets(e.target.value)} min="1" max="10" placeholder="# Series" style={inputStyle} />
@@ -148,7 +149,7 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
               <motion.div key={idx} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
                 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(111,160,255,0.06)', borderRadius: '4px', borderLeft: '3px solid var(--blue)' }}>
                 <div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '13px', color: 'var(--text)' }}>{item.exercise_name}</div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '13px', color: 'var(--text)' }}>{translateName(item.exercise_name)}</div>
                   <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
                     {item.sets.map((s: ExerciseSet) => `${s.setNumber}: ${s.weight}kg × ${s.reps}`).join(' | ')}
                   </div>
