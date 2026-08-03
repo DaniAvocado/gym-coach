@@ -1,3 +1,5 @@
+import { EXERCISE_NAMES_ES } from './names_es'
+
 const EQUIPMENT_MAP: Record<string, string> = {
   'body weight': 'peso corporal',
   dumbbell: 'mancuernas',
@@ -87,7 +89,8 @@ export function titleCase(s: string): string {
 
 export function translateName(name: string): string {
   if (!name) return name
-  return titleCase(name)
+  const es = EXERCISE_NAMES_ES[name.toLowerCase()]
+  return es || titleCase(name)
 }
 
 export function translateMuscle(m: string): string {
