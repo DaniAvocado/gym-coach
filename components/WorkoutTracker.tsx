@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { motion } from 'framer-motion'
 import { translateName } from '@/lib/translate'
+import { fetchAllExercises } from '@/lib/exercises'
 import ExerciseDetailModal from './ExerciseDetailModal'
 import WorkoutTimer from './WorkoutTimer'
 import SetDetail from './SetDetail'
@@ -35,13 +36,24 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
   const [exerciseSets, setExerciseSets] = useState<ExerciseSet[]>([])
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [detailExercise, setDetailExercise] = useState<any>(null)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [categoryFilter, setCategoryFilter] = useState('')
 
   useEffect(() => { fetchExercises() }, [])
 
   const fetchExercises = async () => {
-    const { data } = await supabase.from('exercises').select('*').order('name').limit(2000)
-    setExercises(data || [])
+    setExercises(await fetchAllExercises())
   }
+
+  const categories = Array.from(new Set(exercises.map(e => e.category))).sort()
+
+  const filteredExercises = exercises
+    .filter(ex => {
+      const matchesTerm = !searchTerm || translateName(ex.name).toLowerCase().includes(searchTerm.toLowerCase()) || ex.category.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesCategory = !categoryFilter || ex.category === categoryFilter
+      return matchesTerm && matchesCategory
+    })
+    .slice(0, 30)
 
   const initializeSets = () => {
     const sets = Array.from({ length: parseInt(numSets) || 3 }, (_, i) => ({
@@ -143,17 +155,49 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
       {/* Selector */}
       <div className="panel" style={{ borderLeft: '3px solid var(--blue)' }}>
         <div className="kpi-label" style={{ marginBottom: '12px', fontSize: '0.7rem', letterSpacing: '0.06em' }}>AGREGAR EJERCICIO</div>
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '12px', marginBottom: '16px' }}>
-          <select value={selectedExercise} onChange={(e) => setSelectedExercise(e.target.value)} style={{ ...inputStyle, cursor: 'pointer' }}>
-            <option value="">Selecciona ejercicio...</option>
-            {exercises.map(ex => <option key={ex.id} value={ex.id}>{translateName(ex.name)} ({ex.category})</option>)}
-          </select>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <input type="number" value={numSets} onChange={(e) => setNumSets(e.target.value)} min="1" max="10" placeholder="# Series" style={inputStyle} />
-            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={initializeSets} style={{ padding: '10px 20px', background: 'var(--blue)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '13px' }}>
-              Crear
-            </motion.button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
+          <input type="text" placeholder="Buscar ejercicio..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} style={inputStyle} />
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+            <button onClick={() => setCategoryFilter('')} style={{
+              fontFamily: 'var(--font-mono)', fontSize: '13px', padding: '5px 10px', borderRadius: '3px', cursor: 'pointer',
+              border: categoryFilter === '' ? '1px solid var(--blue)' : '1px solid var(--border)',
+              background: categoryFilter === '' ? 'rgba(91,141,239,0.15)' : 'transparent',
+              color: categoryFilter === '' ? 'var(--blue-light)' : 'var(--text-muted)',
+            }}>Todos</button>
+            {categories.map(cat => (
+              <button key={cat} onClick={() => setCategoryFilter(categoryFilter === cat ? '' : cat)} style={{
+                fontFamily: 'var(--font-mono)', fontSize: '13px', padding: '5px 10px', borderRadius: '3px', cursor: 'pointer',
+                border: categoryFilter === cat ? '1px solid var(--blue)' : '1px solid var(--border)',
+                background: categoryFilter === cat ? 'rgba(91,141,239,0.15)' : 'transparent',
+                color: categoryFilter === cat ? 'var(--blue-light)' : 'var(--text-muted)',
+              }}>{cat}</button>
+            ))}
           </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxHeight: '200px', overflowY: 'auto', border: '1px solid var(--border)', borderRadius: '4px', padding: '4px', background: 'var(--ink)' }}>
+            {filteredExercises.map(ex => (
+              <div key={ex.id} onClick={() => { setSelectedExercise(ex.id); setSearchTerm(''); setCategoryFilter('') }}
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 10px', cursor: 'pointer', borderRadius: '3px', fontFamily: 'var(--font-mono)', fontSize: '13px', color: selectedExercise === ex.id ? 'var(--text)' : 'var(--text-muted)', background: selectedExercise === ex.id ? 'rgba(111,160,255,0.12)' : 'transparent', transition: 'background 0.15s ease' }}
+                onMouseEnter={e => (e.currentTarget.style.background = selectedExercise === ex.id ? 'rgba(111,160,255,0.12)' : 'rgba(111,160,255,0.1)')}
+                onMouseLeave={e => (e.currentTarget.style.background = selectedExercise === ex.id ? 'rgba(111,160,255,0.12)' : 'transparent')}>
+                <span style={{ fontWeight: 700, color: 'var(--blue-light)' }}>+</span>
+                <span>{translateName(ex.name)}</span>
+                <span style={{ marginLeft: 'auto', fontSize: '12px', color: 'var(--text-faint)' }}>{ex.category}</span>
+              </div>
+            ))}
+            {filteredExercises.length === 0 && (
+              <div style={{ padding: '10px', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-faint)', textAlign: 'center' }}>
+                {searchTerm || categoryFilter ? `Sin resultados para "${searchTerm}"` : 'Escribe o selecciona una categoría para buscar'}
+              </div>
+            )}
+          </div>
+          {selectedExercise && (
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <input type="number" value={numSets} onChange={(e) => setNumSets(e.target.value)} min="1" max="10" placeholder="# Series" style={inputStyle} />
+              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={initializeSets} style={{ padding: '10px 20px', background: 'var(--blue)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '13px' }}>
+                Crear series
+              </motion.button>
+            </div>
+          )}
         </div>
 
         {exerciseSets.length > 0 && (
