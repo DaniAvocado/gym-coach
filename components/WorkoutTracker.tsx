@@ -39,7 +39,7 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
   useEffect(() => { fetchExercises() }, [])
 
   const fetchExercises = async () => {
-    const { data } = await supabase.from('exercises').select('*').order('name')
+    const { data } = await supabase.from('exercises').select('*').order('name').limit(2000)
     setExercises(data || [])
   }
 
