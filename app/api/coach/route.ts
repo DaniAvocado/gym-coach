@@ -1,22 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { calculateTDEE } from '@/lib/nutrition'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
-
-const TDEE_VARS = { sedentary: 1.2, light: 1.375, moderate: 1.55, active: 1.725, very_active: 1.9 }
-const META_ADJ = { slow: 0.9, normal: 1.0, fast: 1.1 }
-
-function calculateBMR(w: number, h: number, a: number, g: string) {
-  return 10 * w + 6.25 * h - 5 * a + (g === 'male' ? 5 : -161)
-}
-
-function calculateTDEE(w: number, h: number, a: number, g: string, act: string, meta: string) {
-  const bmr = calculateBMR(w, h, a, g)
-  return Math.round(bmr * (TDEE_VARS[act as keyof typeof TDEE_VARS] || 1.55) * (META_ADJ[meta as keyof typeof META_ADJ] || 1.0))
-}
 
 export async function POST(req: NextRequest) {
   try {
@@ -25,7 +14,7 @@ export async function POST(req: NextRequest) {
     const { data: { user }, error } = await supabase.auth.getUser(token)
     if (error || !user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
 
-    const { workouts, meals, points, profile } = await req.json()
+    const { workouts, meals, profile } = await req.json()
 
     const w = profile?.weight_kg || 75
     const h = profile?.height_cm || 175

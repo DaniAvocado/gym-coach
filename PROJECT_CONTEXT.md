@@ -90,3 +90,13 @@ RLS: activado por dueño (auth.uid()) en todas las tablas; exercises solo lectur
 - lib/rls.sql: politicas RLS por dueno (auth.uid()) en todas las tablas; exercises solo lectura
 - scripts/import_exercises.js: usar SUPABASE_SERVICE_ROLE_KEY por env (sin anon key hardcodeada)
 - PROJECT_CONTEXT.md: actualizar estado de RLS
+
+[2026-08-09 19:57] 6d2dd66: refactor: reducir duplicacion y reforzar seguridad
+
+- Eliminar BodyMap.tsx muerto, migraciones SQL v2-v4/seed/profile y SVGs de plantilla
+- Extraer useMuscleCounts hook compartido (BodyMapVisual + RecoveryZone)
+- Eliminar tabla points_log (insert sin lectura) y NAME_WORD_MAP vacio
+- Quitar campo icon muerto en PointsDisplay
+- Seguridad: validar JWT en /api/coach, headers de seguridad en next.config.ts
+
+[2026-08-09 20:16] 3cfa9c1: fix: hacer schema.sql idempotente (IF NOT EXISTS) para re-ejecutar sin errores

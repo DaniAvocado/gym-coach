@@ -1,16 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { supabase } from '@/lib/supabase'
 import { motion } from 'framer-motion'
 import { translateName } from '@/lib/translate'
 import { fetchAllExercises } from '@/lib/exercises'
+import { useExerciseFilter } from '@/lib/useExerciseFilter'
 import ExerciseDetailModal from './ExerciseDetailModal'
 
 export default function ExerciseCatalog() {
   const [exercises, setExercises] = useState<any[]>([])
-  const [searchTerm, setSearchTerm] = useState('')
-  const [categoryFilter, setCategoryFilter] = useState('')
   const [detailExercise, setDetailExercise] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
@@ -21,13 +19,7 @@ export default function ExerciseCatalog() {
     setLoading(false)
   }
 
-  const categories = Array.from(new Set(exercises.map(e => e.category))).sort()
-
-  const filtered = exercises.filter(ex => {
-    const matchesTerm = !searchTerm || translateName(ex.name).toLowerCase().includes(searchTerm.toLowerCase()) || ex.category.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = !categoryFilter || ex.category === categoryFilter
-    return matchesTerm && matchesCategory
-  })
+  const { searchTerm, setSearchTerm, categoryFilter, setCategoryFilter, categories, filtered } = useExerciseFilter(exercises, Infinity)
 
   const inputStyle = { background: 'var(--ink)', color: 'var(--text)', border: '1px solid var(--border2)', borderRadius: '4px', padding: '10px 12px', fontFamily: 'var(--font-mono)', fontSize: '14px', outline: 'none', width: '100%' }
 

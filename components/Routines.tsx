@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { translateName } from '@/lib/translate'
 import { fetchAllExercises } from '@/lib/exercises'
 import ExerciseDetailModal from './ExerciseDetailModal'
+import ExercisePicker from './ExercisePicker'
 
 interface RoutinesProps {
   userId: string
@@ -20,8 +21,6 @@ export default function Routines({ userId }: RoutinesProps) {
   const [selectedExercises, setSelectedExercises] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [detailExercise, setDetailExercise] = useState<any>(null)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [categoryFilter, setCategoryFilter] = useState('')
 
   useEffect(() => { fetchRoutines(); fetchExercises() }, [])
 
@@ -34,10 +33,8 @@ export default function Routines({ userId }: RoutinesProps) {
     setExercises(await fetchAllExercises())
   }
 
-  const addExercise = (exerciseId: string) => {
-    const exercise = exercises.find(e => e.id === exerciseId)
-    if (!exercise) return
-    setSelectedExercises([...selectedExercises, { exercise_id: exerciseId, exercise, sets: 3, reps: 10, rest_seconds: 90 }])
+  const addExercise = (exercise: any) => {
+    setSelectedExercises([...selectedExercises, { exercise_id: exercise.id, exercise, sets: 3, reps: 10, rest_seconds: 90 }])
   }
 
   const createRoutine = async () => {
@@ -65,16 +62,6 @@ export default function Routines({ userId }: RoutinesProps) {
 
   const inputStyle = { background: 'var(--ink)', color: 'var(--text)', border: '1px solid var(--border2)', borderRadius: '4px', padding: '10px 12px', fontFamily: 'var(--font-mono)', fontSize: '14px', outline: 'none', width: '100%' }
 
-  const categories = Array.from(new Set(exercises.map(e => e.category))).sort()
-
-  const filteredExercises = exercises
-    .filter(ex => {
-      const matchesTerm = !searchTerm || translateName(ex.name).toLowerCase().includes(searchTerm.toLowerCase()) || ex.category.toLowerCase().includes(searchTerm.toLowerCase())
-      const matchesCategory = !categoryFilter || ex.category === categoryFilter
-      return matchesTerm && matchesCategory
-    })
-    .slice(0, 30)
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       {/* Action */}
@@ -92,40 +79,7 @@ export default function Routines({ userId }: RoutinesProps) {
             <input type="text" placeholder="Nombre de la rutina" value={routineName} onChange={e => setRoutineName(e.target.value)} style={inputStyle} />
             <textarea placeholder="Descripción (opcional)" value={routineDescription} onChange={e => setRoutineDescription(e.target.value)} rows={2} style={inputStyle} />
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <input type="text" placeholder="Buscar ejercicio en español..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} style={inputStyle} />
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-                <button onClick={() => setCategoryFilter('')} style={{
-                  fontFamily: 'var(--font-mono)', fontSize: '13px', padding: '5px 10px', borderRadius: '3px', cursor: 'pointer',
-                  border: categoryFilter === '' ? '1px solid var(--blue)' : '1px solid var(--border)',
-                  background: categoryFilter === '' ? 'rgba(91,141,239,0.15)' : 'transparent',
-                  color: categoryFilter === '' ? 'var(--blue-light)' : 'var(--text-muted)',
-                }}>Todos</button>
-                {categories.map(cat => (
-                  <button key={cat} onClick={() => setCategoryFilter(categoryFilter === cat ? '' : cat)} style={{
-                    fontFamily: 'var(--font-mono)', fontSize: '13px', padding: '5px 10px', borderRadius: '3px', cursor: 'pointer',
-                    border: categoryFilter === cat ? '1px solid var(--blue)' : '1px solid var(--border)',
-                    background: categoryFilter === cat ? 'rgba(91,141,239,0.15)' : 'transparent',
-                    color: categoryFilter === cat ? 'var(--blue-light)' : 'var(--text-muted)',
-                  }}>{cat}</button>
-                ))}
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxHeight: '240px', overflowY: 'auto', border: '1px solid var(--border)', borderRadius: '4px', padding: '4px', background: 'var(--ink)' }}>
-                {filteredExercises.map(ex => (
-                  <div key={ex.id} onClick={() => { addExercise(ex.id); setSearchTerm(''); setCategoryFilter('') }}
-                    style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 10px', cursor: 'pointer', borderRadius: '3px', fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-muted)', transition: 'background 0.15s ease' }}
-                    onMouseEnter={e => (e.currentTarget.style.background = 'rgba(111,160,255,0.1)')}
-                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
-                    <span style={{ fontWeight: 700, color: 'var(--blue-light)' }}>+</span>
-                    <span>{translateName(ex.name)}</span>
-                    <span style={{ marginLeft: 'auto', fontSize: '12px', color: 'var(--text-faint)' }}>{ex.category}</span>
-                  </div>
-                ))}
-                {filteredExercises.length === 0 && (
-                  <div style={{ padding: '10px', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-faint)', textAlign: 'center' }}>
-                    {searchTerm || categoryFilter ? `Sin resultados para "${searchTerm}"` : 'Escribe o selecciona una categoría para buscar'}
-                  </div>
-                )}
-              </div>
+              <ExercisePicker exercises={exercises} onSelect={addExercise} maxHeight={240} />
             </div>
 
             {selectedExercises.length > 0 && (

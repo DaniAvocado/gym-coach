@@ -55,17 +55,14 @@ export default function DashboardOverview({ userId }: DashboardOverviewProps) {
       {/* Stats KPIs */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px' }}>
         {[
-          { label: 'Entrenamientos (7d)', value: stats?.totalWorkouts || 0, border: 'var(--blue)', icon: '' },
-          { label: 'Sets Completados', value: stats?.totalSets || 0, border: 'var(--purple)', icon: '' },
-          { label: 'Calorías (7d)', value: stats?.totalCalories || 0, sub: `${stats?.avgCaloriesPerDay}/día`, border: 'var(--orange)', icon: '' },
-          { label: 'Puntos Totales', value: stats?.points || 0, border: 'var(--green)', icon: '' },
+          { label: 'Entrenamientos (7d)', value: stats?.totalWorkouts || 0, border: 'var(--blue)' },
+          { label: 'Sets Completados', value: stats?.totalSets || 0, border: 'var(--purple)' },
+          { label: 'Calorías (7d)', value: stats?.totalCalories || 0, sub: `${stats?.avgCaloriesPerDay}/día`, border: 'var(--orange)' },
+          { label: 'Puntos Totales', value: stats?.points || 0, border: 'var(--green)' },
         ].map((card, idx) => (
           <motion.div key={idx} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.08 }}
             style={{ borderTop: `2px solid ${card.border}`, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '6px', padding: '14px 18px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <div className="kpi-label">{card.label}</div>
-              <span style={{ fontSize: '1.2rem' }}>{card.icon}</span>
-            </div>
+            <div className="kpi-label">{card.label}</div>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.8rem', fontWeight: 700, color: 'var(--text)', lineHeight: 1, marginTop: '4px' }}>
               {card.value}
             </div>
