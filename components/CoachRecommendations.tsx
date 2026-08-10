@@ -23,9 +23,14 @@ export default function CoachRecommendations({ userId }: CoachRecommendationsPro
       const { data: meals } = await supabase.from('meals').select('*').eq('user_id', userId).gte('date', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0])
       const { data: points } = await supabase.from('user_points').select('*').eq('user_id', userId).single()
 
+      const { data: { session } } = await supabase.auth.getSession()
+
       const res = await fetch('/api/coach', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.access_token || ''}`,
+        },
         body: JSON.stringify({ workouts, meals, points, profile }),
       })
 

@@ -64,13 +64,7 @@ CREATE TABLE user_points (
 );
 
 -- Log de puntos (para tracking histórico)
-CREATE TABLE points_log (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  points_earned INTEGER,
-  reason TEXT, -- 'workout_completed', 'macro_goal_hit', 'consistency', etc
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+DROP TABLE IF EXISTS points_log;
 
 -- Rutinas personalizadas (opcional)
 CREATE TABLE routines (
@@ -94,4 +88,3 @@ CREATE TABLE routine_exercises (
 -- Índices para queries rápidas
 CREATE INDEX idx_workouts_user_date ON workouts(user_id, date DESC);
 CREATE INDEX idx_meals_user_date ON meals(user_id, date);
-CREATE INDEX idx_points_log_user ON points_log(user_id, created_at DESC);

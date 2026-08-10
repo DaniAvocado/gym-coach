@@ -1,53 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { supabase } from '@/lib/supabase'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { useMuscleCounts } from '@/lib/useMuscleCounts'
 
 interface BodyMapVisualProps {
   userId: string
 }
 
 export default function BodyMapVisual({ userId }: BodyMapVisualProps) {
-  const [muscleData, setMuscleData] = useState<Record<string, number>>({})
   const [selectedMuscle, setSelectedMuscle] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
-
-  const muscleCategories: Record<string, string[]> = {
-    pecho: ['Pecho'],
-    espalda: ['Espalda'],
-    piernas: ['Pierna'],
-    hombros: ['Hombro'],
-    brazos: ['Brazos'],
-    core: ['Core'],
-  }
-
-  useEffect(() => { fetchMuscleData() }, [userId])
-
-  const fetchMuscleData = async () => {
-    setLoading(true)
-    const sevenDaysAgo = new Date()
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
-
-    const { data: workouts } = await supabase
-      .from('workouts')
-      .select('*, workout_sets(*, exercises(*))')
-      .eq('user_id', userId)
-      .gte('date', sevenDaysAgo.toISOString())
-
-    const counts: Record<string, number> = { pecho: 0, espalda: 0, piernas: 0, hombros: 0, brazos: 0, core: 0 }
-    workouts?.forEach(workout => {
-      workout.workout_sets?.forEach((set: any) => {
-        const category = set.exercises?.category
-        if (!category) return
-        Object.entries(muscleCategories).forEach(([muscle, categories]) => {
-          if (categories.includes(category)) counts[muscle]++
-        })
-      })
-    })
-    setMuscleData(counts)
-    setLoading(false)
-  }
+  const { counts: muscleData, loading } = useMuscleCounts(userId)
 
   const getIntensityColor = (count: number) => {
     if (count === 0) return { bg: '#4a4e68', text: 'Sin entrenar', bar: '0%' }

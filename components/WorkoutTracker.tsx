@@ -124,7 +124,6 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
         })
         await supabase.from('workout_sets').insert(setsToInsert)
         const points = currentWorkout.length * 10
-        await supabase.from('points_log').insert({ user_id: userId, points_earned: points, reason: 'workout_completed' })
         const { data: userPoints } = await supabase.from('user_points').select('total_points').eq('user_id', userId).single()
         await supabase.from('user_points').update({
           total_points: (userPoints?.total_points || 0) + points,

@@ -83,3 +83,10 @@ RLS: activado por dueño (auth.uid()) en todas las tablas; exercises solo lectur
 
 
 
+
+[2026-08-09 19:35] 19f7496: fix: completar traducciones de ejercicios al español y activar RLS en Supabase
+
+- Traducir 87 ejercicios vacios, 39 parciales (solo equipo) y 7 con solo parentesis
+- lib/rls.sql: politicas RLS por dueno (auth.uid()) en todas las tablas; exercises solo lectura
+- scripts/import_exercises.js: usar SUPABASE_SERVICE_ROLE_KEY por env (sin anon key hardcodeada)
+- PROJECT_CONTEXT.md: actualizar estado de RLS

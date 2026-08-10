@@ -76,8 +76,6 @@ const MUSCLE_MAP: Record<string, string> = {
   ankle: 'tobillo',
 }
 
-const NAME_WORD_MAP: Record<string, string> = {}
-
 export function titleCase(s: string): string {
   return s
     .toLowerCase()

@@ -1,60 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { supabase } from '@/lib/supabase'
 import { motion } from 'framer-motion'
+import { useMuscleCounts } from '@/lib/useMuscleCounts'
 
 interface RecoveryZoneProps {
   userId: string
 }
 
 export default function RecoveryZone({ userId }: RecoveryZoneProps) {
-  const [muscleData, setMuscleData] = useState<Record<string, number>>({})
-  const [loading, setLoading] = useState(true)
-
-  const muscleCategories: Record<string, string[]> = {
-    pecho: ['Pecho'],
-    espalda: ['Espalda'],
-    piernas: ['Pierna'],
-    hombros: ['Hombro'],
-    brazos: ['Brazos'],
-    core: ['Core'],
-  }
-
-  // Auto-refresh every 30 seconds
-  useEffect(() => {
-    fetchRecoveryData()
-    const interval = setInterval(fetchRecoveryData, 30000)
-    return () => clearInterval(interval)
-  }, [userId])
-
-  const fetchRecoveryData = async () => {
-    setLoading(false) // Don't show loading on refresh
-    const sevenDaysAgo = new Date()
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
-
-    const { data: workouts } = await supabase
-      .from('workouts')
-      .select('*, workout_sets(*, exercises(*))')
-      .eq('user_id', userId)
-      .gte('date', sevenDaysAgo.toISOString())
-
-    const counts: Record<string, number> = {
-      pecho: 0, espalda: 0, piernas: 0, hombros: 0, brazos: 0, core: 0,
-    }
-
-    workouts?.forEach(workout => {
-      workout.workout_sets?.forEach((set: any) => {
-        const category = set.exercises?.category
-        if (!category) return
-        Object.entries(muscleCategories).forEach(([muscle, categories]) => {
-          if (categories.includes(category)) counts[muscle]++
-        })
-      })
-    })
-
-    setMuscleData(counts)
-  }
+  const { counts: muscleData } = useMuscleCounts(userId, 30000)
 
   const getColor = (count: number) => {
     if (count === 0) return { fill: '#4a4e68', label: 'Sin entrenar', dot: 'var(--text-faint)' }

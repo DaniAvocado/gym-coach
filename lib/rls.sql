@@ -28,12 +28,6 @@ CREATE POLICY "points_own_insert" ON public.user_points FOR INSERT WITH CHECK (a
 CREATE POLICY "points_own_update" ON public.user_points FOR UPDATE USING (auth.uid() = user_id);
 CREATE POLICY "points_own_delete" ON public.user_points FOR DELETE USING (auth.uid() = user_id);
 
-ALTER TABLE public.points_log ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "points_log_own_select" ON public.points_log FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY "points_log_own_insert" ON public.points_log FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY "points_log_own_update" ON public.points_log FOR UPDATE USING (auth.uid() = user_id);
-CREATE POLICY "points_log_own_delete" ON public.points_log FOR DELETE USING (auth.uid() = user_id);
-
 ALTER TABLE public.routines ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "routines_own_select" ON public.routines FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "routines_own_insert" ON public.routines FOR INSERT WITH CHECK (auth.uid() = user_id);

@@ -1,4 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@supabase/supabase-js'
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
 
 const TDEE_VARS = { sedentary: 1.2, light: 1.375, moderate: 1.55, active: 1.725, very_active: 1.9 }
 const META_ADJ = { slow: 0.9, normal: 1.0, fast: 1.1 }
@@ -14,6 +20,11 @@ function calculateTDEE(w: number, h: number, a: number, g: string, act: string, 
 
 export async function POST(req: NextRequest) {
   try {
+    const token = req.headers.get('authorization')?.replace('Bearer ', '')
+    if (!token) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+    const { data: { user }, error } = await supabase.auth.getUser(token)
+    if (error || !user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+
     const { workouts, meals, points, profile } = await req.json()
 
     const w = profile?.weight_kg || 75
