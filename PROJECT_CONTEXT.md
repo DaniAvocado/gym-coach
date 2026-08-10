@@ -49,7 +49,7 @@ App web de entrenamiento personal (Next.js + Supabase) con trackers de:
 ## 4. BASE DE DATOS (Supabase)
 Tablas: user_profiles (peso, altura, edad, sexo, actividad, metabolismo, spotify_playlist),
 exercises, workouts, workout_sets, meals, user_points, points_log, routines, routine_exercises.
-RLS: desactivado para desarrollo. Schema completo en lib/schema.sql.
+RLS: activado por dueño (auth.uid()) en todas las tablas; exercises solo lectura. Schema en lib/schema.sql, políticas en lib/rls.sql.
 
 ## 5. FORMULAS CLAVE
 - BMR: Mifflin-St Jeor (10*p + 6.25*h - 5*a + s)
@@ -76,3 +76,10 @@ RLS: desactivado para desarrollo. Schema completo en lib/schema.sql.
 - NODULOS NO DISPONIBLES: localFileTrigger, executeCommand
 - Los archivos deben guardarse en UTF-8 (PowerShell 5.1 corrompe acentos si se usa Get-Content/WriteAllText)
 - AGENTS.md instruye leer este archivo antes de trabajar
+
+
+
+
+
+
+

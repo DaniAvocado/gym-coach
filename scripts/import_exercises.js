@@ -1,11 +1,16 @@
 // Script de importación del dataset de ejercicios a Supabase
 // Uso: node scripts/import_exercises.js <ruta_al_json>
 // Fuente: https://github.com/hasaneyldrm/exercises-dataset
+// IMPORTANTE: requiere la service_role_key (pasa RLS). NO hardcodearla ni subirla a git.
 
 const fs = require('fs')
 
 const SUPABASE_URL = 'https://sspcpfbracrcbsxcijhn.supabase.co'
-const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcGNwZmJyYWNyY2JzeGNpamhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxODc3MzksImV4cCI6MjEwMDc2MzczOX0.jnwAbp37mguSnlXKrlXfUYEGr4ki3VVHijpYoPAzQFQ'
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
+if (!SUPABASE_KEY) {
+  console.error('Falta la env SUPABASE_SERVICE_ROLE_KEY. Obtenla en Supabase Dashboard -> Settings -> API.')
+  process.exit(1)
+}
 
 const CATEGORY_MAP = {
   chest: 'Pecho',
