@@ -100,3 +100,10 @@ RLS: activado por dueño (auth.uid()) en todas las tablas; exercises solo lectur
 - Seguridad: validar JWT en /api/coach, headers de seguridad en next.config.ts
 
 [2026-08-09 20:16] 3cfa9c1: fix: hacer schema.sql idempotente (IF NOT EXISTS) para re-ejecutar sin errores
+
+[2026-08-09 20:25] 2b8a53f: refactor: extraer ExercisePicker, hook de filtro y lib de nutricion
+
+- lib/nutrition.ts: BMR/TDEE/macros compartidos (antes duplicado en 3 archivos)
+- components/ExercisePicker.tsx + lib/useExerciseFilter.ts: buscador de ejercicios unificado
+- Quitar campo icon vacio en 14 KPI cards y points muerto en /api/coach
+- Deduplicar quickFoods (batido/yogur repetidos)

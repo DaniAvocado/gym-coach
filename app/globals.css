@@ -3,25 +3,16 @@
 :root {
   --ink: #0b0b12;
   --ink-panel: #14141f;
-  --ink-sidebar: #0a0a10;
   --border: #2a2a42;
   --border2: #3d3d5c;
   --pink: #ff6b9d;
   --pink-light: #ff85b3;
-  --pink-lighter: #ffc4d8;
-  --pink-dark: #d94a7a;
   --blue: #5b8def;
   --blue-light: #6fa0ff;
-  --blue-lighter: #93bdfe;
-  --blue-dark: #3d6fd4;
   --purple: #a78bfa;
-  --purple-light: #b794ff;
-  --purple-lighter: #d0bfff;
-  --purple-dark: #8567e0;
   --text: #f0f4ff;
   --text-muted: #b6bdd4;
   --text-faint: #7a81a0;
-  --accent: #7c3aed;
   --green: #4ade80;
   --orange: #ffa94d;
   --red: #ff6b6b;
@@ -126,23 +117,6 @@ input, select, textarea, button {
   width: 100%;
 }
 
-/* Tab bar */
-.tab-bar {
-  display: inline-flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  padding: 4px;
-  border-radius: 6px;
-  border: 1px solid rgba(167, 139, 250, 0.3);
-}
-
-.tab-btn.active {
-  background: rgba(255,107,157,0.10);
-  border-color: var(--pink);
-  color: var(--pink-light);
-  font-weight: 700;
-}
-
 /* Sidebar responsive */
 @media (max-width: 768px) {
   .sidebar-desktop {
@@ -242,9 +216,4 @@ option {
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
-}
-
-@keyframes glowPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(91, 141, 239, 0); }
-  50% { box-shadow: 0 0 8px 1px rgba(91, 141, 239, 0.2); }
 }

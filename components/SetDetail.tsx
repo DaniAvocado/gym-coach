@@ -14,6 +14,7 @@ interface SetDetailProps {
 export default function SetDetail({ setNumber, onUpdate, onRemove, initialWeight = 0, initialReps = 0 }: SetDetailProps) {
   const [weight, setWeight] = useState(initialWeight.toString())
   const [reps, setReps] = useState(initialReps.toString())
+  const commit = () => onUpdate(parseFloat(weight) || 0, parseInt(reps) || 0)
 
   const inputStyle = {
     background: 'var(--ink)',
@@ -36,9 +37,9 @@ export default function SetDetail({ setNumber, onUpdate, onRemove, initialWeight
       <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '12px', color: 'var(--blue)', minWidth: '60px' }}>
         Serie {setNumber}
       </span>
-      <input type="number" placeholder="kg" value={weight} onChange={(e) => setWeight(e.target.value)} onBlur={() => onUpdate(parseFloat(weight) || 0, parseInt(reps) || 0)} step="0.5" style={inputStyle} />
+      <input type="number" placeholder="kg" value={weight} onChange={(e) => setWeight(e.target.value)} onBlur={commit} step="0.5" style={inputStyle} />
       <span style={{ color: 'var(--text-faint)' }}>×</span>
-      <input type="number" placeholder="reps" value={reps} onChange={(e) => setReps(e.target.value)} onBlur={() => onUpdate(parseFloat(weight) || 0, parseInt(reps) || 0)} style={inputStyle} />
+      <input type="number" placeholder="reps" value={reps} onChange={(e) => setReps(e.target.value)} onBlur={commit} style={inputStyle} />
       <motion.button whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} onClick={onRemove} style={{ color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '4px', marginLeft: 'auto' }}>✕</motion.button>
     </motion.div>
   )
