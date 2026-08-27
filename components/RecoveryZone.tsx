@@ -8,7 +8,7 @@ interface RecoveryZoneProps {
 }
 
 export default function RecoveryZone({ userId }: RecoveryZoneProps) {
-  const { counts: muscleData } = useMuscleCounts(userId, 30000)
+  const { counts: muscleData } = useMuscleCounts(userId)
 
   const getColor = (count: number) => {
     if (count === 0) return { fill: '#4a4e68', label: 'Sin entrenar', dot: 'var(--text-faint)' }
