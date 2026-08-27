@@ -15,7 +15,7 @@ function checkRateLimit(ip: string): boolean {
     rateLimit.set(ip, { count: 1, resetAt: now + 60_000 })
     return true
   }
-  if (entry.count >= 10) return false
+  if (entry.count >= 30) return false
   entry.count++
   return true
 }
@@ -31,13 +31,15 @@ interface Profile {
   experience_level?: string
 }
 
-function validateInput(body: any): { ok: true; workouts: any[]; meals: any[]; profile: Profile } | { ok: false; error: string } {
-  if (!body || typeof body !== 'object') return { ok: false, error: 'Body inválido' }
-  const { workouts, meals, profile } = body
-  if (workouts && !Array.isArray(workouts)) return { ok: false, error: 'workouts debe ser array' }
-  if (meals && !Array.isArray(meals)) return { ok: false, error: 'meals debe ser array' }
-  if (profile && typeof profile !== 'object') return { ok: false, error: 'profile debe ser object' }
-  return { ok: true, workouts: workouts || [], meals: meals || [], profile: profile || {} }
+function validateInput(body: any) {
+  if (!body || typeof body !== 'object') return { ok: false as const, error: 'Body inválido' }
+  const { workouts, meals, profile, message, history } = body
+  if (workouts && !Array.isArray(workouts)) return { ok: false as const, error: 'workouts debe ser array' }
+  if (meals && !Array.isArray(meals)) return { ok: false as const, error: 'meals debe ser array' }
+  if (profile && typeof profile !== 'object') return { ok: false as const, error: 'profile debe ser object' }
+  if (message && typeof message !== 'string') return { ok: false as const, error: 'message debe ser string' }
+  if (history && !Array.isArray(history)) return { ok: false as const, error: 'history debe ser array' }
+  return { ok: true as const, workouts: workouts || [], meals: meals || [], profile: profile || {}, message: message || '', history: history || [] }
 }
 
 function computeStats(workouts: any[], meals: any[], profile: Profile) {
@@ -87,6 +89,20 @@ function computeStats(workouts: any[], meals: any[], profile: Profile) {
   return { w, goal, exp, tdee, calTarget, proteinTarget, fatTarget, carbsTarget, totalSets, avgCals, avgProtein, sessions, topExercises }
 }
 
+function statsToContext(stats: ReturnType<typeof computeStats>): string {
+  return `CONTEXTO DEL USUARIO:
+- Objetivo: ${stats.goal}
+- Experiencia: ${stats.exp}
+- TDEE: ${stats.tdee} kcal/día
+- Meta calórica: ${stats.calTarget} kcal
+- Meta macros: P${stats.proteinTarget}g / G${stats.fatTarget}g / C${stats.carbsTarget}g
+- Sesiones esta semana: ${stats.sessions}
+- Sets totales: ${stats.totalSets}
+- Promedio kcal/día: ${stats.avgCals || 'sin datos'}
+- Promedio proteína/día: ${stats.avgProtein || 'sin datos'}g
+- Top ejercicios: ${stats.topExercises.map(e => `${e.name} (${e.total_sets} sets, ~${e.avg_weight}kg × ${e.avg_reps} reps)`).join(', ') || 'sin datos'}`
+}
+
 function fallbackRecommendations(stats: ReturnType<typeof computeStats>): string[] {
   const { calTarget, avgCals, avgProtein, proteinTarget, sessions, totalSets, goal, exp, w } = stats
   const recs: string[] = []
@@ -104,60 +120,51 @@ function fallbackRecommendations(stats: ReturnType<typeof computeStats>): string
   if (avgProtein > 0) {
     const pct = Math.round((avgProtein / proteinTarget) * 100)
     if (pct >= 90) recs.push(`[OK] **Proteína en rango** — Consumes ~${avgProtein}g/día (${pct}% de tu meta de ${proteinTarget}g).`)
-    else recs.push(`[!] **Aumenta proteína** — Consumes ${avgProtein}g/día, necesitas ~${proteinTarget}g. Añade ${Math.round((proteinTarget - avgProtein) / 3)} porciones de 20g proteína.`)
+    else recs.push(`[!] **Aumenta proteína** — Consumes ${avgProtein}g/día, necesitas ~${proteinTarget}g.`)
   } else {
     recs.push(`[i] **Proteína objetivo:** ${proteinTarget}g/día (${(proteinTarget / w).toFixed(1)} g/kg).`)
   }
 
   if (sessions >= 5) recs.push(`[OK] **Frecuencia:** ${sessions} sesiones/semana. Excelente.`)
   else if (sessions >= 3) recs.push(`[^] **Frecuencia:** ${sessions} sesiones. Bien, pero apunta a 5-6.`)
-  else recs.push(`[!] **Frecuencia baja:** ${sessions} sesiones. Mínimo recomendado: 4-5/semana.`)
+  else recs.push(`[!] **Frecuencia baja:** ${sessions} sesiones. Mínimo: 4-5/semana.`)
 
   if (totalSets >= 40) recs.push(`[OK] **Volumen:** ${totalSets} sets/semana. Rango óptimo.`)
   else if (totalSets >= 20) recs.push(`[D] **Volumen:** ${totalSets} sets/semana. Intenta llegar a 40+.`)
-  else recs.push(`[G] **Volumen bajo:** ${totalSets} sets. Apunta a 10-20 sets por grupo muscular.`)
+  else recs.push(`[G] **Volumen bajo:** ${totalSets} sets. Apunta a 10-20 por grupo.`)
 
-  if (exp === 'beginner') recs.push(`[>] **Eres principiante** — Sobrecarga progresiva lineal: sube 2.5kg o 1 rep por sesión.`)
-  else if (exp === 'intermediate') recs.push(`[>] **Nivel intermedio** — Periodización: 3-4 semanas progresión + 1 semana descarga al 60-70%.`)
+  if (exp === 'beginner') recs.push(`[>] **Principiante** — Sobrecarga progresiva lineal: sube 2.5kg o 1 rep por sesión.`)
+  else if (exp === 'intermediate') recs.push(`[>] **Intermedio** — Periodización: 3-4 semanas progresión + 1 descarga al 60-70%.`)
 
-  recs.push(`[>] **Sobrecarga progresiva** — Sube 2.5kg en compuestos cuando completes todas las reps. Para aislamiento, prioriza reps antes que peso.`)
-  if (totalSets > 60) recs.push(`[!] **Volumen muy alto** — Más de 60 sets/semana puede llevar a sobreentrenamiento.`)
-  recs.push(`[>] **RIR** — Deja 1-2 reps en reserve. Solo fallo en última serie del último ejercicio.`)
-  recs.push(`[T] **Distribución** — ${calTarget} kcal en 4-5 comidas. 25% desayuno, 35% almuerzo, 30% cena, 10% snacks.`)
+  recs.push(`[>] **Sobrecarga** — Sube 2.5kg en compuestos cuando completes todas las reps.`)
+  if (totalSets > 60) recs.push(`[!] **Volumen muy alto** — Más de 60 sets/semana puede causar sobreentrenamiento.`)
+  recs.push(`[>] **RIR** — Deja 1-2 reps en reserve. Fallo solo en última serie del último ejercicio.`)
+  recs.push(`[T] **Distribución** — ${calTarget} kcal en 4-5 comidas.`)
   recs.push(`[Z] **Sueño** — 7-9h. Crecimiento muscular ocurre fuera del gym.`)
   recs.push(`[W] **Agua** — ${Math.round(w * 0.04)}L/día (${w}kg × 40ml).`)
 
   return recs
 }
 
-async function llmRecommendations(stats: ReturnType<typeof computeStats>): Promise<string[] | null> {
+async function llmChat(stats: ReturnType<typeof computeStats>, message: string, history: { role: string; content: string }[]): Promise<string | null> {
   const baseUrl = process.env.COACH_LLM_BASE_URL
   const apiKey = process.env.COACH_LLM_API_KEY
   if (!baseUrl || !apiKey) return null
 
-  const prompt = `Eres un coach de fitness y nutrición certificado. Analiza estos datos y da 5-8 recomendaciones específicas y accionables. Sé directo y usa evidencia científica.
+  const systemMsg = `Eres un coach de fitness y nutrición certificado, directo y práctico. Hablas en español.
+Usas evidencia científica. Respondes corto (2-4 oraciones máximo salvo que te pidan más.
+El usuario tiene estos datos:
+${statsToContext(stats)}
 
-DATOS:
-- Objetivo: ${stats.goal}
-- Experiencia: ${stats.exp}
-- TDEE: ${stats.tdee} kcal/día
-- Meta calórica: ${stats.calTarget} kcal
-- Meta proteína: ${stats.proteinTarget}g, grasa: ${stats.fatTarget}g, carbohidratos: ${stats.carbsTarget}g
-- Sesiones esta semana: ${stats.sessions}
-- Sets totales: ${stats.totalSets}
-- Promedio kcal/día: ${stats.avgCals || 'sin datos'}
-- Promedio proteína/día: ${stats.avgProtein || 'sin datos'}g
-- Top ejercicios: ${stats.topExercises.map(e => `${e.name} (${e.total_sets} sets, ~${e.avg_weight}kg × ${e.avg_reps} reps)`).join(', ') || 'sin datos'}
+Si te preguntan algo que no puedes responder con los datos, di que no tienes esa información.
+NO inventes datos que no estén en el contexto.
+NO des recomendaciones médicas.`
 
-FORMATO (uno por línea, exactamente así):
-[OK] **Título** — Descripción con datos específicos
-[!] **Título** — Qué mejorar y cómo
-[D] **Título** — Info neutral
-[>] **Título** — Acción concreta
-[T] **Título** — Consejo de timing/nutrición
-[Z] **Título** — Recuperación/sueño
-
-NO incluyas saludo ni despedida. Solo las recomendaciones.`
+  const messages = [
+    { role: 'system', content: systemMsg },
+    ...history.slice(-10),
+    { role: 'user', content: message },
+  ]
 
   try {
     const res = await fetch(`${baseUrl}/chat/completions`, {
@@ -165,23 +172,16 @@ NO incluyas saludo ni despedida. Solo las recomendaciones.`
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
       body: JSON.stringify({
         model: 'openai/gpt-oss-120b',
-        messages: [
-          { role: 'system', content: 'Eres un coach de fitness. Responde solo con recomendaciones en el formato indicado.' },
-          { role: 'user', content: prompt },
-        ],
-        max_tokens: 4096,
+        messages,
+        max_tokens: 2048,
         temperature: 0.7,
       }),
-      signal: AbortSignal.timeout(15_000),
+      signal: AbortSignal.timeout(30_000),
     })
 
     if (!res.ok) return null
     const data = await res.json()
-    const content = data.choices?.[0]?.message?.content
-    if (!content) return null
-
-    const lines = content.split('\n').filter((l: string) => l.trim().startsWith('['))
-    return lines.length > 0 ? lines : null
+    return data.choices?.[0]?.message?.content || null
   } catch {
     return null
   }
@@ -203,13 +203,24 @@ export async function POST(req: NextRequest) {
     const validated = validateInput(body)
     if (!validated.ok) return NextResponse.json({ error: validated.error }, { status: 400 })
 
-    const { workouts, meals, profile } = validated
+    const { workouts, meals, profile, message, history } = validated
     const stats = computeStats(workouts, meals, profile)
 
-    const llmRecs = await llmRecommendations(stats)
-    const recs = llmRecs || fallbackRecommendations(stats)
+    // No message = initial analysis
+    if (!message) {
+      const llmRecs = await llmChat(stats, 'Analiza mi progreso y dame recomendaciones personalizadas.', [])
+      if (llmRecs) {
+        return NextResponse.json({ reply: llmRecs, source: 'llm' })
+      }
+      return NextResponse.json({ recommendations: fallbackRecommendations(stats), source: 'fallback' })
+    }
 
-    return NextResponse.json({ recommendations: recs, source: llmRecs ? 'llm' : 'fallback' })
+    // Chat message
+    const reply = await llmChat(stats, message, history)
+    if (reply) {
+      return NextResponse.json({ reply, source: 'llm' })
+    }
+    return NextResponse.json({ reply: 'No pude procesar tu pregunta. Intenta de nuevo.', source: 'fallback' })
   } catch (error) {
     return NextResponse.json({ error: 'Error al analizar progreso' }, { status: 500 })
   }
