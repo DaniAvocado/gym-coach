@@ -164,7 +164,7 @@ NO incluyas saludo ni despedida. Solo las recomendaciones.`
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
       body: JSON.stringify({
-        model: 'opencode/big-pickle',
+        model: 'llama-3.3-70b-versatile',
         messages: [
           { role: 'system', content: 'Eres un coach de fitness. Responde solo con recomendaciones en el formato indicado.' },
           { role: 'user', content: prompt },
