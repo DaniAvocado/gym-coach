@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { motion } from 'framer-motion'
 import WorkoutTimer from './WorkoutTimer'
 import SetDetail from './SetDetail'
+import { getExerciseSvgUrl } from '@/lib/exercise-utils'
 
 interface WorkoutTrackerProps {
   userId: string
@@ -115,6 +116,11 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
             <option value="">Selecciona ejercicio...</option>
             {exercises.map(ex => <option key={ex.id} value={ex.id}>{ex.name} ({ex.category})</option>)}
           </select>
+          {selectedExercise && (() => {
+            const ex = exercises.find(e => e.id === selectedExercise)
+            const svg = ex ? getExerciseSvgUrl(ex.name) : null
+            return svg ? <img src={svg} alt="" style={{ width: '48px', height: '48px', objectFit: 'contain', borderRadius: '4px', background: 'rgba(255,255,255,0.03)' }} /> : null
+          })()}
           <div style={{ display: 'flex', gap: '8px' }}>
             <input type="number" value={numSets} onChange={(e) => setNumSets(e.target.value)} min="1" max="10" placeholder="# Series" style={inputStyle} />
             <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={initializeSets} style={{ padding: '10px 20px', background: 'var(--blue)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
@@ -147,10 +153,13 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
             {currentWorkout.map((item, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
                 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(111,160,255,0.06)', borderRadius: '4px', borderLeft: '3px solid var(--blue)' }}>
-                <div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '13px', color: 'var(--text)' }}>{item.exercise_name}</div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
-                    {item.sets.map((s: ExerciseSet) => `${s.setNumber}: ${s.weight}kg × ${s.reps}`).join(' | ')}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  {(() => { const svg = getExerciseSvgUrl(item.exercise_name); return svg ? <img src={svg} alt="" style={{ width: '36px', height: '36px', objectFit: 'contain', borderRadius: '4px', flexShrink: 0 }} /> : null })()}
+                  <div>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '13px', color: 'var(--text)' }}>{item.exercise_name}</div>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
+                      {item.sets.map((s: ExerciseSet) => `${s.setNumber}: ${s.weight}kg × ${s.reps}`).join(' | ')}
+                    </div>
                   </div>
                 </div>
                 <button onClick={() => setCurrentWorkout(currentWorkout.filter((_, i) => i !== idx))} style={{ color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', padding: '4px' }}>✕</button>

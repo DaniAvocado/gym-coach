@@ -4,9 +4,9 @@ import Link from 'next/link'
 import AnimatedBackground from '@/components/AnimatedBackground'
 
 const features = [
+  { title: 'Catálogo de Ejercicios', desc: '302 ejercicios con ilustraciones SVG, búsqueda y filtros por músculo, equipo y tipo.' },
   { title: 'Entrenamientos', desc: 'Registra series, pesos y repeticiones. Sobrecarga progresiva automática.' },
   { title: 'Nutrición', desc: 'Macros calculados con Mifflin-St Jeor y comidas rápidas predefinidas.' },
-  { title: 'Recuperación', desc: 'Mapa muscular con estado de descanso y zonas listas para entrenar.' },
   { title: 'Coach IA', desc: 'Recomendaciones basadas en tus datos reales de entrenamiento y dieta.' },
 ]
 
@@ -44,8 +44,8 @@ export default function Home() {
         </h1>
 
         <p style={{ fontFamily: 'var(--font-mono)', fontSize: '1rem', color: 'var(--text-muted)', maxWidth: '560px', marginTop: '1.25rem', lineHeight: 1.7 }}>
-          Trackea entrenamientos, nutrición y recuperación. El coach IA te dice
-          cuánto peso subir, qué comer y cuándo descansar — basado en ciencia real.
+          302 ejercicios con ilustraciones, tracking de entrenamientos, nutrición y
+          recuperación. El coach IA te dice cuánto peso subir, qué comer y cuándo descansar.
         </p>
 
         {/* CTA */}

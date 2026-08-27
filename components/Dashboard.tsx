@@ -15,12 +15,14 @@ import UserProfile from '@/components/UserProfile'
 import ProgressiveOverload from '@/components/ProgressiveOverload'
 import AnimatedBackground from '@/components/AnimatedBackground'
 import SpotifyWidget from '@/components/SpotifyWidget'
+import ExerciseLibrary from '@/components/ExerciseLibrary'
 
 const navItems = [
   { id: 'overview', abbr: 'RE', label: 'Resumen', sub: 'Tu progreso' },
   { id: 'profile', abbr: 'PE', label: 'Mi Perfil', sub: 'Datos personales' },
   { id: 'workout', abbr: 'TR', label: 'Entrenamientos', sub: 'Registra tu rutina' },
   { id: 'routines', abbr: 'RU', label: 'Rutinas', sub: 'Plan de entrenamiento' },
+  { id: 'exercises', abbr: 'EJ', label: 'Ejercicios', sub: 'Catálogo 302+' },
   { id: 'recovery', abbr: 'RC', label: 'Recuperación', sub: 'Estado muscular' },
   { id: 'body', abbr: 'BM', label: 'Mapa Corporal', sub: 'Visualización' },
   { id: 'meals', abbr: 'CM', label: 'Nutrición', sub: 'Tracker de comidas' },
@@ -75,6 +77,7 @@ export default function Dashboard() {
         </div>
       )
       case 'routines': return <Routines userId={user.id} />
+      case 'exercises': return <ExerciseLibrary />
       case 'recovery': return <RecoveryZone userId={user.id} />
       case 'body': return <BodyMapVisual userId={user.id} />
       case 'meals': return <MealTracker userId={user.id} />

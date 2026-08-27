@@ -14,6 +14,12 @@ CREATE TABLE exercises (
   category TEXT NOT NULL, -- 'chest', 'back', 'legs', 'shoulders', 'arms', 'core'
   description TEXT,
   muscle_group TEXT,
+  slug TEXT UNIQUE,
+  exercise_type TEXT, -- 'weight_reps', 'bodyweight_reps', 'duration', 'distance_duration', 'assisted_bodyweight'
+  equipment TEXT,
+  primary_muscle TEXT,
+  secondary_muscles TEXT[], -- array of muscle names
+  is_stretch BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

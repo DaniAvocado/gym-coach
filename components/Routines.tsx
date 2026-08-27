@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { motion } from 'framer-motion'
+import { getExerciseSvgUrl } from '@/lib/exercise-utils'
 
 interface RoutinesProps {
   userId: string
@@ -123,8 +124,11 @@ export default function Routines({ userId }: RoutinesProps) {
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 {routine.routine_exercises?.map((re: any, i: number) => (
-                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 8px', background: 'rgba(255,255,255,0.03)', borderRadius: '4px' }}>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text)' }}>{re.exercises?.name}</span>
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 8px', background: 'rgba(255,255,255,0.03)', borderRadius: '4px', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      {(() => { const svg = getExerciseSvgUrl(re.exercises?.name || ''); return svg ? <img src={svg} alt="" style={{ width: '28px', height: '28px', objectFit: 'contain', borderRadius: '4px', flexShrink: 0 }} /> : null })()}
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text)' }}>{re.exercises?.name}</span>
+                    </div>
                     <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)' }}>{re.sets}×{re.reps} · {re.rest_seconds}s</span>
                   </div>
                 ))}
