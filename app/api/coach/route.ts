@@ -131,8 +131,8 @@ function fallbackRecommendations(stats: ReturnType<typeof computeStats>): string
 }
 
 async function llmRecommendations(stats: ReturnType<typeof computeStats>): Promise<string[] | null> {
-  const baseUrl = process.env.OPENAI_BASE_URL
-  const apiKey = process.env.OPENAI_API_KEY
+  const baseUrl = process.env.COACH_LLM_BASE_URL
+  const apiKey = process.env.COACH_LLM_API_KEY
   if (!baseUrl || !apiKey) return null
 
   const prompt = `Eres un coach de fitness y nutrición certificado. Analiza estos datos y da 5-8 recomendaciones específicas y accionables. Sé directo y usa evidencia científica.
