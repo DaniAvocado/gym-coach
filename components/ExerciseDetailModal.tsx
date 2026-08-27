@@ -15,6 +15,10 @@ export default function ExerciseDetailModal({ exercise, onClose }: ExerciseDetai
 
   useEffect(() => {
     if (!exercise?._svgSlug) return
+    for (let i = 1; i <= 3; i++) {
+      const img = new window.Image()
+      img.src = getAssetUrl(exercise._svgSlug, i as 1 | 2 | 3) || ''
+    }
     setFrameIdx(1)
     const iv = setInterval(() => {
       setFrameIdx(prev => (prev === 3 ? 1 : (prev + 1) as 1 | 2 | 3))
@@ -56,10 +60,9 @@ export default function ExerciseDetailModal({ exercise, onClose }: ExerciseDetai
         {isSvg ? (
           <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border)', marginBottom: '12px', background: '#0b0b12', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <img
-              key={`${exercise._svgSlug}-${frameIdx}`}
               src={getAssetUrl(exercise._svgSlug, frameIdx) || ''}
               alt={translateName(exercise.name)}
-              style={{ maxHeight: '240px', objectFit: 'contain', display: 'block' }}
+              style={{ maxHeight: '240px', objectFit: 'contain', display: 'block', transition: 'opacity 0.15s ease' }}
             />
             <div style={{ display: 'flex', gap: '6px', padding: '8px' }}>
               {([1, 2, 3] as const).map(i => (
