@@ -164,12 +164,12 @@ NO incluyas saludo ni despedida. Solo las recomendaciones.`
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
+        model: 'openai/gpt-oss-120b',
         messages: [
           { role: 'system', content: 'Eres un coach de fitness. Responde solo con recomendaciones en el formato indicado.' },
           { role: 'user', content: prompt },
         ],
-        max_tokens: 800,
+        max_tokens: 1500,
         temperature: 0.7,
       }),
       signal: AbortSignal.timeout(15_000),
