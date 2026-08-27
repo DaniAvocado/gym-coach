@@ -169,7 +169,7 @@ NO incluyas saludo ni despedida. Solo las recomendaciones.`
           { role: 'system', content: 'Eres un coach de fitness. Responde solo con recomendaciones en el formato indicado.' },
           { role: 'user', content: prompt },
         ],
-        max_tokens: 1500,
+        max_tokens: 4096,
         temperature: 0.7,
       }),
       signal: AbortSignal.timeout(15_000),
