@@ -35,3 +35,8 @@ export function getExerciseSvgUrl(exerciseName: string): string | null {
   if (results.length > 0) return getAssetUrl(results[0].slug, 1)
   return null
 }
+
+export function getExerciseGifOrSvg(exercise: { name: string; gif_url?: string }): string | null {
+  if (exercise.gif_url) return exercise.gif_url
+  return getExerciseSvgUrl(exercise.name)
+}

@@ -1,7 +1,9 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { translateName, translateMuscle, translateEquipment } from '@/lib/translate'
+import { getAssetUrl } from '@bryllim/workout-guide'
 
 interface ExerciseDetailModalProps {
   exercise: any
@@ -9,8 +11,27 @@ interface ExerciseDetailModalProps {
 }
 
 export default function ExerciseDetailModal({ exercise, onClose }: ExerciseDetailModalProps) {
+  const [frameIdx, setFrameIdx] = useState<1 | 2 | 3>(1)
+
+  useEffect(() => {
+    if (!exercise?._svgSlug) return
+    setFrameIdx(1)
+    const iv = setInterval(() => {
+      setFrameIdx(prev => (prev === 3 ? 1 : (prev + 1) as 1 | 2 | 3))
+    }, 1200)
+    return () => clearInterval(iv)
+  }, [exercise?.id])
+
+  useEffect(() => {
+    if (!exercise) return
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [exercise, onClose])
+
   if (!exercise) return null
   const steps = exercise.instruction_steps_es || []
+  const isSvg = !!exercise._svgSlug
 
   return (
     <div onClick={onClose} style={{
@@ -20,6 +41,7 @@ export default function ExerciseDetailModal({ exercise, onClose }: ExerciseDetai
     }}>
       <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} onClick={e => e.stopPropagation()}
         style={{ background: 'var(--ink-panel)', border: '1px solid var(--border2)', borderRadius: '12px', width: '100%', maxWidth: '520px', maxHeight: '85vh', overflowY: 'auto', padding: '20px', boxShadow: '0 20px 60px rgba(0,0,0,0.5)' }}>
+
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', marginBottom: '12px' }}>
           <div>
             <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '18px', color: 'var(--text)', lineHeight: 1.2 }}>{translateName(exercise.name)}</div>
@@ -30,11 +52,29 @@ export default function ExerciseDetailModal({ exercise, onClose }: ExerciseDetai
           <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '18px', padding: '2px' }}>✕</button>
         </div>
 
-        {exercise.gif_url && (
+        {/* Visual: GIF or auto-cycling SVG frames */}
+        {isSvg ? (
+          <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border)', marginBottom: '12px', background: '#0b0b12', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <img
+              key={`${exercise._svgSlug}-${frameIdx}`}
+              src={getAssetUrl(exercise._svgSlug, frameIdx) || ''}
+              alt={translateName(exercise.name)}
+              style={{ maxHeight: '240px', objectFit: 'contain', display: 'block' }}
+            />
+            <div style={{ display: 'flex', gap: '6px', padding: '8px' }}>
+              {([1, 2, 3] as const).map(i => (
+                <button key={i} onClick={() => setFrameIdx(i)} style={{
+                  width: '8px', height: '8px', borderRadius: '50%', border: 'none', cursor: 'pointer',
+                  background: frameIdx === i ? 'var(--blue)' : 'var(--border2)',
+                }} />
+              ))}
+            </div>
+          </div>
+        ) : exercise.gif_url ? (
           <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border)', marginBottom: '12px', background: '#0b0b12', display: 'flex', justifyContent: 'center' }}>
             <img src={exercise.gif_url} alt={translateName(exercise.name)} style={{ maxHeight: '240px', objectFit: 'contain', display: 'block' }} />
           </div>
-        )}
+        ) : null}
 
         {exercise.target_muscle && (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '12px' }}>

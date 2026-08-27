@@ -15,7 +15,7 @@ import UserProfile from '@/components/UserProfile'
 import ProgressiveOverload from '@/components/ProgressiveOverload'
 import AnimatedBackground from '@/components/AnimatedBackground'
 import SpotifyWidget from '@/components/SpotifyWidget'
-import ExerciseLibrary from '@/components/ExerciseLibrary'
+import ExerciseCatalog from '@/components/ExerciseCatalog'
 
 const navItems = [
   { id: 'overview', abbr: 'RE', label: 'Resumen', sub: 'Tu progreso' },
@@ -77,7 +77,7 @@ export default function Dashboard() {
         </div>
       )
       case 'routines': return <Routines userId={user.id} />
-      case 'exercises': return <ExerciseLibrary />
+      case 'exercises': return <ExerciseCatalog />
       case 'recovery': return <RecoveryZone userId={user.id} />
       case 'body': return <BodyMapVisual userId={user.id} />
       case 'meals': return <MealTracker userId={user.id} />
