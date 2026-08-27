@@ -21,12 +21,16 @@ export default function CoachRecommendations({ userId }: CoachRecommendationsPro
       const { data: profile } = await supabase.from('user_profiles').select('*').eq('id', userId).single()
       const { data: workouts } = await supabase.from('workouts').select('*, workout_sets(*)').eq('user_id', userId).order('date', { ascending: false }).limit(10)
       const { data: meals } = await supabase.from('meals').select('*').eq('user_id', userId).gte('date', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0])
-      const { data: points } = await supabase.from('user_points').select('*').eq('user_id', userId).single()
+
+      const { data: { session } } = await supabase.auth.getSession()
 
       const res = await fetch('/api/coach', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ workouts, meals, points, profile }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.access_token || ''}`,
+        },
+        body: JSON.stringify({ workouts, meals, profile }),
       })
 
       if (!res.ok) throw new Error('Error al analizar')

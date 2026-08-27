@@ -17,11 +17,19 @@ interface ExerciseSet {
   reps: number
 }
 
+interface WorkoutItem {
+  exercise_id: string
+  exercise_name: string
+  category: string
+  exercise: any
+  sets: ExerciseSet[]
+}
+
 export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
   const [exercises, setExercises] = useState<any[]>([])
   const [selectedExercise, setSelectedExercise] = useState('')
   const [numSets, setNumSets] = useState('3')
-  const [currentWorkout, setCurrentWorkout] = useState<any[]>([])
+  const [currentWorkout, setCurrentWorkout] = useState<WorkoutItem[]>([])
   const [loading, setLoading] = useState(false)
   const [exerciseSets, setExerciseSets] = useState<ExerciseSet[]>([])
 
@@ -52,10 +60,12 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
   const addExerciseToWorkout = () => {
     if (!selectedExercise || exerciseSets.length === 0) return
     const exercise = exercises.find(e => e.id === selectedExercise)
+    if (!exercise) return
     setCurrentWorkout([...currentWorkout, {
       exercise_id: selectedExercise,
       exercise_name: exercise?.name,
       category: exercise?.category,
+      exercise,
       sets: exerciseSets,
     }])
     setSelectedExercise('')
@@ -81,7 +91,6 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
         })
         await supabase.from('workout_sets').insert(setsToInsert)
         const points = currentWorkout.length * 10
-        await supabase.from('points_log').insert({ user_id: userId, points_earned: points, reason: 'workout_completed' })
         const { data: userPoints } = await supabase.from('user_points').select('total_points').eq('user_id', userId).single()
         await supabase.from('user_points').update({
           total_points: (userPoints?.total_points || 0) + points,
@@ -100,7 +109,7 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
     borderRadius: '4px',
     padding: '10px 12px',
     fontFamily: 'var(--font-mono)',
-    fontSize: '12px',
+    fontSize: '14px',
     outline: 'none',
   }
 
@@ -140,7 +149,7 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
 
         <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={addExerciseToWorkout}
           disabled={!selectedExercise || exerciseSets.length === 0}
-          style={{ width: '100%', padding: '12px', background: 'var(--blue)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '12px', opacity: (!selectedExercise || exerciseSets.length === 0) ? 0.4 : 1 }}>
+          style={{ width: '100%', padding: '12px', background: 'var(--blue)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '14px', opacity: (!selectedExercise || exerciseSets.length === 0) ? 0.4 : 1 }}>
           + Añadir a Entrenamiento
         </motion.button>
       </div>
@@ -168,7 +177,7 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
           </div>
 
           <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={saveWorkout} disabled={loading}
-            style={{ width: '100%', padding: '14px', background: 'var(--green)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '13px', opacity: loading ? 0.5 : 1 }}>
+            style={{ width: '100%', padding: '14px', background: 'var(--green)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '14px', opacity: loading ? 0.5 : 1 }}>
             {loading ? 'Guardando...' : 'Guardar Entrenamiento'}
           </motion.button>
         </div>

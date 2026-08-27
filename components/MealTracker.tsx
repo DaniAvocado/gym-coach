@@ -3,13 +3,11 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { motion } from 'framer-motion'
+import { calculateMacros } from '@/lib/nutrition'
 
 interface MealTrackerProps {
   userId: string
 }
-
-const activityMultipliers: Record<string, number> = { sedentary: 1.2, light: 1.375, moderate: 1.55, active: 1.725, very_active: 1.9 }
-const metaAdjustments: Record<string, number> = { slow: 0.9, normal: 1.0, fast: 1.1 }
 
 const quickFoods: Record<string, { name: string; kcal: number; pro: number; carb: number; fat: number }[]> = {
   breakfast: [
@@ -17,7 +15,6 @@ const quickFoods: Record<string, { name: string; kcal: number; pro: number; carb
     { name: 'Huevos revueltos (3)', kcal: 210, pro: 18, carb: 1, fat: 15 },
     { name: 'Yogur griego (200g)', kcal: 150, pro: 20, carb: 7, fat: 5 },
     { name: 'Pan integral (2 rebanadas)', kcal: 160, pro: 8, carb: 30, fat: 2 },
-    { name: 'Batido de proteína', kcal: 150, pro: 25, carb: 5, fat: 3 },
     { name: 'Plátano (1)', kcal: 105, pro: 1, carb: 27, fat: 0 },
   ],
   lunch: [
@@ -39,7 +36,6 @@ const quickFoods: Record<string, { name: string; kcal: number; pro: number; carb
   snack: [
     { name: 'Batido de proteína', kcal: 150, pro: 25, carb: 5, fat: 3 },
     { name: 'Almendras (30g)', kcal: 170, pro: 6, carb: 6, fat: 15 },
-    { name: 'Yogur griego (200g)', kcal: 150, pro: 20, carb: 7, fat: 5 },
     { name: 'Manzana (1)', kcal: 95, pro: 0, carb: 25, fat: 0 },
     { name: 'Palta (1/2)', kcal: 160, pro: 2, carb: 8, fat: 15 },
     { name: 'Requesón (100g)', kcal: 100, pro: 11, carb: 4, fat: 4 },
@@ -59,11 +55,11 @@ export default function MealTracker({ userId }: MealTrackerProps) {
   const [todayMeals, setTodayMeals] = useState<any[]>([])
   const [macroGoals, setMacroGoals] = useState<{ calories: number; protein: number; fat: number; carbs: number } | null>(null)
 
-  const mealTypes: Record<string, { label: string; icon: string; border: string }> = {
-    breakfast: { label: 'Desayuno', icon: '', border: 'var(--orange)' },
-    lunch: { label: 'Almuerzo', icon: '', border: 'var(--green)' },
-    dinner: { label: 'Cena', icon: '', border: 'var(--purple)' },
-    snack: { label: 'Snack', icon: '', border: 'var(--pink-light)' },
+  const mealTypes: Record<string, { label: string; border: string }> = {
+    breakfast: { label: 'Desayuno', border: 'var(--orange)' },
+    lunch: { label: 'Almuerzo', border: 'var(--green)' },
+    dinner: { label: 'Cena', border: 'var(--purple)' },
+    snack: { label: 'Snack', border: 'var(--pink-light)' },
   }
 
   useEffect(() => {
@@ -82,20 +78,8 @@ export default function MealTracker({ userId }: MealTrackerProps) {
       const metabolicRate = profile.metabolic_rate || 'normal'
       const goal = profile.goal || 'hypertrophy'
 
-      const bmr = 10 * w + 6.25 * h - 5 * a + (gender === 'male' ? 5 : -161)
-      const tdee = Math.round(bmr * (activityMultipliers[activityLevel] || 1.55) * (metaAdjustments[metabolicRate] || 1.0))
-
-      let calTarget = tdee, proteinMult = 2.0, fatMult = 0.8
-      switch (goal) {
-        case 'hypertrophy': calTarget = tdee + 300; proteinMult = 2.2; fatMult = 0.8; break
-        case 'strength': calTarget = tdee + 200; proteinMult = 2.0; fatMult = 0.9; break
-        case 'weight_loss': calTarget = tdee - 400; proteinMult = 2.4; fatMult = 0.7; break
-        default: calTarget = tdee; proteinMult = 2.0; fatMult = 0.8
-      }
-      const proteinTarget = Math.round(w * proteinMult)
-      const fatTarget = Math.round(w * fatMult)
-      const carbsTarget = Math.round((calTarget - (proteinTarget * 4 + fatTarget * 9)) / 4)
-      setMacroGoals({ calories: calTarget, protein: proteinTarget, carbs: carbsTarget, fat: fatTarget })
+      const bmr = calculateMacros(w, h, a, gender, activityLevel, metabolicRate, goal)
+      setMacroGoals({ calories: bmr.calories, protein: bmr.protein, carbs: bmr.carbs, fat: bmr.fat })
     }
   }
 

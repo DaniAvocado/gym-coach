@@ -3,13 +3,10 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { motion } from 'framer-motion'
+import { calculateBMR, calculateMacros, ACTIVITY_MULTIPLIERS, META_ADJUSTMENTS } from '@/lib/nutrition'
 
 interface UserProfileProps {
   userId: string
-}
-
-const activityMultipliers: Record<string, number> = {
-  sedentary: 1.2, light: 1.375, moderate: 1.55, active: 1.725, very_active: 1.9,
 }
 
 const activityLabels: Record<string, string> = {
@@ -18,10 +15,6 @@ const activityLabels: Record<string, string> = {
   moderate: 'Moderado (3-5 días/sem)',
   active: 'Activo (6-7 días/sem)',
   very_active: 'Muy activo (2x/día)',
-}
-
-const metaAdjustments: Record<string, number> = {
-  slow: 0.9, normal: 1.0, fast: 1.1,
 }
 
 const metaLabels: Record<string, string> = {
@@ -87,47 +80,10 @@ export default function UserProfile({ userId }: UserProfileProps) {
     // IMC
     const imc = w / (hM * hM)
 
-    // Mifflin-St Jeor BMR
-    const bmr = 10 * w + 6.25 * h - 5 * a + (gender === 'male' ? 5 : -161)
+    const bmr = calculateBMR(w, h, a, gender)
+    const { tdee, calories, protein, fat, carbs } = calculateMacros(w, h, a, gender, activityLevel, metabolicRate, goal)
 
-    // TDEE with activity multiplier and metabolic adjustment
-    const activityMult = activityMultipliers[activityLevel] || 1.55
-    const metaAdj = metaAdjustments[metabolicRate] || 1.0
-    const tdee = Math.round(bmr * activityMult * metaAdj)
-
-    // Calorie target based on goal
-    let caloriesTarget = tdee
-    let proteinMult = 2.0
-    let fatMult = 0.8
-
-    switch (goal) {
-      case 'hypertrophy':
-        caloriesTarget = tdee + 300
-        proteinMult = 2.2
-        fatMult = 0.8
-        break
-      case 'strength':
-        caloriesTarget = tdee + 200
-        proteinMult = 2.0
-        fatMult = 0.9
-        break
-      case 'endurance':
-        caloriesTarget = tdee + 100
-        proteinMult = 1.8
-        fatMult = 1.0
-        break
-      case 'weight_loss':
-        caloriesTarget = tdee - 400
-        proteinMult = 2.4
-        fatMult = 0.7
-        break
-    }
-
-    const protein = Math.round(w * proteinMult)
-    const fat = Math.round(w * fatMult)
-    const carbs = Math.round((caloriesTarget - (protein * 4 + fat * 9)) / 4)
-
-    return { imc, bmr, tdee, calories: caloriesTarget, protein, fat, carbs }
+    return { imc, bmr, tdee, calories, protein, fat, carbs }
   }
 
   const stats = calculateStats()
@@ -198,19 +154,16 @@ export default function UserProfile({ userId }: UserProfileProps) {
           {/* KPIs */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '10px' }}>
             {[
-              { label: 'Peso', value: weight ? `${weight} kg` : '-', border: 'var(--blue)', icon: '' },
-              { label: 'Estatura', value: height ? `${height} cm` : '-', border: 'var(--purple)', icon: '' },
-              { label: 'Edad', value: age ? `${age} años` : '-', border: 'var(--pink-light)', icon: '' },
-              { label: 'Actividad', value: activityLabels[activityLevel]?.split(' ')[0] || '-', border: 'var(--green)', icon: '' },
-              { label: 'Metabolismo', value: metaLabels[metabolicRate]?.split(' ')[0] || '-', border: 'var(--orange)', icon: '' },
-              { label: 'Objetivo', value: goal === 'hypertrophy' ? 'Hipertrofia' : goal === 'strength' ? 'Fuerza' : goal === 'endurance' ? 'Resistencia' : 'Perdida', border: 'var(--green)', icon: '' },
+              { label: 'Peso', value: weight ? `${weight} kg` : '-', border: 'var(--blue)' },
+              { label: 'Estatura', value: height ? `${height} cm` : '-', border: 'var(--purple)' },
+              { label: 'Edad', value: age ? `${age} años` : '-', border: 'var(--pink-light)' },
+              { label: 'Actividad', value: activityLabels[activityLevel]?.split(' ')[0] || '-', border: 'var(--green)' },
+              { label: 'Metabolismo', value: metaLabels[metabolicRate]?.split(' ')[0] || '-', border: 'var(--orange)' },
+              { label: 'Objetivo', value: goal === 'hypertrophy' ? 'Hipertrofia' : goal === 'strength' ? 'Fuerza' : goal === 'endurance' ? 'Resistencia' : 'Perdida', border: 'var(--green)' },
             ].map((card, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }}
                 style={{ borderTop: `2px solid ${card.border}`, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '6px', padding: '10px 12px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <div className="kpi-label">{card.label}</div>
-                  <span style={{ fontSize: '1rem' }}>{card.icon}</span>
-                </div>
+                <div className="kpi-label">{card.label}</div>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.2rem', fontWeight: 700, color: 'var(--text)', marginTop: '4px' }}>{card.value}</div>
               </motion.div>
             ))}

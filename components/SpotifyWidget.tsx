@@ -70,7 +70,7 @@ export default function SpotifyWidget({ userId }: SpotifyWidgetProps) {
       )}
       {error && <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--red)', marginBottom: '8px' }}>{error}</div>}
 
-      <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: '6px' }}>
+      <div style={{ position: 'relative', paddingBottom: '28%', height: 0, overflow: 'hidden', borderRadius: '6px' }}>
         <iframe
           src={`https://open.spotify.com/embed/playlist/${playlistId}`}
           width="100%"

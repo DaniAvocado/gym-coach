@@ -1,14 +1,14 @@
 -- Tabla de usuarios (Supabase la crea automáticamente)
 -- Aquí solo extendemos con datos adicionales
 
-CREATE TABLE user_profiles (
+CREATE TABLE IF NOT EXISTS user_profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   username TEXT UNIQUE NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Biblioteca de ejercicios predefinidos
-CREATE TABLE exercises (
+CREATE TABLE IF NOT EXISTS exercises (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   category TEXT NOT NULL, -- 'chest', 'back', 'legs', 'shoulders', 'arms', 'core'
@@ -24,7 +24,7 @@ CREATE TABLE exercises (
 );
 
 -- Entrenamientos registrados por usuario
-CREATE TABLE workouts (
+CREATE TABLE IF NOT EXISTS workouts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -33,7 +33,7 @@ CREATE TABLE workouts (
 );
 
 -- Detalles de cada ejercicio en un entrenamiento
-CREATE TABLE workout_sets (
+CREATE TABLE IF NOT EXISTS workout_sets (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   workout_id UUID NOT NULL REFERENCES workouts(id) ON DELETE CASCADE,
   exercise_id UUID NOT NULL REFERENCES exercises(id),
@@ -46,7 +46,7 @@ CREATE TABLE workout_sets (
 );
 
 -- Registro de comidas
-CREATE TABLE meals (
+CREATE TABLE IF NOT EXISTS meals (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   date DATE NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE meals (
 );
 
 -- Sistema de puntos
-CREATE TABLE user_points (
+CREATE TABLE IF NOT EXISTS user_points (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE UNIQUE,
   total_points INTEGER DEFAULT 0,
@@ -70,16 +70,10 @@ CREATE TABLE user_points (
 );
 
 -- Log de puntos (para tracking histórico)
-CREATE TABLE points_log (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  points_earned INTEGER,
-  reason TEXT, -- 'workout_completed', 'macro_goal_hit', 'consistency', etc
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+DROP TABLE IF EXISTS points_log;
 
 -- Rutinas personalizadas (opcional)
-CREATE TABLE routines (
+CREATE TABLE IF NOT EXISTS routines (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
@@ -87,7 +81,7 @@ CREATE TABLE routines (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE routine_exercises (
+CREATE TABLE IF NOT EXISTS routine_exercises (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   routine_id UUID NOT NULL REFERENCES routines(id) ON DELETE CASCADE,
   exercise_id UUID NOT NULL REFERENCES exercises(id),
@@ -98,6 +92,5 @@ CREATE TABLE routine_exercises (
 );
 
 -- Índices para queries rápidas
-CREATE INDEX idx_workouts_user_date ON workouts(user_id, date DESC);
-CREATE INDEX idx_meals_user_date ON meals(user_id, date);
-CREATE INDEX idx_points_log_user ON points_log(user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_workouts_user_date ON workouts(user_id, date DESC);
+CREATE INDEX IF NOT EXISTS idx_meals_user_date ON meals(user_id, date);

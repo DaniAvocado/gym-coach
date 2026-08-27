@@ -49,7 +49,7 @@ App web de entrenamiento personal (Next.js + Supabase) con trackers de:
 ## 4. BASE DE DATOS (Supabase)
 Tablas: user_profiles (peso, altura, edad, sexo, actividad, metabolismo, spotify_playlist),
 exercises, workouts, workout_sets, meals, user_points, points_log, routines, routine_exercises.
-RLS: desactivado para desarrollo. Schema completo en lib/schema.sql.
+RLS: activado por dueño (auth.uid()) en todas las tablas; exercises solo lectura. Schema en lib/schema.sql, políticas en lib/rls.sql.
 
 ## 5. FORMULAS CLAVE
 - BMR: Mifflin-St Jeor (10*p + 6.25*h - 5*a + s)
@@ -76,3 +76,34 @@ RLS: desactivado para desarrollo. Schema completo en lib/schema.sql.
 - NODULOS NO DISPONIBLES: localFileTrigger, executeCommand
 - Los archivos deben guardarse en UTF-8 (PowerShell 5.1 corrompe acentos si se usa Get-Content/WriteAllText)
 - AGENTS.md instruye leer este archivo antes de trabajar
+
+
+
+
+
+
+
+
+[2026-08-09 19:35] 19f7496: fix: completar traducciones de ejercicios al español y activar RLS en Supabase
+
+- Traducir 87 ejercicios vacios, 39 parciales (solo equipo) y 7 con solo parentesis
+- lib/rls.sql: politicas RLS por dueno (auth.uid()) en todas las tablas; exercises solo lectura
+- scripts/import_exercises.js: usar SUPABASE_SERVICE_ROLE_KEY por env (sin anon key hardcodeada)
+- PROJECT_CONTEXT.md: actualizar estado de RLS
+
+[2026-08-09 19:57] 6d2dd66: refactor: reducir duplicacion y reforzar seguridad
+
+- Eliminar BodyMap.tsx muerto, migraciones SQL v2-v4/seed/profile y SVGs de plantilla
+- Extraer useMuscleCounts hook compartido (BodyMapVisual + RecoveryZone)
+- Eliminar tabla points_log (insert sin lectura) y NAME_WORD_MAP vacio
+- Quitar campo icon muerto en PointsDisplay
+- Seguridad: validar JWT en /api/coach, headers de seguridad en next.config.ts
+
+[2026-08-09 20:16] 3cfa9c1: fix: hacer schema.sql idempotente (IF NOT EXISTS) para re-ejecutar sin errores
+
+[2026-08-09 20:25] 2b8a53f: refactor: extraer ExercisePicker, hook de filtro y lib de nutricion
+
+- lib/nutrition.ts: BMR/TDEE/macros compartidos (antes duplicado en 3 archivos)
+- components/ExercisePicker.tsx + lib/useExerciseFilter.ts: buscador de ejercicios unificado
+- Quitar campo icon vacio en 14 KPI cards y points muerto en /api/coach
+- Deduplicar quickFoods (batido/yogur repetidos)
