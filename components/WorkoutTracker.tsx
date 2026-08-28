@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
 import { motion } from 'framer-motion'
 import WorkoutTimer from './WorkoutTimer'
 import SetDetail from './SetDetail'
 import { getExerciseSvgUrl } from '@/lib/exercise-utils'
+import { translateName } from '@/lib/translate'
 
 interface WorkoutTrackerProps {
   userId: string
@@ -25,13 +26,24 @@ interface WorkoutItem {
   sets: ExerciseSet[]
 }
 
+const CATEGORY_LABELS: Record<string, string> = {
+  chest: 'Pecho',
+  back: 'Espalda',
+  legs: 'Piernas',
+  shoulders: 'Hombros',
+  arms: 'Brazos',
+  core: 'Core',
+}
+
 export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
   const [exercises, setExercises] = useState<any[]>([])
-  const [selectedExercise, setSelectedExercise] = useState('')
+  const [selectedExercise, setSelectedExercise] = useState<any>(null)
   const [numSets, setNumSets] = useState('3')
   const [currentWorkout, setCurrentWorkout] = useState<WorkoutItem[]>([])
   const [loading, setLoading] = useState(false)
   const [exerciseSets, setExerciseSets] = useState<ExerciseSet[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [categoryFilter, setCategoryFilter] = useState('')
 
   useEffect(() => { fetchExercises() }, [])
 
@@ -39,6 +51,19 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
     const { data } = await supabase.from('exercises').select('*').order('category')
     setExercises(data || [])
   }
+
+  const categories = useMemo(() => {
+    return Array.from(new Set(exercises.map(e => e.category))).sort()
+  }, [exercises])
+
+  const filtered = useMemo(() => {
+    return exercises.filter(ex => {
+      const matchesSearch = !searchTerm ||
+        translateName(ex.name).toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesCategory = !categoryFilter || ex.category === categoryFilter
+      return matchesSearch && matchesCategory
+    }).slice(0, 50)
+  }, [exercises, searchTerm, categoryFilter])
 
   const initializeSets = () => {
     const sets = Array.from({ length: parseInt(numSets) || 3 }, (_, i) => ({
@@ -59,18 +84,18 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
 
   const addExerciseToWorkout = () => {
     if (!selectedExercise || exerciseSets.length === 0) return
-    const exercise = exercises.find(e => e.id === selectedExercise)
-    if (!exercise) return
     setCurrentWorkout([...currentWorkout, {
-      exercise_id: selectedExercise,
-      exercise_name: exercise?.name,
-      category: exercise?.category,
-      exercise,
+      exercise_id: selectedExercise.id,
+      exercise_name: selectedExercise.name,
+      category: selectedExercise.category,
+      exercise: selectedExercise,
       sets: exerciseSets,
     }])
-    setSelectedExercise('')
+    setSelectedExercise(null)
     setExerciseSets([])
     setNumSets('3')
+    setSearchTerm('')
+    setCategoryFilter('')
   }
 
   const saveWorkout = async () => {
@@ -113,6 +138,17 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
     outline: 'none',
   }
 
+  const btnStyle = (active: boolean) => ({
+    fontFamily: 'var(--font-mono)' as const,
+    fontSize: '13px',
+    padding: '5px 10px',
+    borderRadius: '3px',
+    cursor: 'pointer' as const,
+    border: active ? '1px solid var(--blue)' : '1px solid var(--border)',
+    background: active ? 'rgba(91,141,239,0.15)' : 'transparent',
+    color: active ? 'var(--blue-light)' : 'var(--text-muted)',
+  })
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
       <WorkoutTimer />
@@ -120,23 +156,58 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
       {/* Selector */}
       <div className="panel" style={{ borderLeft: '3px solid var(--blue)' }}>
         <div className="kpi-label" style={{ marginBottom: '12px', fontSize: '0.7rem', letterSpacing: '0.06em' }}>AGREGAR EJERCICIO</div>
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '12px', marginBottom: '16px' }}>
-          <select value={selectedExercise} onChange={(e) => setSelectedExercise(e.target.value)} style={{ ...inputStyle, cursor: 'pointer' }}>
-            <option value="">Selecciona ejercicio...</option>
-            {exercises.map(ex => <option key={ex.id} value={ex.id}>{ex.name} ({ex.category})</option>)}
-          </select>
-          {selectedExercise && (() => {
-            const ex = exercises.find(e => e.id === selectedExercise)
-            const svg = ex ? getExerciseSvgUrl(ex.name) : null
-            return svg ? <img src={svg} alt="" style={{ width: '48px', height: '48px', objectFit: 'contain', borderRadius: '4px', background: 'rgba(255,255,255,0.03)' }} /> : null
-          })()}
-          <div style={{ display: 'flex', gap: '8px' }}>
+
+        {/* Selected exercise display */}
+        {selectedExercise && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'rgba(111,160,255,0.08)', border: '1px solid var(--blue)', borderRadius: '6px', marginBottom: '12px' }}>
+            {(() => { const svg = getExerciseSvgUrl(selectedExercise.name); return svg ? <img src={svg} alt="" style={{ width: '40px', height: '40px', objectFit: 'contain', borderRadius: '4px', flexShrink: 0 }} /> : null })()}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '14px', color: 'var(--text)' }}>{translateName(selectedExercise.name)}</div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-faint)' }}>{CATEGORY_LABELS[selectedExercise.category] || selectedExercise.category}</div>
+            </div>
+            <button onClick={() => setSelectedExercise(null)} style={{ color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px' }}>✕</button>
+          </div>
+        )}
+
+        {/* Search + category filters */}
+        {!selectedExercise && (
+          <>
+            <input type="text" placeholder="Buscar ejercicio por nombre..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} style={{ ...inputStyle, width: '100%', marginBottom: '8px' }} />
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '8px' }}>
+              <button onClick={() => setCategoryFilter('')} style={btnStyle(categoryFilter === '')}>Todos</button>
+              {categories.map(cat => (
+                <button key={cat} onClick={() => setCategoryFilter(categoryFilter === cat ? '' : cat)} style={btnStyle(categoryFilter === cat)}>
+                  {CATEGORY_LABELS[cat] || cat}
+                </button>
+              ))}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', maxHeight: '260px', overflowY: 'auto', border: '1px solid var(--border)', borderRadius: '4px', marginBottom: '12px' }}>
+              {filtered.map(ex => (
+                <div key={ex.id} onClick={() => setSelectedExercise(ex)}
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 10px', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-muted)' }}>
+                  {(() => { const svg = getExerciseSvgUrl(ex.name); return svg ? <img src={svg} alt="" style={{ width: '24px', height: '24px', objectFit: 'contain', flexShrink: 0 }} /> : null })()}
+                  <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{translateName(ex.name)}</span>
+                  <span style={{ fontSize: '11px', color: 'var(--text-faint)', flexShrink: 0 }}>{CATEGORY_LABELS[ex.category] || ex.category}</span>
+                </div>
+              ))}
+              {filtered.length === 0 && (
+                <div style={{ padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-faint)', textAlign: 'center' }}>
+                  Sin resultados para &quot;{searchTerm}&quot;
+                </div>
+              )}
+            </div>
+          </>
+        )}
+
+        {/* Sets config */}
+        {selectedExercise && (
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
             <input type="number" value={numSets} onChange={(e) => setNumSets(e.target.value)} min="1" max="10" placeholder="# Series" style={inputStyle} />
             <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={initializeSets} style={{ padding: '10px 20px', background: 'var(--blue)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
               Crear
             </motion.button>
           </div>
-        </div>
+        )}
 
         {exerciseSets.length > 0 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
@@ -162,10 +233,10 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
             {currentWorkout.map((item, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
                 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(111,160,255,0.06)', borderRadius: '4px', borderLeft: '3px solid var(--blue)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
                   {(() => { const svg = getExerciseSvgUrl(item.exercise_name); return svg ? <img src={svg} alt="" style={{ width: '36px', height: '36px', objectFit: 'contain', borderRadius: '4px', flexShrink: 0 }} /> : null })()}
-                  <div>
-                    <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '13px', color: 'var(--text)' }}>{item.exercise_name}</div>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '13px', color: 'var(--text)' }}>{translateName(item.exercise_name)}</div>
                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
                       {item.sets.map((s: ExerciseSet) => `${s.setNumber}: ${s.weight}kg × ${s.reps}`).join(' | ')}
                     </div>

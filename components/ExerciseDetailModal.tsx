@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { translateName, translateMuscle, translateEquipment } from '@/lib/translate'
 import { getAssetUrl } from '@bryllim/workout-guide'
+import { getExerciseMuscles } from '@/lib/exercise-utils'
+import MuscleMap from './MuscleMap'
 
 interface ExerciseDetailModalProps {
   exercise: any
@@ -36,6 +38,7 @@ export default function ExerciseDetailModal({ exercise, onClose }: ExerciseDetai
   if (!exercise) return null
   const steps = exercise.instruction_steps_es || []
   const isSvg = !!exercise._svgSlug
+  const workoutMuscles = getExerciseMuscles(exercise.name)
 
   return (
     <div onClick={onClose} style={{
@@ -89,6 +92,12 @@ export default function ExerciseDetailModal({ exercise, onClose }: ExerciseDetai
                 {translateMuscle(m)}
               </span>
             ))}
+          </div>
+        )}
+
+        {workoutMuscles && (
+          <div style={{ border: '1px solid var(--border)', borderRadius: '8px', padding: '12px', marginBottom: '16px', background: 'rgba(255,255,255,0.02)' }}>
+            <MuscleMap primary={workoutMuscles.primary} secondary={workoutMuscles.secondary} />
           </div>
         )}
 

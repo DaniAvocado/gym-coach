@@ -1,21 +1,58 @@
 ﻿'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 
-export default function WorkoutTimer() {
-  const [seconds, setSeconds] = useState(0)
-  const [isRunning, setIsRunning] = useState(false)
+const STORAGE_KEY = 'workout-timer'
 
+function load() {
+  if (typeof window === 'undefined') return { startTime: null as number | null, elapsed: 0, running: false }
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return { startTime: null, elapsed: 0, running: false }
+    return JSON.parse(raw)
+  } catch {
+    return { startTime: null, elapsed: 0, running: false }
+  }
+}
+
+export default function WorkoutTimer() {
+  const init = load()
+  const [startTime, setStartTime] = useState<number | null>(init.startTime)
+  const [elapsedBase, setElapsedBase] = useState(init.elapsed)
+  const [isRunning, setIsRunning] = useState(init.running)
+  const [now, setNow] = useState(Date.now())
+  const mountRef = useRef(true)
+
+  // Persist on every change
   useEffect(() => {
-    let interval: NodeJS.Timeout
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ startTime, elapsed: elapsedBase, running: isRunning })) } catch {}
+  }, [startTime, elapsedBase, isRunning])
+
+  // Tick while running
+  useEffect(() => {
+    if (!isRunning || startTime === null) return
+    const iv = setInterval(() => setNow(Date.now()), 1000)
+    return () => clearInterval(iv)
+  }, [isRunning, startTime])
+
+  const elapsedSeconds = isRunning && startTime !== null
+    ? Math.floor((Date.now() - startTime) / 1000) + elapsedBase
+    : elapsedBase
+
+  const toggle = () => {
     if (isRunning) {
-      interval = setInterval(() => {
-        setSeconds(s => s + 1)
-      }, 1000)
+      // pause: freeze accumulated time
+      setElapsedBase(elapsedSeconds)
+      setStartTime(null)
+      setIsRunning(false)
+    } else {
+      setStartTime(Date.now())
+      setIsRunning(true)
     }
-    return () => clearInterval(interval)
-  }, [isRunning])
+  }
+
+  const reset = () => { setElapsedBase(0); setStartTime(null); setIsRunning(false); setNow(Date.now()) }
 
   const formatTime = (secs: number) => {
     const hrs = Math.floor(secs / 3600)
@@ -23,8 +60,6 @@ export default function WorkoutTimer() {
     const s = secs % 60
     return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
   }
-
-  const reset = () => { setSeconds(0); setIsRunning(false) }
 
   return (
     <motion.div
@@ -39,63 +74,26 @@ export default function WorkoutTimer() {
         border: '1px solid var(--border)',
         borderLeft: '3px solid var(--purple)',
         borderRadius: '6px',
+        flexWrap: 'wrap',
+        gap: '8px',
       }}
     >
       <div>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-faint)', marginBottom: '4px' }}>
           Tiempo de Entrenamiento
         </div>
-        <motion.p
-          key={seconds}
-          initial={{ scale: 1.05 }}
-          animate={{ scale: 1 }}
-          style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: '2.2rem',
-            fontWeight: 700,
-            color: 'var(--text)',
-            letterSpacing: '0.05em',
-          }}
-        >
-          {formatTime(seconds)}
-        </motion.p>
+        <p style={{ fontFamily: 'var(--font-mono)', fontSize: '2rem', fontWeight: 700, color: 'var(--text)', letterSpacing: '0.05em' }}>
+          {formatTime(elapsedSeconds)}
+        </p>
       </div>
 
-      <div style={{ display: 'flex', gap: '12px' }}>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setIsRunning(!isRunning)}
-          style={{
-            padding: '10px 24px',
-            borderRadius: '4px',
-            border: 'none',
-            cursor: 'pointer',
-            fontFamily: 'var(--font-mono)',
-            fontWeight: 700,
-            fontSize: '0.8rem',
-            background: 'var(--blue)',
-            color: '#0b0b12',
-          }}
-        >
+      <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+        <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={toggle}
+          style={{ padding: '10px 24px', borderRadius: '4px', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '0.8rem', background: 'var(--blue)', color: '#0b0b12' }}>
           {isRunning ? 'Pausar' : 'Iniciar'}
         </motion.button>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={reset}
-          style={{
-            padding: '10px 24px',
-            borderRadius: '4px',
-            border: '1px solid var(--red)',
-            background: 'transparent',
-            color: 'var(--red)',
-            cursor: 'pointer',
-            fontFamily: 'var(--font-mono)',
-            fontWeight: 700,
-            fontSize: '0.8rem',
-          }}
-        >
+        <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={reset}
+          style={{ padding: '10px 24px', borderRadius: '4px', border: '1px solid var(--red)', background: 'transparent', color: 'var(--red)', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '0.8rem' }}>
           Reset
         </motion.button>
       </div>

@@ -148,6 +148,15 @@ input, select, textarea, button {
   .dashboard-main {
     padding-top: 52px !important;
   }
+
+  .panel {
+    overflow-wrap: break-word;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
 }
 
 /* Input/Select dark */
