@@ -21,19 +21,20 @@ export const MUSCLE_LABELS: Record<MuscleKey, string> = {
 }
 
 const NAME_TO_KEY: Record<string, MuscleKey> = {
-  'chest': 'chest', 'pectorals': 'chest',
+  'chest': 'chest', 'pectorals': 'chest', 'upper chest': 'chest',
   'shoulders': 'shoulders', 'delts': 'shoulders', 'deltoids': 'shoulders',
   'rear delts': 'rearDelts', 'rear deltoids': 'rearDelts',
   'biceps': 'biceps', 'forearms': 'forearms', 'triceps': 'triceps',
-  'abs': 'abs', 'abdominals': 'abs', 'core': 'abs',
+  'abs': 'abs', 'abdominals': 'abs', 'core': 'abs', 'obliques': 'abs', 'serratus anterior': 'abs',
   'quads': 'quads', 'quadriceps': 'quads',
   'hamstrings': 'hamstrings',
   'glutes': 'glutes', 'gluteus': 'glutes',
   'calves': 'calves',
   'lower back': 'lowerBack',
   'lats': 'lats', 'latissimus dorsi': 'lats',
-  'upper back': 'lats', 'back': 'lats',
-  'traps': 'traps', 'trapezius': 'traps', 'neck': 'traps',
+  'upper back': 'lats', 'back': 'lats', 'middle back': 'lats',
+  'traps': 'traps', 'trapezius': 'traps', 'neck': 'traps', 'levator scapulae': 'traps',
+  'abductors': 'glutes', 'adductors': 'glutes',
 }
 
 export function resolveMuscleKeys(primary: string, secondary: string[]): {

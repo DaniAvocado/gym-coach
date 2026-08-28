@@ -39,6 +39,7 @@ export default function ExerciseDetailModal({ exercise, onClose }: ExerciseDetai
   const steps = exercise.instruction_steps_es || []
   const isSvg = !!exercise._svgSlug
   const workoutMuscles = getExerciseMuscles(exercise.name)
+  const mapMuscles = workoutMuscles || (exercise.target_muscle ? { primary: exercise.target_muscle, secondary: exercise.secondary_muscles || [] } : null)
 
   return (
     <div onClick={onClose} style={{
@@ -80,6 +81,10 @@ export default function ExerciseDetailModal({ exercise, onClose }: ExerciseDetai
           <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border)', marginBottom: '12px', background: '#0b0b12', display: 'flex', justifyContent: 'center' }}>
             <img src={exercise.gif_url} alt={translateName(exercise.name)} style={{ maxHeight: '240px', objectFit: 'contain', display: 'block' }} />
           </div>
+        ) : exercise.image_url ? (
+          <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border)', marginBottom: '12px', background: '#0b0b12', display: 'flex', justifyContent: 'center' }}>
+            <img src={exercise.image_url} alt={translateName(exercise.name)} style={{ maxHeight: '240px', objectFit: 'contain', display: 'block' }} />
+          </div>
         ) : null}
 
         {exercise.target_muscle && (
@@ -95,9 +100,9 @@ export default function ExerciseDetailModal({ exercise, onClose }: ExerciseDetai
           </div>
         )}
 
-        {workoutMuscles && (
+        {mapMuscles && (
           <div style={{ border: '1px solid var(--border)', borderRadius: '8px', padding: '12px', marginBottom: '16px', background: 'rgba(255,255,255,0.02)' }}>
-            <MuscleMap primary={workoutMuscles.primary} secondary={workoutMuscles.secondary} />
+            <MuscleMap primary={mapMuscles.primary} secondary={mapMuscles.secondary} />
           </div>
         )}
 

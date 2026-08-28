@@ -12,6 +12,7 @@ interface UnifiedExercise {
   name: string
   category: string
   gif_url?: string
+  image_url?: string
   equipment?: string
   target_muscle?: string
   secondary_muscles?: string[]
@@ -99,7 +100,7 @@ export default function ExerciseCatalog() {
         {/* Source filter */}
         <div style={{ display: 'flex', gap: '4px', marginTop: '8px' }}>
           <button onClick={() => setSourceFilter('all')} style={btnStyle(sourceFilter === 'all')}>Todos ({allExercises.length})</button>
-          <button onClick={() => setSourceFilter('supabase')} style={btnStyle(sourceFilter === 'supabase')}>Con GIF ({supabaseCount})</button>
+          <button onClick={() => setSourceFilter('supabase')} style={btnStyle(sourceFilter === 'supabase')}>Del catálogo ({supabaseCount})</button>
           <button onClick={() => setSourceFilter('workout-guide')} style={btnStyle(sourceFilter === 'workout-guide')}>Con SVG ({wgCount})</button>
         </div>
 
@@ -125,9 +126,11 @@ export default function ExerciseCatalog() {
                 onMouseEnter={e => { e.currentTarget.style.background = 'rgba(111,160,255,0.08)'; e.currentTarget.style.borderColor = 'var(--blue)' }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'var(--border)' }}>
 
-                {/* Thumbnail: GIF or SVG frame 1 */}
+                {/* Thumbnail: GIF, static image, or SVG frame 1 */}
                 {ex._source === 'supabase' && ex.gif_url ? (
                   <img src={ex.gif_url} alt={translateName(ex.name)} style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '4px', flexShrink: 0, background: '#0b0b12' }} />
+                ) : ex._source === 'supabase' && ex.image_url ? (
+                  <img src={ex.image_url} alt={translateName(ex.name)} style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '4px', flexShrink: 0, background: '#0b0b12' }} />
                 ) : ex._svgSlug ? (
                   <img src={getAssetUrl(ex._svgSlug, 1) || ''} alt={translateName(ex.name)} style={{ width: '48px', height: '48px', objectFit: 'contain', borderRadius: '4px', flexShrink: 0, background: 'rgba(255,255,255,0.03)' }} />
                 ) : null}
@@ -147,7 +150,7 @@ export default function ExerciseCatalog() {
                   color: ex._source === 'supabase' ? 'var(--pink-light)' : 'var(--green)',
                   border: `1px solid ${ex._source === 'supabase' ? 'rgba(255,107,157,0.3)' : 'rgba(74,222,128,0.3)'}`,
                 }}>
-                  {ex._source === 'supabase' ? 'GIF' : 'SVG'}
+                  {ex._source === 'supabase' ? (ex.gif_url ? 'GIF' : 'FOTO') : 'SVG'}
                 </span>
               </div>
             </motion.div>

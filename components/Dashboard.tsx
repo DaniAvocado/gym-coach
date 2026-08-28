@@ -16,11 +16,13 @@ import ProgressiveOverload from '@/components/ProgressiveOverload'
 import AnimatedBackground from '@/components/AnimatedBackground'
 import SpotifyWidget from '@/components/SpotifyWidget'
 import ExerciseCatalog from '@/components/ExerciseCatalog'
+import WorkoutHistory from '@/components/WorkoutHistory'
 
 const navItems = [
   { id: 'overview', abbr: 'RE', label: 'Resumen', sub: 'Tu progreso' },
   { id: 'profile', abbr: 'PE', label: 'Mi Perfil', sub: 'Datos personales' },
   { id: 'workout', abbr: 'TR', label: 'Entrenamientos', sub: 'Registra tu rutina' },
+  { id: 'history', abbr: 'HI', label: 'Historial', sub: 'Entrenos pasados' },
   { id: 'routines', abbr: 'RU', label: 'Rutinas', sub: 'Plan de entrenamiento' },
   { id: 'exercises', abbr: 'EJ', label: 'Ejercicios', sub: 'Catálogo 302+' },
   { id: 'recovery', abbr: 'RC', label: 'Recuperación', sub: 'Estado muscular' },
@@ -77,6 +79,7 @@ export default function Dashboard() {
         </div>
       )
       case 'routines': return <Routines userId={user.id} />
+      case 'history': return <WorkoutHistory userId={user.id} />
       case 'exercises': return <ExerciseCatalog />
       case 'recovery': return <RecoveryZone userId={user.id} />
       case 'body': return <BodyMapVisual userId={user.id} />

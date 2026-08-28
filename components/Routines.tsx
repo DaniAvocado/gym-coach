@@ -9,6 +9,53 @@ interface RoutinesProps {
   userId: string
 }
 
+const TEMPLATES: { id: string; name: string; description: string; icon: string; exercises: { name: string; sets: number; reps: number }[] }[] = [
+  {
+    id: 'push', name: 'Empuje (Push)', icon: '═', description: 'Pecho · Hombros · Tríceps',
+    exercises: [
+      { name: 'Press de banca plano', sets: 4, reps: 8 },
+      { name: 'Press militar (hombro)', sets: 3, reps: 10 },
+      { name: 'Aperturas con mancuernas', sets: 3, reps: 12 },
+      { name: 'Flexiones de pecho', sets: 3, reps: 15 },
+      { name: 'Press francés', sets: 3, reps: 10 },
+      { name: 'Extensión de tríceps en polea', sets: 3, reps: 12 },
+    ],
+  },
+  {
+    id: 'pull', name: 'Tirón (Pull)', icon: '∥', description: 'Espalda · Bíceps',
+    exercises: [
+      { name: 'Dominadas (Pull-ups)', sets: 4, reps: 8 },
+      { name: 'Remo con barra', sets: 4, reps: 10 },
+      { name: 'Jalón al pecho', sets: 3, reps: 12 },
+      { name: 'Remo en polea baja', sets: 3, reps: 12 },
+      { name: 'Curl de bíceps con barra', sets: 3, reps: 10 },
+      { name: 'Curl de bíceps con mancuernas', sets: 3, reps: 12 },
+    ],
+  },
+  {
+    id: 'legs', name: 'Pierna', icon: '▽', description: 'Cuádriceps · Isquios · Glúteos',
+    exercises: [
+      { name: 'Sentadilla (Squat)', sets: 4, reps: 10 },
+      { name: 'Peso muerto (Deadlift)', sets: 4, reps: 8 },
+      { name: 'Prensa de piernas', sets: 3, reps: 12 },
+      { name: 'Extensión de piernas', sets: 3, reps: 12 },
+      { name: 'Curl de pierna sentado', sets: 3, reps: 12 },
+      { name: 'Elevación de talones (Calf raise)', sets: 4, reps: 15 },
+    ],
+  },
+  {
+    id: 'fullbody', name: 'Cuerpo Completo', icon: '□', description: 'Todo el cuerpo · 2-3x/semana',
+    exercises: [
+      { name: 'Sentadilla (Squat)', sets: 3, reps: 10 },
+      { name: 'Press de banca plano', sets: 3, reps: 10 },
+      { name: 'Remo con barra', sets: 3, reps: 10 },
+      { name: 'Press militar (hombro)', sets: 3, reps: 10 },
+      { name: 'Curl de bíceps con barra', sets: 2, reps: 12 },
+      { name: 'Plancha abdominal', sets: 3, reps: 30 },
+    ],
+  },
+]
+
 export default function Routines({ userId }: RoutinesProps) {
   const [routines, setRoutines] = useState<any[]>([])
   const [exercises, setExercises] = useState<any[]>([])
@@ -57,6 +104,32 @@ export default function Routines({ userId }: RoutinesProps) {
   const deleteRoutine = async (id: string) => {
     await supabase.from('routines').delete().eq('id', id)
     fetchRoutines()
+  }
+
+  const matchExercise = (name: string) => {
+    const q = name.toLowerCase().trim()
+    return exercises.find(e => e.name.toLowerCase().trim() === q)
+      || exercises.find(e => e.name.toLowerCase().includes(q))
+      || exercises.find(e => q.includes(e.name.toLowerCase()))
+  }
+
+  const useTemplate = async (template: typeof TEMPLATES[number]) => {
+    const resolved = template.exercises
+      .map(ex => ({ ...ex, exercise: matchExercise(ex.name) }))
+      .filter(x => x.exercise)
+    if (resolved.length === 0) { alert('No se encontraron ejercicios en el catálogo'); return }
+    setLoading(true)
+    const { data: routine } = await supabase.from('routines').insert({
+      user_id: userId, name: template.name, description: template.description,
+    }).select()
+    if (routine?.[0]) {
+      await supabase.from('routine_exercises').insert(resolved.map((r, idx) => ({
+        routine_id: routine[0].id, exercise_id: r.exercise.id, sets: r.sets, reps: r.reps, rest_seconds: 90, order_index: idx,
+      })))
+      alert(`Rutina "${template.name}" creada`)
+      fetchRoutines()
+    }
+    setLoading(false)
   }
 
   const inputStyle = { background: 'var(--ink)', color: 'var(--text)', border: '1px solid var(--border2)', borderRadius: '4px', padding: '10px 12px', fontFamily: 'var(--font-mono)', fontSize: '14px', outline: 'none', width: '100%' }
@@ -108,6 +181,32 @@ export default function Routines({ userId }: RoutinesProps) {
           </div>
         </motion.div>
       )}
+
+      {/* Pre-built templates */}
+      <div className="panel" style={{ borderLeft: '3px solid var(--pink)' }}>
+        <div className="kpi-label" style={{ marginBottom: '12px' }}>PLANTILLAS PRE-DISEÑADAS</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '10px' }}>
+          {TEMPLATES.map(t => (
+            <motion.div key={t.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border)', borderRadius: '6px', padding: '14px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+                <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '16px', color: 'var(--pink)' }}>{t.icon}</span>
+                <div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '13px', color: 'var(--text)' }}>{t.name}</div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-faint)' }}>{t.description}</div>
+                </div>
+              </div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-muted)', marginBottom: '10px' }}>
+                {t.exercises.length} ejercicios
+              </div>
+              <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => useTemplate(t)} disabled={loading}
+                style={{ width: '100%', padding: '8px', background: 'rgba(255,107,157,0.15)', color: 'var(--pink-light)', border: '1px solid var(--pink)', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '11px', opacity: loading ? 0.5 : 1 }}>
+                Usar plantilla
+              </motion.button>
+            </motion.div>
+          ))}
+        </div>
+      </div>
 
       {/* Routine list */}
       {routines.length > 0 ? (
