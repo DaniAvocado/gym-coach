@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
 import { motion } from 'framer-motion'
 import { getExerciseSvgUrl } from '@/lib/exercise-utils'
+import { translateName } from '@/lib/translate'
 
 interface RoutinesProps {
   userId: string
@@ -64,6 +65,8 @@ export default function Routines({ userId }: RoutinesProps) {
   const [routineDescription, setRoutineDescription] = useState('')
   const [selectedExercises, setSelectedExercises] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [categoryFilter, setCategoryFilter] = useState('')
 
   useEffect(() => { fetchRoutines(); fetchExercises() }, [])
 
@@ -76,6 +79,19 @@ export default function Routines({ userId }: RoutinesProps) {
     const { data } = await supabase.from('exercises').select('*').order('category')
     setExercises(data || [])
   }
+
+  const categories = useMemo(() => {
+    return Array.from(new Set(exercises.map(e => e.category))).sort()
+  }, [exercises])
+
+  const filteredExercises = useMemo(() => {
+    return exercises.filter(ex => {
+      const matchesSearch = !searchTerm ||
+        translateName(ex.name).toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesCategory = !categoryFilter || ex.category === categoryFilter
+      return matchesSearch && matchesCategory
+    }).slice(0, 50)
+  }, [exercises, searchTerm, categoryFilter])
 
   const addExercise = (exerciseId: string) => {
     const exercise = exercises.find(e => e.id === exerciseId)
@@ -134,6 +150,17 @@ export default function Routines({ userId }: RoutinesProps) {
 
   const inputStyle = { background: 'var(--ink)', color: 'var(--text)', border: '1px solid var(--border2)', borderRadius: '4px', padding: '10px 12px', fontFamily: 'var(--font-mono)', fontSize: '14px', outline: 'none', width: '100%' }
 
+  const btnStyle = (active: boolean) => ({
+    fontFamily: 'var(--font-mono)' as const,
+    fontSize: '13px',
+    padding: '5px 10px',
+    borderRadius: '3px',
+    cursor: 'pointer' as const,
+    border: active ? '1px solid var(--blue)' : '1px solid var(--border)',
+    background: active ? 'rgba(91,141,239,0.15)' : 'transparent',
+    color: active ? 'var(--blue-light)' : 'var(--text-muted)',
+  })
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       {/* Action */}
@@ -150,17 +177,39 @@ export default function Routines({ userId }: RoutinesProps) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <input type="text" placeholder="Nombre de la rutina" value={routineName} onChange={e => setRoutineName(e.target.value)} style={inputStyle} />
             <textarea placeholder="Descripción (opcional)" value={routineDescription} onChange={e => setRoutineDescription(e.target.value)} rows={2} style={inputStyle} />
-            <select onChange={e => { addExercise(e.target.value); e.target.value = '' }} style={inputStyle}>
-              <option value="">+ Añadir ejercicio...</option>
-              {exercises.map(ex => <option key={ex.id} value={ex.id}>{ex.name} ({ex.category})</option>)}
-            </select>
+            <input type="text" placeholder="Buscar ejercicio por nombre..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} style={inputStyle} />
+            {categories.length > 0 && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                <button onClick={() => setCategoryFilter('')} style={btnStyle(categoryFilter === '')}>Todos</button>
+                {categories.map(cat => (
+                  <button key={cat} onClick={() => setCategoryFilter(categoryFilter === cat ? '' : cat)} style={btnStyle(categoryFilter === cat)}>
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            )}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', maxHeight: '260px', overflowY: 'auto', border: '1px solid var(--border)', borderRadius: '4px', marginBottom: '12px' }}>
+              {filteredExercises.map(ex => (
+                <div key={ex.id} onClick={() => addExercise(ex.id)}
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 10px', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-muted)' }}>
+                  {(() => { const svg = getExerciseSvgUrl(ex.name); return svg ? <img src={svg} alt="" style={{ width: '24px', height: '24px', objectFit: 'contain', flexShrink: 0 }} /> : null })()}
+                  <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{translateName(ex.name)}</span>
+                  <span style={{ fontSize: '11px', color: 'var(--text-faint)', flexShrink: 0 }}>{ex.category}</span>
+                </div>
+              ))}
+              {filteredExercises.length === 0 && (
+                <div style={{ padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-faint)', textAlign: 'center' }}>
+                  Sin resultados para &quot;{searchTerm}&quot;
+                </div>
+              )}
+            </div>
 
             {selectedExercises.length > 0 && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 {selectedExercises.map((item, idx) => (
                   <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 12px', background: 'rgba(111,160,255,0.06)', borderRadius: '4px', borderLeft: '3px solid var(--blue)' }}>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '12px', color: 'var(--text)' }}>{item.exercise.name}</div>
+                      <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '12px', color: 'var(--text)' }}>{translateName(item.exercise.name)}</div>
                       <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
                         <input type="number" value={item.sets} onChange={e => { const u = [...selectedExercises]; u[idx].sets = parseInt(e.target.value); setSelectedExercises(u) }} style={{ ...inputStyle, width: '60px', fontSize: '13px', padding: '6px 8px' }} />
                         <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-faint)', alignSelf: 'center' }}>×</span>
@@ -226,7 +275,7 @@ export default function Routines({ userId }: RoutinesProps) {
                   <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 8px', background: 'rgba(255,255,255,0.03)', borderRadius: '4px', alignItems: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       {(() => { const svg = getExerciseSvgUrl(re.exercises?.name || ''); return svg ? <img src={svg} alt="" style={{ width: '28px', height: '28px', objectFit: 'contain', borderRadius: '4px', flexShrink: 0 }} /> : null })()}
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text)' }}>{re.exercises?.name}</span>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text)' }}>{translateName(re.exercises?.name)}</span>
                     </div>
                     <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)' }}>{re.sets}×{re.reps} · {re.rest_seconds}s</span>
                   </div>
