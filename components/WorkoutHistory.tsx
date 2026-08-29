@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
-import { motion } from 'framer-motion'
 import { getExerciseSvgUrl } from '@/lib/exercise-utils'
 import { translateName } from '@/lib/translate'
 
@@ -57,8 +56,8 @@ export default function WorkoutHistory({ userId }: { userId: string }) {
         const totalSets = w.workout_sets?.length || 0
         const totalWeight = w.workout_sets?.reduce((s: number, x: any) => s + (x.weight || 0), 0) || 0
         return (
-          <motion.div key={w.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }}
-            className="panel" style={{ borderLeft: '3px solid var(--blue)' }}>
+          <div key={w.id}
+            className="panel" style={{ borderLeft: '3px solid var(--blue)', animation: 'rise .3s ease backwards', animationDelay: `${idx * 0.05}s` }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '10px' }}>
               <div>
                 <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '13px', color: 'var(--text)', textTransform: 'capitalize' }}>{dateLabel(w.created_at)}</div>
@@ -83,7 +82,7 @@ export default function WorkoutHistory({ userId }: { userId: string }) {
                 </div>
               ))}
             </div>
-          </motion.div>
+          </div>
         )
       })}
     </div>

@@ -32,6 +32,74 @@ const navItems = [
   { id: 'coach', abbr: 'IA', label: 'Coach IA', sub: 'Recomendaciones' },
 ]
 
+function NavRow({ item, active, open, onClick, variant }: { item: (typeof navItems)[number]; active: boolean; open?: boolean; onClick: () => void; variant: 'desktop' | 'mobile' }) {
+  if (variant === 'mobile') {
+    return (
+      <div onClick={onClick}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          padding: '14px 20px',
+          margin: '4px 12px',
+          cursor: 'pointer',
+          borderRadius: '8px',
+          border: active ? '1px solid var(--blue)' : '1px solid rgba(255,255,255,0.06)',
+          background: active ? 'rgba(111,160,255,0.12)' : 'rgba(255,255,255,0.02)',
+          transition: 'all 0.2s ease',
+          boxShadow: active ? '0 2px 8px rgba(91,141,239,0.15)' : 'none',
+        }}>
+        <span style={{ fontSize: '1.3rem', width: '28px', textAlign: 'center' }}>{item.abbr}</span>
+        <div>
+          <div style={{ fontFamily: 'monospace', fontWeight: active ? 700 : 400, fontSize: '14px', color: active ? 'var(--text)' : 'var(--text-muted)' }}>
+            {item.label}
+          </div>
+          <div style={{ fontFamily: 'monospace', fontSize: '11px', color: 'var(--text-faint)' }}>
+            {item.sub}
+          </div>
+        </div>
+      </div>
+    )
+  }
+  return (
+    <div onClick={onClick} className={`nav-item ${active ? 'active' : ''}`}>
+      <span style={{
+        fontFamily: 'monospace',
+        fontSize: '10px',
+        fontWeight: 700,
+        letterSpacing: '0.06em',
+        color: active ? 'var(--blue)' : 'var(--text-faint)',
+        flexShrink: 0,
+        width: '20px',
+        textAlign: 'center',
+      }}>
+        {item.abbr}
+      </span>
+      {open && (
+        <div style={{ marginLeft: '10px' }}>
+          <div style={{
+            fontFamily: 'monospace',
+            fontSize: '12px',
+            fontWeight: active ? 700 : 400,
+            color: active ? 'var(--text)' : 'var(--text-muted)',
+            letterSpacing: '0.03em',
+          }}>
+            {item.label}
+          </div>
+          <div style={{
+            fontFamily: 'monospace',
+            fontSize: '10px',
+            color: 'var(--text-faint)',
+            letterSpacing: '0.06em',
+          }}>
+            {item.sub}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function Dashboard() {
   const [user, setUser] = useState<any>(null)
   const [points, setPoints] = useState<any>(null)
@@ -131,34 +199,9 @@ export default function Dashboard() {
           display: 'flex',
           flexDirection: 'column',
         }} className="sidebar-mobile-toggle">
-          {navItems.map(item => {
-            return (
-              <div key={item.id} onClick={() => { setActiveTab(item.id); setMobileNavOpen(false) }}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  padding: '14px 20px',
-                  margin: '4px 12px',
-                  cursor: 'pointer',
-                  borderRadius: '8px',
-                  border: activeTab === item.id ? '1px solid var(--blue)' : '1px solid rgba(255,255,255,0.06)',
-                  background: activeTab === item.id ? 'rgba(111,160,255,0.12)' : 'rgba(255,255,255,0.02)',
-                  transition: 'all 0.2s ease',
-                  boxShadow: activeTab === item.id ? '0 2px 8px rgba(91,141,239,0.15)' : 'none',
-                }}>
-                <span style={{ fontSize: '1.3rem', width: '28px', textAlign: 'center' }}>{item.abbr}</span>
-                <div>
-                  <div style={{ fontFamily: 'monospace', fontWeight: activeTab === item.id ? 700 : 400, fontSize: '14px', color: activeTab === item.id ? 'var(--text)' : 'var(--text-muted)' }}>
-                    {item.label}
-                  </div>
-                  <div style={{ fontFamily: 'monospace', fontSize: '11px', color: 'var(--text-faint)' }}>
-                    {item.sub}
-                  </div>
-                </div>
-              </div>
-            )
-          })}
+          {navItems.map(item => (
+            <NavRow key={item.id} variant="mobile" item={item} active={activeTab === item.id} onClick={() => { setActiveTab(item.id); setMobileNavOpen(false) }} />
+          ))}
           <div onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 20px', cursor: 'pointer', borderTop: '1px solid var(--border)', marginTop: 'auto' }}>
             <span style={{ fontSize: '1.3rem', width: '28px', textAlign: 'center' }}>→</span>
             <span style={{ fontFamily: 'monospace', fontSize: '13px', color: 'var(--red)' }}>Cerrar sesión</span>
@@ -218,45 +261,7 @@ export default function Dashboard() {
         {/* Nav */}
         <nav style={{ flex: 1, padding: '12px 0', overflowY: 'auto', overflowX: 'hidden' }}>
           {navItems.map((item) => (
-            <div
-              key={item.id}
-              onClick={() => setActiveTab(item.id)}
-              className={`nav-item ${activeTab === item.id ? 'active' : ''}`}
-            >
-              <span style={{
-                fontFamily: 'monospace',
-                fontSize: '10px',
-                fontWeight: 700,
-                letterSpacing: '0.06em',
-                color: activeTab === item.id ? 'var(--blue)' : 'var(--text-faint)',
-                flexShrink: 0,
-                width: '20px',
-                textAlign: 'center',
-              }}>
-                {item.abbr}
-              </span>
-              {sidebarOpen && (
-                <div style={{ marginLeft: '10px' }}>
-                  <div style={{
-                    fontFamily: 'monospace',
-                    fontSize: '12px',
-                    fontWeight: activeTab === item.id ? 700 : 400,
-                    color: activeTab === item.id ? 'var(--text)' : 'var(--text-muted)',
-                    letterSpacing: '0.03em',
-                  }}>
-                    {item.label}
-                  </div>
-                  <div style={{
-                    fontFamily: 'monospace',
-                    fontSize: '10px',
-                    color: 'var(--text-faint)',
-                    letterSpacing: '0.06em',
-                  }}>
-                    {item.sub}
-                  </div>
-                </div>
-              )}
-            </div>
+            <NavRow key={item.id} variant="desktop" item={item} active={activeTab === item.id} open={sidebarOpen} onClick={() => setActiveTab(item.id)} />
           ))}
         </nav>
 
@@ -368,12 +373,12 @@ export default function Dashboard() {
         </div>
 
         {/* Content */}
-        <main style={{ padding: '0.75rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%', maxWidth: '100%' }}>
+        <div style={{ padding: '0.75rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%', maxWidth: '100%' }}>
           <PointsDisplay points={points} />
           <div className="panel" style={{ width: '100%' }}>
             {renderContent()}
           </div>
-        </main>
+        </div>
       </main>
       </div>
     </div>

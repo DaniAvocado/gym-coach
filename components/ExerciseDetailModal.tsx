@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
 import { translateName, translateMuscle, translateEquipment } from '@/lib/translate'
 import { getAssetUrl } from '@bryllim/workout-guide'
 import { getExerciseMuscles } from '@/lib/exercise-utils'
@@ -47,8 +46,8 @@ export default function ExerciseDetailModal({ exercise, onClose }: ExerciseDetai
       background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)',
       display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px',
     }}>
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} onClick={e => e.stopPropagation()}
-        style={{ background: 'var(--ink-panel)', border: '1px solid var(--border2)', borderRadius: '12px', width: '100%', maxWidth: '520px', maxHeight: '85vh', overflowY: 'auto', padding: '20px', boxShadow: '0 20px 60px rgba(0,0,0,0.5)' }}>
+      <div onClick={e => e.stopPropagation()}
+        style={{ background: 'var(--ink-panel)', border: '1px solid var(--border2)', borderRadius: '12px', width: '100%', maxWidth: '520px', maxHeight: '85vh', overflowY: 'auto', padding: '20px', boxShadow: '0 20px 60px rgba(0,0,0,0.5)', animation: 'popIn .25s ease backwards' }}>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', marginBottom: '12px' }}>
           <div>
@@ -116,7 +115,7 @@ export default function ExerciseDetailModal({ exercise, onClose }: ExerciseDetai
             {exercise.description || 'Sin instrucciones disponibles.'}
           </p>
         )}
-      </motion.div>
+      </div>
     </div>
   )
 }

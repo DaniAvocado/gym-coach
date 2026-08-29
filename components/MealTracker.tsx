@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
-import { motion } from 'framer-motion'
 import { calculateMacros } from '@/lib/nutrition'
 
 interface MealTrackerProps {
@@ -167,12 +166,12 @@ export default function MealTracker({ userId }: MealTrackerProps) {
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
           {(quickFoods[mealType] || []).map((food, idx) => (
-            <motion.button key={idx} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
+            <button key={idx} className="fx"
               onClick={() => quickAdd(food)}
               title={`${food.kcal} kcal · P:${food.pro} C:${food.carb} G:${food.fat}`}
               style={{ padding: '7px 10px', background: 'rgba(111,160,255,0.08)', border: '1px solid rgba(111,160,255,0.3)', color: 'var(--text)', borderRadius: '4px', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '11px' }}>
               {food.name}
-            </motion.button>
+            </button>
           ))}
         </div>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-faint)', marginTop: '8px' }}>
@@ -195,10 +194,10 @@ export default function MealTracker({ userId }: MealTrackerProps) {
           <input type="number" placeholder="Carbos (g)" value={carbs} onChange={e => setCarbs(e.target.value)} style={inputStyle} />
           <input type="number" placeholder="Grasas (g)" value={fats} onChange={e => setFats(e.target.value)} style={inputStyle} />
         </div>
-        <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={saveMeal} disabled={loading}
+        <button className="fx" onClick={saveMeal} disabled={loading}
           style={{ width: '100%', padding: '12px', background: 'var(--green)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '12px', opacity: loading ? 0.5 : 1 }}>
           {loading ? 'Guardando...' : 'Registrar Comida'}
-        </motion.button>
+        </button>
       </div>
 
       {/* Today's meals */}
@@ -209,8 +208,8 @@ export default function MealTracker({ userId }: MealTrackerProps) {
             {todayMeals.map((meal, idx) => {
               const info = mealTypes[meal.meal_type]
               return (
-                <motion.div key={meal.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.05 }}
-                  style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(111,160,255,0.06)', borderRadius: '4px', borderLeft: `3px solid ${info?.border || 'var(--border)'}` }}>
+                <div key={meal.id}
+                  style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(111,160,255,0.06)', borderRadius: '4px', borderLeft: `3px solid ${info?.border || 'var(--border)'}`, animation: 'slideIn .3s ease backwards', animationDelay: `${idx * 0.05}s` }}>
                   <div>
                     <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '13px', color: 'var(--text)' }}>{meal.food_name}</div>
                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
@@ -218,7 +217,7 @@ export default function MealTracker({ userId }: MealTrackerProps) {
                     </div>
                   </div>
                   <button onClick={() => deleteMeal(meal.id)} style={{ color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px' }}>✕</button>
-                </motion.div>
+                </div>
               )
             })}
           </div>

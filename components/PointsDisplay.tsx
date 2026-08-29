@@ -1,7 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
-
 interface PointsDisplayProps {
   points: any
 }
@@ -16,20 +14,14 @@ export default function PointsDisplay({ points }: PointsDisplayProps) {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '10px', width: '100%' }}>
       {cards.map((card, idx) => (
-        <motion.div
+        <div
           key={idx}
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: idx * 0.08, duration: 0.3 }}
-          style={{ borderTop: `2px solid ${card.border}`, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '6px', padding: '16px 18px', overflow: 'hidden' }}
+          style={{ borderTop: `2px solid ${card.border}`, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '6px', padding: '16px 18px', overflow: 'hidden', animation: 'rise .3s ease backwards', animationDelay: `${idx * 0.08}s` }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
               <div className="kpi-label">{card.label}</div>
-              <motion.div
-                initial={{ scale: 0.9 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: idx * 0.08 + 0.15, type: 'spring', stiffness: 200 }}
+              <div
                 style={{
                   fontFamily: 'var(--font-mono)',
                   fontSize: '1.8rem',
@@ -39,10 +31,12 @@ export default function PointsDisplay({ points }: PointsDisplayProps) {
                   marginTop: '4px',
                   overflowWrap: 'break-word',
                   wordBreak: 'break-word',
+                  animation: 'popIn .4s ease backwards',
+                  animationDelay: `${idx * 0.08 + 0.15}s`,
                 }}
               >
                 {card.value}
-              </motion.div>
+              </div>
               {card.subtitle && (
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--text-faint)', marginTop: '3px' }}>
                   {card.subtitle}
@@ -50,7 +44,7 @@ export default function PointsDisplay({ points }: PointsDisplayProps) {
               )}
             </div>
           </div>
-        </motion.div>
+        </div>
       ))}
     </div>
   )

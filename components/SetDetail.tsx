@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 
 interface SetDetailProps {
   setNumber: number
@@ -29,10 +28,8 @@ export default function SetDetail({ setNumber, onUpdate, onRemove, initialWeight
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: -10 }}
-      animate={{ opacity: 1, x: 0 }}
-      style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', background: 'rgba(111,160,255,0.06)', borderRadius: '4px', borderLeft: '3px solid var(--blue)', flexWrap: 'wrap' }}
+    <div
+      style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', background: 'rgba(111,160,255,0.06)', borderRadius: '4px', borderLeft: '3px solid var(--blue)', flexWrap: 'wrap', animation: 'slideIn .25s ease backwards' }}
     >
       <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '12px', color: 'var(--blue)', minWidth: '52px', flexShrink: 0 }}>
         Serie {setNumber}
@@ -40,7 +37,7 @@ export default function SetDetail({ setNumber, onUpdate, onRemove, initialWeight
       <input type="number" placeholder="kg" value={weight} onChange={(e) => setWeight(e.target.value)} onBlur={commit} step="0.5" style={{ ...inputStyle, width: '70px', flexGrow: 1, minWidth: '60px' }} />
       <span style={{ color: 'var(--text-faint)', flexShrink: 0 }}>×</span>
       <input type="number" placeholder="reps" value={reps} onChange={(e) => setReps(e.target.value)} onBlur={commit} style={{ ...inputStyle, width: '70px', flexGrow: 1, minWidth: '60px' }} />
-      <motion.button whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} onClick={onRemove} style={{ color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '4px', marginLeft: 'auto', flexShrink: 0 }}>✕</motion.button>
-    </motion.div>
+      <button className="fx" onClick={onRemove} style={{ color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '4px', marginLeft: 'auto', flexShrink: 0 }}>✕</button>
+    </div>
   )
 }

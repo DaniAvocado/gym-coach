@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 import { useMuscleCounts } from '@/lib/useMuscleCounts'
+import { MUSCLE_META } from '@/lib/muscle-meta'
 
 interface BodyMapVisualProps {
   userId: string
@@ -20,15 +20,6 @@ export default function BodyMapVisual({ userId }: BodyMapVisualProps) {
     return { bg: '#f87171', text: 'Muy intenso', bar: '100%' }
   }
 
-  const muscleMeta: Record<string, { icon: string; label: string; desc: string }> = {
-    pecho: { icon: '', label: 'Pecho', desc: 'Press banca, Aperturas, Flexiones' },
-    espalda: { icon: '', label: 'Espalda', desc: 'Dominadas, Remo, Jalón al pecho' },
-    piernas: { icon: '', label: 'Piernas', desc: 'Sentadilla, Peso muerto, Prensa' },
-    hombros: { icon: '', label: 'Hombros', desc: 'Press militar, Elevaciones laterales' },
-    brazos: { icon: '', label: 'Brazos', desc: 'Curl bíceps, Press francés' },
-    core: { icon: '', label: 'Core', desc: 'Plancha, Crunch, Elevación piernas' },
-  }
-
   if (loading) return <div style={{ textAlign: 'center', padding: '2rem', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-faint)' }}>Cargando mapa muscular...</div>
 
   return (
@@ -37,16 +28,13 @@ export default function BodyMapVisual({ userId }: BodyMapVisualProps) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))', gap: '10px' }}>
         {Object.entries(muscleData).map(([muscle, count], idx) => {
           const colors = getIntensityColor(count)
-          const meta = muscleMeta[muscle]
+          const meta = MUSCLE_META[muscle]
           const isSelected = selectedMuscle === muscle
 
           return (
-            <motion.div
+            <div
               key={muscle}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.06 }}
-              whileHover={{ scale: 1.02, y: -2 }}
+              className="fx-lift"
               onClick={() => setSelectedMuscle(isSelected ? null : muscle)}
               style={{
                 cursor: 'pointer',
@@ -55,6 +43,8 @@ export default function BodyMapVisual({ userId }: BodyMapVisualProps) {
                 borderRadius: '6px',
                 padding: '14px 16px',
                 transition: 'border-color 0.15s',
+                animation: 'rise .3s ease backwards',
+                animationDelay: `${idx * 0.06}s`,
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -69,12 +59,7 @@ export default function BodyMapVisual({ userId }: BodyMapVisualProps) {
                   </div>
                   {/* Bar */}
                   <div style={{ height: '4px', background: 'rgba(255,255,255,0.06)', borderRadius: '2px', marginTop: '6px', overflow: 'hidden' }}>
-                    <motion.div
-                      initial={{ width: '0%' }}
-                      animate={{ width: Math.min(count / 10 * 100, 100) + '%' }}
-                      transition={{ duration: 0.5 }}
-                      style={{ height: '100%', background: colors.bg, borderRadius: '2px' }}
-                    />
+                    <div style={{ height: '100%', width: Math.min(count / 10 * 100, 100) + '%', background: colors.bg, borderRadius: '2px' }} />
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4px' }}>
                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-faint)' }}>
@@ -86,26 +71,24 @@ export default function BodyMapVisual({ userId }: BodyMapVisualProps) {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           )
         })}
       </div>
 
       {/* Detail panel when selected */}
-      {selectedMuscle && muscleMeta[selectedMuscle] && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
+      {selectedMuscle && MUSCLE_META[selectedMuscle] && (
+        <div
           className="panel"
-          style={{ borderLeft: '3px solid var(--blue)' }}
+          style={{ borderLeft: '3px solid var(--blue)', animation: 'rise .3s ease backwards' }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
             <div>
               <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '16px', color: 'var(--text)' }}>
-                {muscleMeta[selectedMuscle].label}
+                {MUSCLE_META[selectedMuscle].label}
               </div>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)' }}>
-                {muscleMeta[selectedMuscle].desc}
+                {MUSCLE_META[selectedMuscle].desc}
               </div>
             </div>
             <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
@@ -133,7 +116,7 @@ export default function BodyMapVisual({ userId }: BodyMapVisualProps) {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       )}
     </div>
   )

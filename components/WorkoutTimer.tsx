@@ -1,7 +1,6 @@
 ﻿'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { motion } from 'framer-motion'
 
 const STORAGE_KEY = 'workout-timer'
 
@@ -62,9 +61,7 @@ export default function WorkoutTimer() {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
+    <div
       style={{
         display: 'flex',
         alignItems: 'center',
@@ -76,6 +73,7 @@ export default function WorkoutTimer() {
         borderRadius: '6px',
         flexWrap: 'wrap',
         gap: '8px',
+        animation: 'riseUp .3s ease backwards',
       }}
     >
       <div>
@@ -88,15 +86,15 @@ export default function WorkoutTimer() {
       </div>
 
       <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-        <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={toggle}
+        <button className="fx" onClick={toggle}
           style={{ padding: '10px 24px', borderRadius: '4px', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '0.8rem', background: 'var(--blue)', color: '#0b0b12' }}>
           {isRunning ? 'Pausar' : 'Iniciar'}
-        </motion.button>
-        <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={reset}
+        </button>
+        <button className="fx" onClick={reset}
           style={{ padding: '10px 24px', borderRadius: '4px', border: '1px solid var(--red)', background: 'transparent', color: 'var(--red)', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '0.8rem' }}>
           Reset
-        </motion.button>
+        </button>
       </div>
-    </motion.div>
+    </div>
   )
 }

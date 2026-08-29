@@ -3,7 +3,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
 import { fetchAllExercises } from '@/lib/exercises'
-import { motion } from 'framer-motion'
 import { getExerciseSvgUrl } from '@/lib/exercise-utils'
 import { translateName } from '@/lib/translate'
 
@@ -166,15 +165,15 @@ export default function Routines({ userId }: RoutinesProps) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       {/* Action */}
-      <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+      <button className="fx"
         onClick={() => setShowCreateForm(!showCreateForm)}
         style={{ padding: '12px', background: showCreateForm ? 'transparent' : 'var(--blue)', color: showCreateForm ? 'var(--blue)' : '#0b0b12', border: `1px solid ${showCreateForm ? 'var(--blue)' : 'transparent'}`, borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '14px' }}>
         {showCreateForm ? '✕ Cancelar' : '+ Nueva Rutina'}
-      </motion.button>
+      </button>
 
       {/* Create form */}
       {showCreateForm && (
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="panel" style={{ borderLeft: '3px solid var(--blue)' }}>
+        <div className="panel" style={{ borderLeft: '3px solid var(--blue)', animation: 'riseUp .3s ease backwards' }}>
           <div className="kpi-label" style={{ marginBottom: '12px' }}>NUEVA RUTINA</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <input type="text" placeholder="Nombre de la rutina" value={routineName} onChange={e => setRoutineName(e.target.value)} style={inputStyle} />
@@ -230,12 +229,12 @@ export default function Routines({ userId }: RoutinesProps) {
               </div>
             )}
 
-            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={createRoutine} disabled={loading}
+            <button className="fx" onClick={createRoutine} disabled={loading}
               style={{ width: '100%', padding: '12px', background: 'var(--green)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '14px', opacity: loading ? 0.5 : 1 }}>
               {loading ? 'Creando...' : 'Guardar Rutina'}
-            </motion.button>
+            </button>
           </div>
-        </motion.div>
+        </div>
       )}
 
       {/* Pre-built templates */}
@@ -243,8 +242,8 @@ export default function Routines({ userId }: RoutinesProps) {
         <div className="kpi-label" style={{ marginBottom: '12px' }}>PLANTILLAS PRE-DISEÑADAS</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '10px' }}>
           {TEMPLATES.map(t => (
-            <motion.div key={t.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border)', borderRadius: '6px', padding: '14px' }}>
+            <div key={t.id}
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border)', borderRadius: '6px', padding: '14px', animation: 'rise .3s ease backwards' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
                 <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '16px', color: 'var(--pink)' }}>{t.icon}</span>
                 <div>
@@ -255,11 +254,11 @@ export default function Routines({ userId }: RoutinesProps) {
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-muted)', marginBottom: '10px' }}>
                 {t.exercises.length} ejercicios
               </div>
-              <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => useTemplate(t)} disabled={loading}
+              <button className="fx" onClick={() => useTemplate(t)} disabled={loading}
                 style={{ width: '100%', padding: '8px', background: 'rgba(255,107,157,0.15)', color: 'var(--pink-light)', border: '1px solid var(--pink)', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '11px', opacity: loading ? 0.5 : 1 }}>
-                Usar plantilla
-              </motion.button>
-            </motion.div>
+Usar plantilla
+              </button>
+            </div>
           ))}
         </div>
       </div>
@@ -268,8 +267,8 @@ export default function Routines({ userId }: RoutinesProps) {
       {routines.length > 0 ? (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '10px' }}>
           {routines.map((routine, idx) => (
-            <motion.div key={routine.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.08 }}
-              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '6px', padding: '16px', borderLeft: '3px solid var(--purple)' }}>
+            <div key={routine.id}
+              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '6px', padding: '16px', borderLeft: '3px solid var(--purple)', animation: 'rise .3s ease backwards', animationDelay: `${idx * 0.08}s` }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
                 <div>
                   <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '16px', color: 'var(--text)' }}>{routine.name}</div>
@@ -288,7 +287,7 @@ export default function Routines({ userId }: RoutinesProps) {
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       ) : (

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
-import { motion } from 'framer-motion'
 import { calculateBMR, calculateMacros, ACTIVITY_MULTIPLIERS, META_ADJUSTMENTS } from '@/lib/nutrition'
 
 interface UserProfileProps {
@@ -101,11 +100,11 @@ export default function UserProfile({ userId }: UserProfileProps) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+      <button className="fx"
         onClick={() => setEditing(!editing)}
         style={{ padding: '12px', background: editing ? 'transparent' : 'var(--blue)', color: editing ? 'var(--blue)' : '#0b0b12', border: `1px solid ${editing ? 'var(--blue)' : 'transparent'}`, borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
         {editing ? '✕ Cancelar' : 'Editar Perfil'}
-      </motion.button>
+      </button>
 
       {editing ? (
         <div className="panel" style={{ borderLeft: '3px solid var(--blue)' }}>
@@ -144,10 +143,10 @@ export default function UserProfile({ userId }: UserProfileProps) {
               <option value="weight_loss">Pérdida de peso</option>
             </select>
           </div>
-          <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={saveProfile}
+          <button className="fx" onClick={saveProfile}
             style={{ width: '100%', padding: '12px', background: 'var(--green)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
             Guardar Cambios
-          </motion.button>
+          </button>
         </div>
       ) : (
         <>
@@ -161,11 +160,11 @@ export default function UserProfile({ userId }: UserProfileProps) {
               { label: 'Metabolismo', value: metaLabels[metabolicRate]?.split(' ')[0] || '-', border: 'var(--orange)' },
               { label: 'Objetivo', value: goal === 'hypertrophy' ? 'Hipertrofia' : goal === 'strength' ? 'Fuerza' : goal === 'endurance' ? 'Resistencia' : 'Perdida', border: 'var(--green)' },
             ].map((card, idx) => (
-              <motion.div key={idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }}
-                style={{ borderTop: `2px solid ${card.border}`, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '6px', padding: '10px 12px' }}>
+              <div key={idx}
+                style={{ borderTop: `2px solid ${card.border}`, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '6px', padding: '10px 12px', animation: 'rise .3s ease backwards', animationDelay: `${idx * 0.05}s` }}>
                 <div className="kpi-label">{card.label}</div>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.2rem', fontWeight: 700, color: 'var(--text)', marginTop: '4px' }}>{card.value}</div>
-              </motion.div>
+              </div>
             ))}
           </div>
 

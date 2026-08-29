@@ -3,7 +3,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
 import { fetchAllExercises } from '@/lib/exercises'
-import { motion } from 'framer-motion'
 import WorkoutTimer from './WorkoutTimer'
 import SetDetail from './SetDetail'
 import { getExerciseSvgUrl } from '@/lib/exercise-utils'
@@ -211,9 +210,9 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
         {selectedExercise && (
           <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
             <input type="number" value={numSets} onChange={(e) => setNumSets(e.target.value)} min="1" max="10" placeholder="# Series" style={inputStyle} />
-            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={initializeSets} style={{ padding: '10px 20px', background: 'var(--blue)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
+            <button className="fx" onClick={initializeSets} style={{ padding: '10px 20px', background: 'var(--blue)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
               Crear
-            </motion.button>
+            </button>
           </div>
         )}
 
@@ -226,11 +225,11 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
           </div>
         )}
 
-        <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={addExerciseToWorkout}
+        <button className="fx" onClick={addExerciseToWorkout}
           disabled={!selectedExercise || exerciseSets.length === 0}
           style={{ width: '100%', padding: '12px', background: 'var(--blue)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '14px', opacity: (!selectedExercise || exerciseSets.length === 0) ? 0.4 : 1 }}>
           + Añadir a Entrenamiento
-        </motion.button>
+        </button>
       </div>
 
       {/* Workout summary */}
@@ -239,8 +238,8 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
           <div className="kpi-label" style={{ marginBottom: '12px', fontSize: '0.7rem' }}>ENTRENAMIENTO ACTUAL ({currentWorkout.length} ejercicios)</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
             {currentWorkout.map((item, idx) => (
-              <motion.div key={idx} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
-                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(111,160,255,0.06)', borderRadius: '4px', borderLeft: '3px solid var(--blue)' }}>
+              <div key={idx}
+                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(111,160,255,0.06)', borderRadius: '4px', borderLeft: '3px solid var(--blue)', animation: 'slideIn .3s ease backwards' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
                   {(() => { const svg = getExerciseSvgUrl(item.exercise_name); return svg ? <img src={svg} alt="" style={{ width: '36px', height: '36px', objectFit: 'contain', borderRadius: '4px', flexShrink: 0 }} /> : null })()}
                   <div style={{ minWidth: 0 }}>
@@ -251,14 +250,14 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
                   </div>
                 </div>
                 <button onClick={() => setCurrentWorkout(currentWorkout.filter((_, i) => i !== idx))} style={{ color: 'var(--red)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', padding: '4px' }}>✕</button>
-              </motion.div>
+              </div>
             ))}
           </div>
 
-          <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={saveWorkout} disabled={loading}
+          <button className="fx" onClick={saveWorkout} disabled={loading}
             style={{ width: '100%', padding: '14px', background: 'var(--green)', color: '#0b0b12', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '14px', opacity: loading ? 0.5 : 1 }}>
             {loading ? 'Guardando...' : 'Guardar Entrenamiento'}
-          </motion.button>
+          </button>
         </div>
       )}
     </div>

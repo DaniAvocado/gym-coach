@@ -1,7 +1,7 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { useMuscleCounts } from '@/lib/useMuscleCounts'
+import { MUSCLE_META } from '@/lib/muscle-meta'
 
 interface RecoveryZoneProps {
   userId: string
@@ -15,24 +15,6 @@ export default function RecoveryZone({ userId }: RecoveryZoneProps) {
     if (count <= 2) return { fill: '#4ade80', label: 'Fresco', dot: 'var(--green)' }
     if (count <= 5) return { fill: '#fbbf24', label: 'Moderado', dot: 'var(--orange)' }
     return { fill: '#f87171', label: 'Fatigado', dot: 'var(--red)' }
-  }
-
-  const muscleLabels: Record<string, string> = {
-    pecho: 'Pecho',
-    espalda: 'Espalda',
-    piernas: 'Piernas',
-    hombros: 'Hombros',
-    brazos: 'Brazos',
-    core: 'Core',
-  }
-
-  const muscleDetails: Record<string, string> = {
-    pecho: 'Ejercicios: Press banca, Aperturas, Flexiones',
-    espalda: 'Ejercicios: Dominadas, Remos, Jalón al pecho',
-    piernas: 'Ejercicios: Sentadilla, Peso muerto, Prensa',
-    hombros: 'Ejercicios: Press militar, Elevaciones laterales',
-    brazos: 'Ejercicios: Curl bíceps, Press francés tríceps',
-    core: 'Ejercicios: Plancha, Crunch, Elevación piernas',
   }
 
   return (
@@ -62,11 +44,10 @@ export default function RecoveryZone({ userId }: RecoveryZoneProps) {
         {Object.entries(muscleData).map(([muscle, count], idx) => {
           const colors = getColor(count)
           return (
-            <motion.div key={muscle} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: idx * 0.08 }}
-              whileHover={{ scale: 1.03, y: -3 }}
-              style={{ background: 'rgba(255,255,255,0.05)', border: `2px solid ${colors.fill}`, borderRadius: '6px', padding: '14px', textAlign: 'center', cursor: 'default' }}>
+            <div key={muscle} className="fx-lift"
+              style={{ background: 'rgba(255,255,255,0.05)', border: `2px solid ${colors.fill}`, borderRadius: '6px', padding: '14px', textAlign: 'center', cursor: 'default', animation: 'popIn .3s ease backwards', animationDelay: `${idx * 0.08}s` }}>
               <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '13px', color: 'var(--text)' }}>
-                {muscleLabels[muscle]}
+                {MUSCLE_META[muscle]?.label}
               </div>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.5rem', fontWeight: 700, color: colors.fill, marginTop: '8px' }}>
                 {count} sets
@@ -75,9 +56,9 @@ export default function RecoveryZone({ userId }: RecoveryZoneProps) {
                 {colors.label}
               </div>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--text-faint)', marginTop: '8px', lineHeight: 1.4 }}>
-                {muscleDetails[muscle]}
+                {MUSCLE_META[muscle] && `Ejercicios: ${MUSCLE_META[muscle].desc}`}
               </div>
-            </motion.div>
+            </div>
           )
         })}
       </div>

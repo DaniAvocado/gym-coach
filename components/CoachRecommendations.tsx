@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
-import { motion } from 'framer-motion'
 
 interface CoachRecommendationsProps {
   userId: string
@@ -99,18 +98,18 @@ export default function CoachRecommendations({ userId }: CoachRecommendationsPro
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center', marginTop: '8px' }}>
               {suggestions.map((s, i) => (
-                <motion.button key={i} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                <button key={i} className="fx"
                   onClick={() => sendMessage(s)}
                   style={{ padding: '10px 16px', background: 'rgba(111,160,255,0.1)', border: '1px solid rgba(111,160,255,0.3)', color: 'var(--blue-light)', borderRadius: '6px', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '14px' }}>
                   {s}
-                </motion.button>
+                </button>
               ))}
             </div>
           </div>
         )}
 
         {messages.map((msg, idx) => (
-          <motion.div key={idx} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+          <div key={idx}
             style={{
               alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
               maxWidth: '85%',
@@ -123,21 +122,22 @@ export default function CoachRecommendations({ userId }: CoachRecommendationsPro
               lineHeight: 1.6,
               whiteSpace: 'pre-wrap',
               border: msg.role === 'assistant' ? '1px solid var(--border2)' : 'none',
+              animation: 'rise .3s ease backwards',
             }}>
             {msg.content}
-          </motion.div>
+          </div>
         ))}
 
         {loading && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            style={{ alignSelf: 'flex-start', padding: '12px 16px', borderRadius: '12px', background: 'rgba(255,255,255,0.06)', border: '1px solid var(--border2)' }}>
+          <div
+            style={{ alignSelf: 'flex-start', padding: '12px 16px', borderRadius: '12px', background: 'rgba(255,255,255,0.06)', border: '1px solid var(--border2)', animation: 'fadeIn .3s ease backwards' }}>
             <div style={{ display: 'flex', gap: '4px' }}>
               {[0, 1, 2].map(i => (
-                <motion.div key={i} animate={{ y: [0, -4, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: i * 0.15 }}
-                  style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--text-muted)' }} />
+                <div key={i}
+                  style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--text-muted)', animation: 'bob .6s ease-in-out infinite backwards', animationDelay: `${i * 0.15}s` }} />
               ))}
             </div>
-          </motion.div>
+          </div>
         )}
 
         <div ref={messagesEndRef} />
@@ -159,14 +159,14 @@ export default function CoachRecommendations({ userId }: CoachRecommendationsPro
             border: '1px solid var(--border2)', borderRadius: '8px', fontFamily: 'var(--font-mono)',
             fontSize: '15px', outline: 'none', resize: 'none', minHeight: '48px', maxHeight: '120px',
           }} />
-        <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => sendMessage()} disabled={loading || !input.trim()}
+        <button className="fx" onClick={() => sendMessage()} disabled={loading || !input.trim()}
           style={{
             padding: '12px 16px', background: 'var(--blue)', color: '#0b0b12', border: 'none',
             borderRadius: '8px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)',
             fontSize: '16px', opacity: loading || !input.trim() ? 0.4 : 1, flexShrink: 0,
           }}>
           →
-        </motion.button>
+        </button>
       </div>
     </div>
   )

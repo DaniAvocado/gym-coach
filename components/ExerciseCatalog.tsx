@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { motion } from 'framer-motion'
 import { translateName } from '@/lib/translate'
 import { fetchAllExercises } from '@/lib/exercises'
 import { searchExercises as wgSearch, exercises as wgExercises, getAssetUrl } from '@bryllim/workout-guide'
@@ -120,8 +119,7 @@ export default function ExerciseCatalog() {
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '10px' }}>
           {filtered.map((ex, idx) => (
-            <motion.div key={ex.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: Math.min(idx * 0.03, 0.5) }}
-              onClick={() => setDetailExercise(ex)} style={{ cursor: 'pointer' }}>
+            <div key={ex.id} onClick={() => setDetailExercise(ex)} style={{ cursor: 'pointer', animation: 'rise .3s ease backwards', animationDelay: `${Math.min(idx * 0.03, 0.5)}s` }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border)', borderRadius: '6px', transition: 'all 0.15s ease' }}
                 onMouseEnter={e => { e.currentTarget.style.background = 'rgba(111,160,255,0.08)'; e.currentTarget.style.borderColor = 'var(--blue)' }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'var(--border)' }}>
@@ -153,7 +151,7 @@ export default function ExerciseCatalog() {
                   {ex._source === 'supabase' ? (ex.gif_url ? 'GIF' : 'FOTO') : 'SVG'}
                 </span>
               </div>
-            </motion.div>
+            </div>
           ))}
           {filtered.length === 0 && (
             <div style={{ textAlign: 'center', padding: '3rem', border: '1px dashed var(--border)', borderRadius: '6px', fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-faint)' }}>

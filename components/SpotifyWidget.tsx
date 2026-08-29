@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
-import { motion } from 'framer-motion'
 
 interface SpotifyWidgetProps {
   userId: string

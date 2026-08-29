@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
-import { motion } from 'framer-motion'
 
 interface DashboardOverviewProps {
   userId: string
@@ -60,14 +59,14 @@ export default function DashboardOverview({ userId }: DashboardOverviewProps) {
           { label: 'Calorías (7d)', value: stats?.totalCalories || 0, sub: `${stats?.avgCaloriesPerDay}/día`, border: 'var(--orange)' },
           { label: 'Puntos Totales', value: stats?.points || 0, border: 'var(--green)' },
         ].map((card, idx) => (
-          <motion.div key={idx} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.08 }}
-            style={{ borderTop: `2px solid ${card.border}`, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '6px', padding: '14px 18px' }}>
+          <div key={idx}
+            style={{ borderTop: `2px solid ${card.border}`, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '6px', padding: '14px 18px', animation: 'rise .3s ease backwards', animationDelay: `${idx * 0.08}s` }}>
             <div className="kpi-label">{card.label}</div>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.8rem', fontWeight: 700, color: 'var(--text)', lineHeight: 1, marginTop: '4px' }}>
               {card.value}
             </div>
             {card.sub && <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--text-faint)', marginTop: '3px' }}>{card.sub}</div>}
-          </motion.div>
+          </div>
         ))}
       </div>
 
@@ -79,7 +78,7 @@ export default function DashboardOverview({ userId }: DashboardOverviewProps) {
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px', minWidth: '500px' }}>
           {weekData.map((day, idx) => (
-            <motion.div key={idx} whileHover={{ scale: 1.05 }}
+            <div key={idx} className="fx"
               style={{
                 padding: '12px 8px',
                 borderRadius: '6px',
@@ -91,7 +90,7 @@ export default function DashboardOverview({ userId }: DashboardOverviewProps) {
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', fontWeight: 700, color: 'var(--text-muted)' }}>{day.day}</div>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.5rem', fontWeight: 700, color: 'var(--text)', marginTop: '4px' }}>{day.workouts}</div>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-faint)' }}>{day.sets} sets</div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

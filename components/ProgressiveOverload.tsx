@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
-import { motion } from 'framer-motion'
 
 interface ProgressiveOverloadProps {
   userId: string
@@ -17,7 +16,7 @@ interface ExerciseRecommendation {
   last_sets: number
   suggested_weight: number
   suggested_reps: number
-  suggestion_type: 'increase_weight' | 'increase_reps' | 'maintain' | 'deload'
+  suggestion_type: 'increase_weight' | 'increase_reps' | 'maintain'
   reason: string
   confidence: 'high' | 'medium' | 'low'
 }
@@ -71,7 +70,6 @@ export default function ProgressiveOverload({ userId }: ProgressiveOverloadProps
         // 1. If user completed target reps (>10) at current weight → increase weight
         // 2. If user hit target reps (8-12) consistently → increase weight by 2.5-5%
         // 3. If user struggling (failed reps) → maintain weight, increase reps
-        // 4. If multiple sessions at same weight → suggest deload
 
         let suggestedWeight = lastWeight
         let suggestedReps = lastReps
@@ -146,7 +144,6 @@ export default function ProgressiveOverload({ userId }: ProgressiveOverloadProps
       case 'increase_weight': return '↑'
       case 'increase_reps': return '+'
       case 'maintain': return '→'
-      case 'deload': return '↓'
     }
   }
 
@@ -155,7 +152,6 @@ export default function ProgressiveOverload({ userId }: ProgressiveOverloadProps
       case 'increase_weight': return 'Subir peso'
       case 'increase_reps': return 'Subir reps'
       case 'maintain': return 'Mantener'
-      case 'deload': return 'Descargar'
     }
   }
 
@@ -173,10 +169,10 @@ export default function ProgressiveOverload({ userId }: ProgressiveOverloadProps
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       {/* Header */}
-      <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={analyzeProgress} disabled={loading}
+      <button className="fx" onClick={analyzeProgress} disabled={loading}
         style={{ width: '100%', padding: '16px', background: 'var(--purple)', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '13px', opacity: loading ? 0.5 : 1 }}>
         {loading ? 'Analizando progreso...' : 'Analizar Sobrecarga Progresiva'}
-      </motion.button>
+      </button>
 
       {lastAnalysis && <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--text-faint)' }}>Último análisis: {lastAnalysis.toLocaleString('es-ES')}</p>}
 
@@ -192,8 +188,8 @@ export default function ProgressiveOverload({ userId }: ProgressiveOverloadProps
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <div className="kpi-label">RECOMENDACIONES PARA TU PRÓXIMA SESIÓN</div>
           {recommendations.map((rec, idx) => (
-            <motion.div key={idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.08 }}
-              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '6px', borderLeft: `3px solid ${rec.confidence === 'high' ? 'var(--green)' : rec.confidence === 'medium' ? 'var(--orange)' : 'var(--red)'}` }}>
+            <div key={idx}
+              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '6px', borderLeft: `3px solid ${rec.confidence === 'high' ? 'var(--green)' : rec.confidence === 'medium' ? 'var(--orange)' : 'var(--red)'}`, animation: 'rise .3s ease backwards', animationDelay: `${idx * 0.08}s` }}>
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                   <span style={{ fontSize: '1.2rem' }}>{getSuggestionIcon(rec.suggestion_type)}</span>
@@ -215,7 +211,7 @@ export default function ProgressiveOverload({ userId }: ProgressiveOverloadProps
                   {rec.suggested_weight}kg × {rec.suggested_reps}
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       )}
