@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
+import { fetchAllExercises } from '@/lib/exercises'
 import { motion } from 'framer-motion'
 import { getExerciseSvgUrl } from '@/lib/exercise-utils'
 import { translateName } from '@/lib/translate'
@@ -77,7 +78,7 @@ export default function Routines({ userId }: RoutinesProps) {
   }
 
   const fetchExercises = async () => {
-    const { data } = await supabase.from('exercises').select('*').order('category')
+    const data = await fetchAllExercises()
     setExercises(data || [])
   }
 

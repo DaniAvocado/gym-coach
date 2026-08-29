@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
+import { fetchAllExercises } from '@/lib/exercises'
 import { motion } from 'framer-motion'
 import WorkoutTimer from './WorkoutTimer'
 import SetDetail from './SetDetail'
@@ -49,7 +50,7 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
   useEffect(() => { fetchExercises() }, [])
 
   const fetchExercises = async () => {
-    const { data } = await supabase.from('exercises').select('*').order('category')
+    const data = await fetchAllExercises()
     setExercises(data || [])
   }
 
