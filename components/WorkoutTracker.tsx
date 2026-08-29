@@ -44,6 +44,7 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
   const [exerciseSets, setExerciseSets] = useState<ExerciseSet[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('')
+  const [visibleCount, setVisibleCount] = useState(100)
 
   useEffect(() => { fetchExercises() }, [])
 
@@ -62,7 +63,7 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
         translateName(ex.name).toLowerCase().includes(searchTerm.toLowerCase())
       const matchesCategory = !categoryFilter || ex.category === categoryFilter
       return matchesSearch && matchesCategory
-    }).slice(0, 50)
+    }).sort((a, b) => translateName(a.name).localeCompare(translateName(b.name)))
   }, [exercises, searchTerm, categoryFilter])
 
   const initializeSets = () => {
@@ -96,6 +97,7 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
     setNumSets('3')
     setSearchTerm('')
     setCategoryFilter('')
+    setVisibleCount(100)
   }
 
   const saveWorkout = async () => {
@@ -182,7 +184,7 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
               ))}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', maxHeight: '260px', overflowY: 'auto', border: '1px solid var(--border)', borderRadius: '4px', marginBottom: '12px' }}>
-              {filtered.map(ex => (
+              {filtered.slice(0, visibleCount).map(ex => (
                 <div key={ex.id} onClick={() => setSelectedExercise(ex)}
                   style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 10px', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-muted)' }}>
                   {(() => { const svg = getExerciseSvgUrl(ex.name); return svg ? <img src={svg} alt="" style={{ width: '24px', height: '24px', objectFit: 'contain', flexShrink: 0 }} /> : null })()}
@@ -196,6 +198,11 @@ export default function WorkoutTracker({ userId }: WorkoutTrackerProps) {
                 </div>
               )}
             </div>
+            {visibleCount < filtered.length && (
+              <button onClick={() => setVisibleCount(v => v + 100)} style={{ ...btnStyle(false), width: '100%', marginBottom: '12px' }}>
+                Cargar más ({filtered.length - visibleCount} restantes)
+              </button>
+            )}
           </>
         )}
 
