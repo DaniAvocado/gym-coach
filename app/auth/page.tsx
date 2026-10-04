@@ -1,9 +1,18 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
+import { animate, createTimeline } from 'animejs'
 import AnimatedBackground from '@/components/AnimatedBackground'
+import { Card, CardContent, CardDescription } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+
+const reducedMotion = () =>
+  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 export default function AuthPage() {
   const [email, setEmail] = useState('')
@@ -14,11 +23,32 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  const formRef = useRef<HTMLFormElement>(null)
+  const mounted = useRef(false)
   const router = useRouter()
 
   useEffect(() => {
     if (new URLSearchParams(window.location.search).has('reset')) setMode('reset')
   }, [])
+
+  useEffect(() => {
+    if (reducedMotion()) return
+    const tl = createTimeline({ defaults: { ease: 'easeOutExpo' } })
+      .add('.auth-card', { opacity: [0, 1], translateY: [26, 0], duration: 650 })
+      .add('.auth-title', { opacity: [0, 1], translateY: [12, 0], duration: 500 }, 0.2)
+      .add('.auth-form', { opacity: [0, 1], translateY: [14, 0], duration: 550 }, 0.35)
+    tl.play()
+  }, [])
+
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true
+      return
+    }
+    const el = formRef.current
+    if (!el || reducedMotion()) return
+    animate(el, { opacity: [0, 1], translateY: [10, 0], duration: 350, ease: 'easeOutCubic' })
+  }, [mode, isSignUp])
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -91,149 +121,170 @@ export default function AuthPage() {
   }
 
   return (
-    <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--ink)', fontFamily: 'var(--font-mono)', overflow: 'hidden' }}>
+    <div className="relative flex min-h-dvh items-center justify-center overflow-hidden bg-[var(--ink)] px-4 py-10 font-[var(--font-mono)]">
       <AnimatedBackground />
-      <div style={{ position: 'relative', zIndex: 1, background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '14px', padding: '2.5rem', width: '100%', maxWidth: '400px', boxShadow: '0 8px 32px rgba(0,0,0,0.35)' }}>
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <h1 style={{ fontFamily: 'Georgia, serif', fontWeight: 700, fontSize: '1.5rem', color: 'var(--text)', marginBottom: '4px' }}>
-            Gym <span style={{ fontStyle: 'italic', color: 'var(--blue)' }}>Coach</span>
-          </h1>
-          <p style={{ fontFamily: 'monospace', fontSize: '11px', color: 'var(--text-faint)', letterSpacing: '0.1em' }}>
-            TU ENTRENADOR PERSONAL
-          </p>
-        </div>
 
-        <form onSubmit={mode === 'auth' ? handleAuth : mode === 'forgot' ? handleForgot : handleReset} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '12px 14px',
-              border: '1px solid var(--border)',
-              borderRadius: '4px',
-              background: 'var(--ink)',
-              color: 'var(--text)',
-              fontFamily: 'monospace',
-              fontSize: '13px',
-              outline: 'none',
-            }}
-            required={mode !== 'reset'}
-            disabled={mode === 'reset'}
-          />
-          {mode === 'auth' && (
-            <input
-              type="password"
-              placeholder="Contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '12px 14px',
-                border: '1px solid var(--border)',
-                borderRadius: '4px',
-                background: 'var(--ink)',
-                color: 'var(--text)',
-                fontFamily: 'monospace',
-                fontSize: '13px',
-                outline: 'none',
-              }}
-              required
-            />
-          )}
-          {mode === 'reset' && (
-            <>
-              <input
-                type="password"
-                placeholder="Nueva contraseña"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border)', borderRadius: '4px', background: 'var(--ink)', color: 'var(--text)', fontFamily: 'monospace', fontSize: '13px', outline: 'none' }}
-                required
-              />
-              <input
-                type="password"
-                placeholder="Confirmar nueva contraseña"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                style={{ width: '100%', padding: '12px 14px', border: '1px solid var(--border)', borderRadius: '4px', background: 'var(--ink)', color: 'var(--text)', fontFamily: 'monospace', fontSize: '13px', outline: 'none' }}
-                required
-              />
-            </>
-          )}
-
-          {error && (
-            <p style={{ color: 'var(--red)', fontSize: '12px', fontFamily: 'monospace' }}>
-              {error}
-            </p>
-          )}
-
-          {message && (
-            <p style={{ color: 'var(--green)', fontSize: '12px', fontFamily: 'monospace' }}>
-              {message}
-            </p>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              width: '100%',
-              padding: '12px',
-              background: 'var(--blue)',
-              color: '#0b0b12',
-              border: 'none',
-              borderRadius: '4px',
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              fontSize: '13px',
-              cursor: 'pointer',
-              opacity: loading ? 0.5 : 1,
-            }}
-          >
-            {loading ? 'Cargando...' : mode === 'auth' ? (isSignUp ? 'Registrarse' : 'Iniciar Sesión') : mode === 'forgot' ? 'Enviar link de recuperación' : 'Guardar nueva contraseña'}
-          </button>
-        </form>
-
-        {mode === 'auth' && !isSignUp && (
-          <p style={{ textAlign: 'center', marginTop: '0.75rem', fontFamily: 'monospace', fontSize: '12px' }}>
-            <button onClick={() => setMode('forgot')} style={{ color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'monospace', fontSize: '12px' }}>
-              ¿Olvidaste tu contraseña?
-            </button>
-          </p>
-        )}
-
-        {mode === 'forgot' && (
-          <p style={{ textAlign: 'center', marginTop: '0.75rem', fontFamily: 'monospace', fontSize: '12px' }}>
-            <button onClick={() => setMode('auth')} style={{ color: 'var(--blue)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'monospace', fontSize: '12px' }}>
-              Volver al inicio de sesión
-            </button>
-          </p>
-        )}
-
-        {mode === 'auth' && (
-          <p style={{ textAlign: 'center', marginTop: '1.5rem', fontFamily: 'monospace', fontSize: '12px', color: 'var(--text-muted)' }}>
-            {isSignUp ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?'}
-            <button
-              onClick={() => setIsSignUp(!isSignUp)}
-              style={{
-                color: 'var(--blue)',
-                fontWeight: 700,
-                marginLeft: '8px',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                fontFamily: 'monospace',
-                fontSize: '12px',
-              }}
+      <Card className="auth-card relative z-10 w-full max-w-[420px] border-white/15 bg-white/[0.07] shadow-[0_16px_60px_rgba(0,0,0,0.45)] backdrop-blur-2xl ring-white/10">
+        <CardContent className="!p-8 sm:!p-10">
+          <div className="auth-title flex flex-col items-center gap-3 text-center">
+            <Badge
+              variant="outline"
+              className="h-9 rounded-xl border-white/15 bg-white/[0.06] px-5 shadow-[0_4px_20px_rgba(0,0,0,0.3)] backdrop-blur-xl"
             >
-              {isSignUp ? 'Inicia sesión' : 'Regístrate'}
-            </button>
-          </p>
-        )}
-      </div>
+              <span className="text-[11px] uppercase tracking-[0.14em] text-[var(--text-faint)]">
+                Tu entrenador personal
+              </span>
+            </Badge>
+            <h1 className="text-3xl font-bold tracking-[-0.02em] text-[var(--text)]">
+              Gym <span className="italic text-[var(--pink)]">Coach</span>
+            </h1>
+            <CardDescription className="text-[13px] text-[var(--text-muted)]">
+              {mode === 'auth'
+                ? (isSignUp ? 'Crea tu cuenta y empieza hoy' : 'Accede a tu plan de entrenamiento')
+                : mode === 'forgot'
+                  ? 'Recupera el acceso a tu cuenta'
+                  : 'Define una nueva contraseña'}
+            </CardDescription>
+          </div>
+
+          <form
+            ref={formRef}
+            onSubmit={mode === 'auth' ? handleAuth : mode === 'forgot' ? handleForgot : handleReset}
+            className="auth-form mt-8 flex flex-col gap-5"
+          >
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="email" className="text-xs uppercase tracking-[0.1em] text-[var(--text-faint)]">
+                Email
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="tu@email.com"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required={mode !== 'reset'}
+                disabled={mode === 'reset'}
+                className="!h-11 !rounded-lg border-white/15 bg-[var(--ink)]/60 !px-3.5 !text-sm placeholder:text-[var(--text-faint)]/60"
+              />
+            </div>
+
+            {mode === 'auth' && (
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="password" className="text-xs uppercase tracking-[0.1em] text-[var(--text-faint)]">
+                  Contraseña
+                </Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  autoComplete={isSignUp ? 'new-password' : 'current-password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="!h-11 !rounded-lg border-white/15 bg-[var(--ink)]/60 !px-3.5 !text-sm placeholder:text-[var(--text-faint)]/60"
+                />
+              </div>
+            )}
+
+            {mode === 'reset' && (
+              <>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="new-password" className="text-xs uppercase tracking-[0.1em] text-[var(--text-faint)]">
+                    Nueva contraseña
+                  </Label>
+                  <Input
+                    id="new-password"
+                    type="password"
+                    placeholder="Mínimo 6 caracteres"
+                    autoComplete="new-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="!h-11 !rounded-lg border-white/15 bg-[var(--ink)]/60 !px-3.5 !text-sm placeholder:text-[var(--text-faint)]/60"
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="confirm-password" className="text-xs uppercase tracking-[0.1em] text-[var(--text-faint)]">
+                    Confirmar contraseña
+                  </Label>
+                  <Input
+                    id="confirm-password"
+                    type="password"
+                    placeholder="Repite la contraseña"
+                    autoComplete="new-password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    className="!h-11 !rounded-lg border-white/15 bg-[var(--ink)]/60 !px-3.5 !text-sm placeholder:text-[var(--text-faint)]/60"
+                  />
+                </div>
+              </>
+            )}
+
+            {error && (
+              <p className="rounded-lg border border-[var(--red)]/30 bg-[var(--red)]/10 px-3 py-2 text-xs text-[var(--red)]">
+                {error}
+              </p>
+            )}
+
+            {message && (
+              <p className="rounded-lg border border-[var(--green)]/30 bg-[var(--green)]/10 px-3 py-2 text-xs text-[var(--green)]">
+                {message}
+              </p>
+            )}
+
+            <Button
+              type="submit"
+              size="lg"
+              disabled={loading}
+              className="!h-11 w-full bg-gradient-to-r from-[var(--pink)] to-[var(--blue)] font-bold text-[#0b0b12] shadow-[0_8px_28px_rgba(255,107,157,0.3)] hover:opacity-90"
+            >
+              {loading
+                ? 'Cargando...'
+                : mode === 'auth'
+                  ? (isSignUp ? 'Registrarse' : 'Iniciar Sesión')
+                  : mode === 'forgot'
+                    ? 'Enviar link de recuperación'
+                    : 'Guardar nueva contraseña'}
+            </Button>
+          </form>
+
+          {mode === 'auth' && !isSignUp && (
+            <p className="mt-5 text-center font-[var(--font-mono)] text-xs">
+              <button
+                onClick={() => setMode('forgot')}
+                className="text-[var(--text-muted)] transition-colors hover:text-[var(--text)]"
+              >
+                ¿Olvidaste tu contraseña?
+              </button>
+            </p>
+          )}
+
+          {mode === 'forgot' && (
+            <p className="mt-5 text-center font-[var(--font-mono)] text-xs">
+              <button
+                onClick={() => setMode('auth')}
+                className="text-[var(--blue)] transition-colors hover:underline"
+              >
+                Volver al inicio de sesión
+              </button>
+            </p>
+          )}
+
+          {mode === 'auth' && (
+            <p className="mt-6 border-t border-white/10 pt-5 text-center font-[var(--font-mono)] text-xs text-[var(--text-muted)]">
+              {isSignUp ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?'}
+              <button
+                onClick={() => setIsSignUp(!isSignUp)}
+                className="ml-2 font-bold text-[var(--blue)] transition-colors hover:underline"
+              >
+                {isSignUp ? 'Inicia sesión' : 'Regístrate'}
+              </button>
+            </p>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }
