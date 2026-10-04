@@ -7,8 +7,8 @@ import { cn } from 'cn'
 import AnimatedBackground from '@/components/AnimatedBackground'
 import AnimeDemo from '@/components/anime-demo'
 import IntroReveal from '@/components/intro-reveal'
+import Logo3D from '@/components/logo-3d'
 import ScrambleText from '@/components/scramble-text'
-import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { buttonVariants } from '@/components/ui/button'
 
@@ -106,16 +106,9 @@ export default function Home() {
       ))}
 
       <div className="relative z-1 mx-auto flex w-full max-w-[1000px] flex-col items-center px-6 py-20 text-center">
-        <Badge
-          variant="outline"
-          className="logo-float enter-hero h-12 rounded-2xl border-white/15 bg-white/[0.06] px-7 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.35)]"
-        >
-          <span className="text-lg font-bold text-[var(--text)]">
-            Gym <span className="italic text-[var(--pink)]">Coach</span>
-          </span>
-        </Badge>
+        <Logo3D className="logo-float enter-hero h-24 w-48 sm:h-28 sm:w-64" />
 
-        <h1 className="enter-hero mt-10 text-[clamp(2.2rem,5vw,4rem)] font-bold leading-[1.1] tracking-[-0.02em] text-[var(--text)]">
+        <h1 className="enter-hero mt-8 text-[clamp(2.2rem,5vw,4rem)] font-bold leading-[1.1] tracking-[-0.02em] text-[var(--text)]">
           Tu <span className="text-[var(--pink)]">entrenador</span> personal
           <br />
           en el <span className="text-[var(--blue)]">bolsillo</span>
