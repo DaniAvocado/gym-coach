@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import { animate, createTimeline, stagger, utils } from 'animejs'
 import { cn } from 'cn'
 import AnimatedBackground from '@/components/AnimatedBackground'
+import AnimeDemo from '@/components/anime-demo'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { buttonVariants } from '@/components/ui/button'
@@ -169,6 +170,8 @@ export default function Home() {
             </Card>
           ))}
         </div>
+
+        <AnimeDemo />
 
         <p className="enter-fade mt-14 text-[11px] text-[var(--text-faint)]">
           Hecho con rosa, azul y morado. React + Supabase + Next.js
