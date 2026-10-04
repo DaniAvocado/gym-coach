@@ -6,6 +6,8 @@ import { animate, createTimeline, stagger, utils } from 'animejs'
 import { cn } from 'cn'
 import AnimatedBackground from '@/components/AnimatedBackground'
 import AnimeDemo from '@/components/anime-demo'
+import IntroReveal from '@/components/intro-reveal'
+import ScrambleText from '@/components/scramble-text'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { buttonVariants } from '@/components/ui/button'
@@ -41,6 +43,12 @@ const stats = [
   { value: 302, suffix: '', label: 'ejercicios ilustrados' },
   { value: 4, suffix: '', label: 'módulos integrados' },
   { value: 24, suffix: '/7', label: 'coach disponible' },
+]
+
+const scramblePhrases = [
+  'Fuerza, hipertrofia y progreso',
+  'Metas que se cumplen',
+  'Tu coach de IA 24/7',
 ]
 
 const blobs = [
@@ -83,6 +91,8 @@ export default function Home() {
     <div className="relative min-h-screen overflow-hidden bg-[var(--ink)] font-[var(--font-mono)]">
       <AnimatedBackground />
 
+      <IntroReveal />
+
       {blobs.map((b, i) => (
         <div
           key={i}
@@ -110,6 +120,10 @@ export default function Home() {
           <br />
           en el <span className="text-[var(--blue)]">bolsillo</span>
         </h1>
+
+        <p className="enter-hero mt-4 font-[var(--font-mono)] text-sm tracking-[0.08em] text-[var(--blue-light)]">
+          <ScrambleText phrases={scramblePhrases} />
+        </p>
 
         <p className="enter-hero mt-5 max-w-[560px] text-base leading-relaxed text-[var(--text-muted)]">
           302 ejercicios con ilustraciones, tracking de entrenamientos, nutrición y
