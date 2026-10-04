@@ -62,13 +62,13 @@ export default function Home() {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduced) return
 
-    const tl = createTimeline({ defaults: { ease: 'easeOutExpo' } })
+    const tl = createTimeline({ defaults: { ease: 'outExpo' } })
       .add('.enter-hero', { opacity: [0, 1], translateY: [26, 0], duration: 900, delay: stagger(90) }, 0)
       .add('.enter-fade', { opacity: [0, 1], translateY: [14, 0], duration: 800, delay: stagger(110) }, 0.25)
       .add('.enter-cards', { opacity: [0, 1], translateY: [22, 0], duration: 700, delay: stagger(120) }, 0.45)
 
     animate('.logo-float', {
-      translateY: [0, -6], duration: 3800, loop: true, ease: 'inOutSine', direction: 'alternate',
+      translateY: [0, -6], duration: 3800, loop: true, ease: 'inOutSine', alternate: true,
     })
 
     document.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {

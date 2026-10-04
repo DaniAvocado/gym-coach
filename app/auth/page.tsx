@@ -33,7 +33,7 @@ export default function AuthPage() {
 
   useEffect(() => {
     if (reducedMotion()) return
-    const tl = createTimeline({ defaults: { ease: 'easeOutExpo' } })
+    const tl = createTimeline({ defaults: { ease: 'outExpo' } })
       .add('.auth-card', { opacity: [0, 1], translateY: [26, 0], duration: 650 })
       .add('.auth-title', { opacity: [0, 1], translateY: [12, 0], duration: 500 }, 0.2)
       .add('.auth-form', { opacity: [0, 1], translateY: [14, 0], duration: 550 }, 0.35)
@@ -47,7 +47,7 @@ export default function AuthPage() {
     }
     const el = formRef.current
     if (!el || reducedMotion()) return
-    animate(el, { opacity: [0, 1], translateY: [10, 0], duration: 350, ease: 'easeOutCubic' })
+    animate(el, { opacity: [0, 1], translateY: [10, 0], duration: 350, ease: 'outCubic' })
   }, [mode, isSignUp])
 
   const handleAuth = async (e: React.FormEvent) => {

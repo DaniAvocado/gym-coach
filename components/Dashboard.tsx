@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { animate, stagger, utils } from 'animejs'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import WorkoutTracker from '@/components/WorkoutTracker'
@@ -107,6 +108,47 @@ export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const router = useRouter()
+  const navRef = useRef<HTMLElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
+  const headerRef = useRef<HTMLDivElement>(null)
+  const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  // entrada escalonada de la nav, igual que el hero de la landing
+  useEffect(() => {
+    const rows = navRef.current?.querySelectorAll('.nav-item')
+    if (!rows?.length || reduced()) return
+    animate(rows, {
+      opacity: [0, 1],
+      translateX: [-12, 0],
+      duration: 550,
+      delay: stagger(30),
+      ease: 'outExpo',
+    })
+    return () => { utils.remove(rows) }
+  }, [user])
+
+  // cambio de pestaña: se re-anima la cabecera y el panel
+  useEffect(() => {
+    const panel = panelRef.current
+    if (!panel || reduced()) return
+    const spans = headerRef.current?.querySelectorAll('.section-header > span') ?? []
+    animate(panel, {
+      opacity: [0, 1],
+      translateY: [14, 0],
+      duration: 420,
+      ease: 'outCubic',
+    })
+    if (spans.length) {
+      animate(spans, {
+        opacity: [0, 1],
+        translateY: [8, 0],
+        duration: 380,
+        delay: stagger(45),
+        ease: 'outCubic',
+      })
+    }
+    return () => { utils.remove([panel, ...spans]) }
+  }, [activeTab, user])
 
   useEffect(() => { setSidebarOpen(window.innerWidth > 768) }, [])
 
@@ -259,7 +301,7 @@ export default function Dashboard() {
         </div>
 
         {/* Nav */}
-        <nav style={{ flex: 1, padding: '12px 0', overflowY: 'auto', overflowX: 'hidden' }}>
+        <nav ref={navRef} style={{ flex: 1, padding: '12px 0', overflowY: 'auto', overflowX: 'hidden' }}>
           {navItems.map((item) => (
             <NavRow key={item.id} variant="desktop" item={item} active={activeTab === item.id} open={sidebarOpen} onClick={() => setActiveTab(item.id)} />
           ))}
@@ -364,7 +406,7 @@ export default function Dashboard() {
         </header>
 
         {/* Section Header */}
-        <div style={{ padding: '0.75rem 1rem 0 1rem' }} className="hide-mobile">
+        <div ref={headerRef} style={{ padding: '0.75rem 1rem 0 1rem' }} className="hide-mobile">
           <div className="section-header">
             <span className="section-num">{currentNav?.abbr}</span>
             <span className="section-title">{currentNav?.label}</span>
@@ -375,7 +417,7 @@ export default function Dashboard() {
         {/* Content */}
         <div style={{ padding: '0.75rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%', maxWidth: '100%' }}>
           <PointsDisplay points={points} />
-          <div className="panel" style={{ width: '100%' }}>
+          <div ref={panelRef} className="panel" style={{ width: '100%' }}>
             {renderContent()}
           </div>
         </div>

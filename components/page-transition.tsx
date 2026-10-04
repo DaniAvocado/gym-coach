@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { animate } from 'animejs'
+import { animate, utils } from 'animejs'
 import { usePathname } from 'next/navigation'
 
 export default function PageTransition({ children }: { children: React.ReactNode }) {
@@ -21,8 +21,9 @@ export default function PageTransition({ children }: { children: React.ReactNode
       opacity: [0, 1],
       translateY: [18, 0],
       duration: 420,
-      ease: 'easeOutCubic',
+      ease: 'outCubic',
     })
+    return () => { utils.remove(el) }
   }, [pathname])
 
   return <div ref={node}>{children}</div>
