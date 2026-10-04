@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Barlow, Barlow_Condensed, Geist } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import PageTransition from "@/components/page-transition";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -26,7 +27,9 @@ export default function RootLayout({
       lang="es"
       className={cn("dark", "h-full", "antialiased", condensed.variable, "font-sans", geist.variable)}
     >
-      <body className="min-h-full flex flex-col font-mono">{children}</body>
+      <body className="min-h-full flex flex-col font-mono">
+        <PageTransition>{children}</PageTransition>
+      </body>
     </html>
   );
 }

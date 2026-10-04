@@ -136,9 +136,9 @@ export default function Home() {
           </Link>
         </div>
 
-        <div className="enter-fade mt-12 grid w-full grid-cols-3 gap-3 sm:gap-6">
+        <div className="enter-fade mt-14 grid w-full grid-cols-3 gap-4 sm:gap-8">
           {stats.map((s) => (
-            <div key={s.label} className="flex flex-col items-center rounded-xl border border-white/10 bg-white/[0.04] px-2 py-5 backdrop-blur-md">
+            <div key={s.label} className="flex flex-col items-center rounded-xl border border-white/10 bg-white/[0.04] px-3 py-6 backdrop-blur-md sm:px-4">
               <span className="text-3xl font-bold text-[var(--text)] sm:text-4xl">
                 <span data-count={s.value}>0</span>
                 {s.suffix}
@@ -148,13 +148,13 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="enter-cards mt-8 grid w-full gap-4 sm:grid-cols-2">
+        <div className="enter-cards mt-12 grid w-full gap-6 sm:grid-cols-2 sm:gap-x-10">
           {features.map((f) => (
             <Card
               key={f.num}
               className="group/card border border-white/10 bg-white/[0.06] backdrop-blur-xl hover:-translate-y-1 hover:bg-white/[0.09] transition-all duration-200 ring-white/10"
             >
-              <CardContent className="flex items-start gap-4 !pt-5">
+              <CardContent className="flex items-start gap-4 !p-6">
                 <span
                   className="shrink-0 rounded-md px-2 py-1 text-xs font-bold text-[#0b0b12]"
                   style={{ background: `linear-gradient(135deg, ${f.accent}, var(--blue))` }}
