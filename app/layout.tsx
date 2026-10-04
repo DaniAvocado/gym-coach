@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
-import { Barlow, Barlow_Condensed } from "next/font/google";
+import { Barlow, Barlow_Condensed, Geist } from "next/font/google";
 import "./globals.css";
+import { cn } from "@/lib/utils";
 
-const sans = Barlow({
-  variable: "--font-sans",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-});
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const condensed = Barlow_Condensed({
   variable: "--font-mono",
@@ -27,7 +24,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${sans.variable} ${condensed.variable} h-full antialiased`}
+      className={cn("dark", "h-full", "antialiased", condensed.variable, "font-sans", geist.variable)}
     >
       <body className="min-h-full flex flex-col font-mono">{children}</body>
     </html>
