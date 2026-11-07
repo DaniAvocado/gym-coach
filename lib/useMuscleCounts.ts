@@ -12,7 +12,7 @@ const MUSCLE_CATEGORIES: Record<string, string[]> = {
   core: ['Core'],
 }
 
-export function useMuscleCounts(userId: string, refreshMs?: number) {
+export function useMuscleCounts(userId: string) {
   const [counts, setCounts] = useState<Record<string, number>>({})
   const [loading, setLoading] = useState(true)
 
@@ -44,12 +44,8 @@ export function useMuscleCounts(userId: string, refreshMs?: number) {
     }
 
     fetchData()
-    if (refreshMs) {
-      const interval = setInterval(fetchData, refreshMs)
-      return () => { cancelled = true; clearInterval(interval) }
-    }
     return () => { cancelled = true }
-  }, [userId, refreshMs])
+  }, [userId])
 
   return { counts, loading }
 }

@@ -6,6 +6,7 @@
 ## MEMORIA OBLIGATORIA
 Antes de tocar código, lee `PROJECT_CONTEXT.md` (arquitectura, fórmulas, historial, decisiones).
 Ese archivo es la fuente de verdad del proyecto — no releer conversaciones antiguas.
+Antes de tocar animaciones, lee `docs/anime-v4.md` (trampas de anime.js v4; es curado, no se regenera).
 
 ## Rutas de trabajo
 - App local: `npm run dev` en la raíz → http://localhost:3000
